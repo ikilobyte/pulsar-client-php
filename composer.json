@@ -16,7 +16,7 @@
 	"require": {
 		"php": ">=7.0",
 		"google/crc32": "^0.1.0",
-		"guzzlehttp/guzzle": "^6.5"
+		"guzzlehttp/guzzle": ">=6.5"
 	},
 	"require-dev": {
 		"allegro/php-protobuf": "^0.12.4",
