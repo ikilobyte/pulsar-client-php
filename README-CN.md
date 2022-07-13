@@ -15,7 +15,7 @@
 
 [English](README.md) | 中文
 
-这是一个用php实现的[pulsar](https://pulsar.apache.org)客户端库，基于[PulsarApi.proto](src/PulsarApi.proto)
+这是一个用php实现的[Apache Pulsar](https://pulsar.apache.org)客户端库，基于[PulsarApi.proto](src/PulsarApi.proto)
 
 ## 依赖
 
@@ -154,10 +154,15 @@ $consumer->close();
 ## 可选项配置
 
 * ProducerOptions
-    * setProducerName()
+    * setTopic()
     * setAuthentication()
+    * setConnectTimeout()
+    * setProducerName()
     * setCompression()
 * ConsumerOptions
+    * setTopic()
+    * setAuthentication()
+    * setConnectTimeout()
     * setConsumerName()
     * setSubscription()
     * setSubscriptionType()

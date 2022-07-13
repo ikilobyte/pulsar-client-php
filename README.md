@@ -15,7 +15,7 @@
 
 English | [中文](README-CN.md)
 
-This is a [pulsar](https://pulsar.apache.org) client library implemented in php
+This is a [Apache Pulsar](https://pulsar.apache.org) client library implemented in php
 Reference [PulsarApi.proto](src/PulsarApi.proto)
 
 ## Requirements
@@ -157,10 +157,15 @@ $consumer->close();
 ## Options
 
 * ProducerOptions
-    * setProducerName()
+    * setTopic()
     * setAuthentication()
+    * setConnectTimeout()
+    * setProducerName()
     * setCompression()
 * ConsumerOptions
+    * setTopic()
+    * setAuthentication()
+    * setConnectTimeout()
     * setConsumerName()
     * setSubscription()
     * setSubscriptionType()
