@@ -1,0 +1,25 @@
+{
+	"name": "ikilobyte/pulsar-client-php",
+	"description": "A Pulsar Client library",
+	"type": "library",
+	"license": "MIT",
+	"keywords": [
+		"Pulsar",
+		"Client",
+		"Library"
+	],
+	"autoload": {
+		"psr-4": {
+			"Pulsar\\": "src/"
+		}
+	},
+	"require": {
+		"php": ">=7.0",
+		"google/crc32": "^0.1.0",
+		"guzzlehttp/guzzle": "^6.5"
+	},
+	"require-dev": {
+		"allegro/php-protobuf": "^0.12.4",
+		"symfony/var-dumper": "^5.4"
+	}
+}
