@@ -38,9 +38,12 @@ composer require ikilobyte/pulsar-client-php
 > allegro/php-protobuf
 
 ```bash
+cd /usr/local/src
 git clone https://github.com/allegro/php-protobuf
 cd php-protobuf
-phpize && ./configure --with-php-config=${php-config} && make && make install
+phpize 
+./configure --with-php-config=${php-config} 
+make && make install
 
 # add to php.ini
 [protobuf]
