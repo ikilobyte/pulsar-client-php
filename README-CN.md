@@ -165,4 +165,4 @@ $consumer->close();
 
 ## License
 
-MIT LICENSE
+[MIT](LICENSE) LICENSE
