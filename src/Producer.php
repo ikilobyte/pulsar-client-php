@@ -9,7 +9,6 @@
 namespace Pulsar;
 
 use Google\CRC32\CRC32;
-use GuzzleHttp\Exception\GuzzleException;
 use Pulsar\Exception\RuntimeException;
 use Pulsar\Proto\BaseCommand;
 use Pulsar\Proto\BaseCommand_Type;
@@ -163,6 +162,7 @@ class Producer extends Client
     {
         // [totalSize] [commandSize] [command] [magicNumber] [checksum] [metadataSize] [metadata] [payload]
 
+        // New messageOptions
         $messageOptions = new MessageOptions($options);
 
         $buffer = new Buffer();
