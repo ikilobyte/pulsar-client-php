@@ -99,15 +99,20 @@ class Packer
 
         $messages = [];
         $batchNums = $metadata->getNumMessagesInBatch();
+        // The default value is 1
+        if ($batchNums <= 0) {
+            $batchNums = 1;
+        }
         $batchIdx = 0;
         $messageIDData = $commandMessage->getMessageId();
         $trackingValue = 0;
         while ($buffer->readableLength()) {
-            $size = $buffer->readUint32();
-            $singleMetadata = new SingleMessageMetadata();
-            $singleMetadataBuffer = $buffer->read($size);
-            $singleMetadata->parseFromString($singleMetadataBuffer);
-            $payload = $buffer->read($singleMetadata->getPayloadSize());
+            if ($metadata->hasNumMessagesInBatch()) {
+                $payload = self::readSingleMessage($buffer);
+            } else {
+                $payload = self::readMessage($buffer);
+            }
+
             $messages[] = new Message(
                 $messageIDData,
                 $commandMessage->getConsumerId(),
@@ -135,5 +140,40 @@ class Packer
         $hc = CRC32::create(CRC32::CASTAGNOLI);
         $hc->update($bytes);
         return hexdec($hc->hash());
+    }
+
+
+
+    /**
+     * @param Buffer $buffer
+     * @return false|string
+     */
+    protected static function readMessage(Buffer $buffer)
+    {
+        // Format [payload]
+        return $buffer->read($buffer->readableLength());
+    }
+
+
+
+    /**
+     * @param Buffer $buffer
+     * @return false|string
+     * @throws Exception
+     */
+    protected static function readSingleMessage(Buffer $buffer)
+    {
+        // Format [metadataSize] [metadata] [payload]
+
+        // [metadataSize]
+        $size = $buffer->readUint32();
+        $singleMetadata = new SingleMessageMetadata();
+
+        // [metadata]
+        $singleMetadataBuffer = $buffer->read($size);
+        $singleMetadata->parseFromString($singleMetadataBuffer);
+
+        // [payload]
+        return $buffer->read($singleMetadata->getPayloadSize());
     }
 }
