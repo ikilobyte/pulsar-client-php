@@ -195,6 +195,14 @@ class StreamIO extends AbstractIO implements Reader
 
         // [command]
         $commandBytes = $this->read($commandSize);
+
+        // Write to Buffer
+        // This buffer is holding a complete package
+        $buffer->write($commandBytes);
+
+        // This part does not need to be read subsequently in the
+        $buffer->skip($commandSize);
+
         $baseCommand = new BaseCommand();
         $baseCommand->parseFromString($commandBytes);
         $commandType = $baseCommand->getType();
