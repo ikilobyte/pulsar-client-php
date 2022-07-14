@@ -42,7 +42,7 @@ cd /usr/local/src
 git clone https://github.com/allegro/php-protobuf
 cd php-protobuf
 phpize 
-./configure --with-php-config=${php-config} 
+./configure --with-php-config=$(which php-config) 
 make && make install
 
 # add to php.ini
