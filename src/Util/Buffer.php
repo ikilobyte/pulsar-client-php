@@ -79,6 +79,8 @@ class Buffer implements Reader
     }
 
     /**
+     * Remaining readable length
+     *
      * @return int
      */
     public function readableLength(): int
@@ -107,6 +109,14 @@ class Buffer implements Reader
         return strlen($this->data);
     }
 
+    /**
+     * @param int $idx
+     * @return void
+     */
+    public function skip(int $idx)
+    {
+        $this->readerIdx += $idx;
+    }
 
     /**
      * @param string $buffer
