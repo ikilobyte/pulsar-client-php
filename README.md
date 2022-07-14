@@ -1,4 +1,4 @@
-# PHP Pulsar Client
+# PHP Native Pulsar Client
 
 # Contents
 
