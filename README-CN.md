@@ -21,7 +21,7 @@
 
 * PHP >= 7.0
 * Protobuf Extension
-  > 因为pulsar使用proto2语法
+  > 因为Apache Pulsar使用proto2语法
 
   > 由于Google protobuf的PHP扩展并不支持proto2语法
 

@@ -22,7 +22,7 @@ Reference [PulsarApi.proto](src/PulsarApi.proto)
 
 * PHP >= 7.0
 * Protobuf Extension
-  > Because pulsar uses the proto2 syntax
+  > Because Apache Pulsar uses the proto2 syntax
 
   > Since the Google protobuf for PHP extension does not support the proto2 syntax
 
