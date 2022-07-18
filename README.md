@@ -20,7 +20,7 @@ Reference [PulsarApi.proto](src/PulsarApi.proto)
 
 ## Requirements
 
-* PHP >= 7.0
+* PHP >= 7.0 (Not supported PHP8)
 * Protobuf Extension
   > Because Apache Pulsar uses the proto2 syntax
 
@@ -28,6 +28,8 @@ Reference [PulsarApi.proto](src/PulsarApi.proto)
 
   > So install the [allegro/php-protobuf](https://github.com/allegro/php-protobuf) extension instead rather than
   protocolbuffers/protobuf
+
+  > Unfortunately, since the allegro/php-protobuf extension library does not support php8, it cannot support php8 either
 
 * ZLib Extension（If you want to use zlib compression）
 

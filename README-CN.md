@@ -19,13 +19,15 @@
 
 ## 依赖
 
-* PHP >= 7.0
+* PHP >= 7.0 (Not supported PHP8)
 * Protobuf Extension
   > 因为Apache Pulsar使用proto2语法
 
   > 由于Google protobuf的PHP扩展并不支持proto2语法
 
   > 所以是安装[allegro/php-protobuf](https://github.com/allegro/php-protobuf)扩展，而不是安装 protocolbuffers/protobuf
+
+  > 很遗憾的是，由于allegro/php-protobuf扩展库不支持php8，所以它也不能支持php8
 
 * ZLib Extension（如果你想使用zlib压缩）
 
