@@ -19,7 +19,7 @@
 
 ## 依赖
 
-* PHP >= 7.0 (Not supported PHP8)
+* PHP 7.x (Not supported PHP8)
 * Protobuf Extension
   > 因为Apache Pulsar使用proto2语法
 

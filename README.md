@@ -20,7 +20,7 @@ Reference [PulsarApi.proto](src/PulsarApi.proto)
 
 ## Requirements
 
-* PHP >= 7.0 (Not supported PHP8)
+* PHP 7.x (Not supported PHP8)
 * Protobuf Extension
   > Because Apache Pulsar uses the proto2 syntax
 
