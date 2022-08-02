@@ -16,7 +16,7 @@
 English | [中文](README-CN.md)
 
 This is a [Apache Pulsar](https://pulsar.apache.org) client library implemented in php
-Reference [PulsarApi.proto](src/PulsarApi.proto)
+Reference [PulsarApi.proto](src/PulsarApi.proto) And support Swoole coroutine
 
 ## Requirements
 
