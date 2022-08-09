@@ -33,6 +33,14 @@ abstract class AbstractIO
 
 
     /**
+     * Because of the protobuf extension library, it is not possible to generate data with empty structures
+     *
+     * @var string
+     */
+    private $pingBytes = '';
+
+
+    /**
      * @var float|int
      */
     protected $maxMessageSize = 1024 * 1024 * 5;
@@ -66,6 +74,21 @@ abstract class AbstractIO
         }
         // reply PONG
         $this->write($this->pongBytes);
+    }
+
+
+    /**
+     * @return void
+     */
+    protected function ping()
+    {
+        if (empty($this->pingBytes)) {
+            $this->pingBytes = file_get_contents(__DIR__ . '/../Util/ping.bytes');
+        }
+
+        // send PING command
+        // Used to stay active
+        $this->write($this->pingBytes);
     }
 
     /**
