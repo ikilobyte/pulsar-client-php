@@ -213,6 +213,12 @@ class StreamIO extends AbstractIO implements Reader
             return null;
         }
 
+        // receive PONG command
+        // No processing required
+        if ($commandType == BaseCommand_Type::PONG) {
+            return null;
+        }
+
         // receive ACTIVE_CONSUMER_CHANGE
         // only consumer received
         if ($commandType == BaseCommand_Type::ACTIVE_CONSUMER_CHANGE) {

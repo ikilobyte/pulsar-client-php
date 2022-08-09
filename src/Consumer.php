@@ -9,7 +9,6 @@
 namespace Pulsar;
 
 
-use GuzzleHttp\Exception\GuzzleException;
 use Pulsar\Exception\OptionsException;
 use Pulsar\Exception\RuntimeException;
 use Pulsar\Proto\CommandMessage;
@@ -54,10 +53,6 @@ class Consumer extends Client
      * @param string $url
      * @param ConsumerOptions $options
      * @throws OptionsException
-     * @throws RuntimeException
-     * @throws GuzzleException
-     * @throws Exception\ConnectException
-     * @throws Exception\IOException
      */
     public function __construct(string $url, ConsumerOptions $options)
     {
@@ -126,6 +121,9 @@ class Consumer extends Client
         // nack
         $this->executeInternalNack();
 
+        // ping
+        $this->ping();
+
         if (is_null($response)) {
             return $this->receive();
         }
@@ -171,7 +169,7 @@ class Consumer extends Client
         // send CommandAck
         $this->getPartitionConsumer($message->getConsumerID())->ack($message);
     }
-    
+
 
     /**
      * @param Message $message

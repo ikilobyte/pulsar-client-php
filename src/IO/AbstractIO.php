@@ -65,6 +65,14 @@ abstract class AbstractIO
 
 
     /**
+     * Time when the last ping command was sent
+     *
+     * @var int
+     */
+    protected $lastSendPingCommandTime = 0;
+
+
+    /**
      * @return void
      */
     protected function pong()
@@ -80,15 +88,21 @@ abstract class AbstractIO
     /**
      * @return void
      */
-    protected function ping()
+    public function ping()
     {
         if (empty($this->pingBytes)) {
             $this->pingBytes = file_get_contents(__DIR__ . '/../Util/ping.bytes');
         }
 
+        // 30 seconds interval
+        if (time() - $this->lastSendPingCommandTime < 30) {
+            return;
+        }
+
         // send PING command
         // Used to stay active
         $this->write($this->pingBytes);
+        $this->lastSendPingCommandTime = time();
     }
 
     /**

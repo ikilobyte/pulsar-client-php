@@ -167,4 +167,17 @@ abstract class Client
             $connection->close();
         }
     }
+
+
+    /**
+     * all connections send PING command
+     *
+     * @return void
+     */
+    protected function ping()
+    {
+        foreach ($this->connections as $connection) {
+            $connection->ping();
+        }
+    }
 }
