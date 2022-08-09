@@ -40,47 +40,44 @@ class TopicManage
 
 
     /**
-     * @var string
-     */
-    protected $base;
-
-
-    /**
      * @param string $topic
-     * @param int $partitions
+     * @param int $partition
+     * @return void
      */
-    public function __construct(string $topic, int $partitions)
+    public function setPartitions(string $topic, int $partition)
     {
-        for ($i = 0; $i < $partitions; $i++) {
-            $this->data[] = sprintf('%s-partition-%d', $topic, $i);
+
+        // count partitions
+        $this->partitions += $partition;
+
+        // Not a partition topic
+        if ($partition <= 0) {
+            $this->data[] = $topic;
+            return;
         }
 
-        $this->base = $topic;
-        $this->partitions = $partitions;
+        // partition topic
+        for ($i = 0; $i < $partition; $i++) {
+            $this->data[] = sprintf('%s-partition-%d', $topic, $i);
+        }
     }
-
 
 
     /**
      * @return int
      */
-    public function count(): int
+    public function countPartitions(): int
     {
         return $this->partitions;
     }
 
 
     /**
-     * @return string
-     * for producer
+     * @return int
      */
-    public function one(): string
+    public function countTopics(): int
     {
-        if ($this->partitions <= 0) {
-            return $this->base;
-        }
-
-        return $this->data[ mt_rand(0, $this->partitions - 1) ];
+        return count($this->data);
     }
 
 
@@ -90,10 +87,8 @@ class TopicManage
      */
     public function all(): array
     {
-        return $this->partitions <= 0 ? [$this->base] : $this->data;
+        return $this->data;
     }
-
-
 
 
     /**

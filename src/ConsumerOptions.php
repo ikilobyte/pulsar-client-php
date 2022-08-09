@@ -45,6 +45,16 @@ class ConsumerOptions extends Options
 
 
     /**
+     * @param array $topics
+     * @return void
+     */
+    public function setTopics(array $topics)
+    {
+        $this->data[ self::TOPICS ] = $topics;
+    }
+
+
+    /**
      * @param string $name
      * @return void
      */
@@ -103,7 +113,7 @@ class ConsumerOptions extends Options
     {
         return $this->data[ self::RECEIVE_QUEUE_SIZE ] ?? 1000;
     }
-    
+
     /**
      * @return string
      * @throws OptionsException

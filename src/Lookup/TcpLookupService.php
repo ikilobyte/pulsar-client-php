@@ -24,7 +24,6 @@ use Pulsar\Proto\CommandLookupTopicResponse_LookupType;
 use Pulsar\Proto\CommandPartitionedTopicMetadata;
 use Pulsar\Proto\CommandPartitionedTopicMetadataResponse;
 use Pulsar\Proto\CommandPartitionedTopicMetadataResponse_LookupType;
-use Pulsar\TopicManage;
 use Pulsar\Util\Helper;
 
 
@@ -112,12 +111,11 @@ class TcpLookupService implements LookupService
 
     /**
      * @param string $topic
-     * @return TopicManage
-     * @throws RuntimeException
+     * @return int
      * @throws IOException
-     * @throws \Exception
+     * @throws RuntimeException
      */
-    public function getPartitionedTopicMetadata(string $topic): TopicManage
+    public function getPartitionedTopicMetadata(string $topic): int
     {
         $command = new CommandPartitionedTopicMetadata();
         $command->setRequestId(Helper::getRequestID());
@@ -133,7 +131,7 @@ class TcpLookupService implements LookupService
             throw new RuntimeException($subCommand->getMessage());
         }
 
-        return new TopicManage($topic, $subCommand->getPartitions());
+        return $subCommand->getPartitions();
     }
 
 

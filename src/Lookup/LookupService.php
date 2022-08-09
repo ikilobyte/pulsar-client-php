@@ -10,8 +10,6 @@ declare( strict_types = 1 );
 
 namespace Pulsar\Lookup;
 
-use Pulsar\TopicManage;
-
 
 interface LookupService
 {
@@ -25,9 +23,9 @@ interface LookupService
 
     /**
      * @param string $topic
-     * @return TopicManage
+     * @return int
      */
-    public function getPartitionedTopicMetadata(string $topic): TopicManage;
+    public function getPartitionedTopicMetadata(string $topic): int;
 
 
     /**

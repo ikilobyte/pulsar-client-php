@@ -37,9 +37,10 @@ abstract class Options implements ArrayAccess
     const CONNECT_TIMEOUT = 'connect_timeout';
 
     /**
-     * @var string topic
+     * @var array topics
      */
-    const TOPIC = 'topic';
+    const TOPICS = 'topics';
+
 
     /**
      * @var array
@@ -108,18 +109,32 @@ abstract class Options implements ArrayAccess
      */
     public function setTopic(string $topic)
     {
-        $this->data[ self::TOPIC ] = $topic;
+        $this->data[ self::TOPICS ] = [$topic];
     }
 
 
     /**
+     * @return array
+     * @throws OptionsException
+     */
+    public function getTopics(): array
+    {
+        $topics = $this->data[ self::TOPICS ] ?? [];
+        if (empty($topics)) {
+            throw new OptionsException('topic is required');
+        }
+
+        return $topics;
+    }
+
+    
+    /**
+     * @param string $topic
      * @return string
      * @throws OptionsException
      */
-    public function getTopic(): string
+    public function validateTopic(string $topic): string
     {
-        $topic = trim($this->data[ Options::TOPIC ] ?? '');
-
         if (empty($topic)) {
             throw new OptionsException('topic is required');
         }

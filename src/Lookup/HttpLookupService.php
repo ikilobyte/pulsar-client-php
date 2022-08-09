@@ -18,7 +18,6 @@ use Pulsar\Authentication\Authentication;
 use Pulsar\Exception\OptionsException;
 use Pulsar\Exception\RuntimeException;
 use Pulsar\Options;
-use Pulsar\TopicManage;
 
 /**
  * Class HttpLookupService
@@ -88,11 +87,11 @@ class HttpLookupService implements LookupService
 
     /**
      * @param string $topic
-     * @return TopicManage
+     * @return int
      * @throws GuzzleException
      * @throws RuntimeException
      */
-    public function getPartitionedTopicMetadata(string $topic): TopicManage
+    public function getPartitionedTopicMetadata(string $topic): int
     {
         $parseTopic = $this->parseTopic($topic);
         $url = sprintf(
@@ -106,7 +105,7 @@ class HttpLookupService implements LookupService
             throw new RuntimeException('Failed to get partition metadata');
         }
 
-        return new TopicManage($topic, $result['partitions']);
+        return $result['partitions'];
     }
 
 

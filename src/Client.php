@@ -43,7 +43,7 @@ abstract class Client
     /**
      * Class library version
      */
-    const VERSION_ID = '1.0.2';
+    const VERSION_ID = '1.0.4';
 
     /**
      * @var Options
@@ -97,7 +97,15 @@ abstract class Client
         $this->serviceScheme = $parse['scheme'];
         $this->eventloop = new Select();
         $this->lookupService = $this->makeLookupService();
-        $this->topicManage = $this->lookupService->getPartitionedTopicMetadata($this->options->getTopic());
+        $this->topicManage = new TopicManage();
+
+
+        foreach ($this->options->getTopics() as $topic) {
+            $partition = $this->lookupService->getPartitionedTopicMetadata(
+                $this->options->validateTopic($topic)
+            );
+            $this->topicManage->setPartitions($topic, $partition);
+        }
     }
 
 
