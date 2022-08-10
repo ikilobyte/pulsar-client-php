@@ -77,6 +77,9 @@ $options->setConnectTimeout(3);
 $options->setTopic('persistent://public/default/demo');
 $options->setCompression(Compression::ZLIB);
 $producer = new Producer('pulsar://localhost:6650', $options);
+// or use pulsar proxy address
+//$producer = new Producer('http://localhost:8080', $options);
+
 $producer->connect();
 
 for ($i = 0; $i < 10; $i++) {
@@ -103,6 +106,23 @@ for ($i = 0; $i < 10; $i++) {
 
 // close
 $producer->close();
+```
+
+> Message deduplication
+
+* Message de-duplication is a feature provided by pulsar and is based on the producer name and sequence number ID
+* The name of the same producer needs to be fixed and unique, generally distinguished by business latitude, and the
+  sequence number ID of each message is unique and self-incrementing.
+* [Reference Pulsar Docs](https://pulsar.apache.org/docs/next/concepts-messaging#message-deduplication)
+
+```php
+$options = new ProducerOptions();
+$options->setProducerName('name');
+
+$producer = new Producer('pulsar://localhost:6650', $options);
+$producer->send('body',[
+    \Pulsar\MessageOptions::SEQUENCE_ID => 123456,
+]);
 ```
 
 ## Consumer
@@ -132,6 +152,9 @@ $options->setSubscriptionType(SubscriptionType::Shared);
 $options->setNackRedeliveryDelay(20);
 
 $consumer = new Consumer('pulsar://localhost:6650', $options);
+// or use pulsar proxy address
+//$producer = new Producer('http://localhost:8080', $options);
+
 $consumer->connect();
 
 while (true) {
@@ -156,6 +179,17 @@ while (true) {
 $consumer->close();
 ```
 
+> Subscribe to multiple topics
+
+```php
+$options->setTopics([
+    'persistent://public/default/demo-1',
+    'persistent://public/default/demo-2',
+    'persistent://public/default/demo-3',
+    //....
+]);
+```
+
 ## Options
 
 * ProducerOptions
@@ -166,6 +200,7 @@ $consumer->close();
     * setCompression()
 * ConsumerOptions
     * setTopic()
+    * setTopics()
     * setAuthentication()
     * setConnectTimeout()
     * setConsumerName()
@@ -175,6 +210,7 @@ $consumer->close();
     * setReceiveQueueSize()
 * MessageOptions
     * DELAY_SECONDS
+    * SEQUENCE_ID
 
 ## License
 
