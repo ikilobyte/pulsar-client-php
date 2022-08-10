@@ -11,6 +11,8 @@ declare( strict_types = 1 );
 namespace Pulsar;
 
 
+use Pulsar\Util\Helper;
+
 /**
  * Class MessageOptions
  *
@@ -25,6 +27,15 @@ class MessageOptions
      *       types, the messages will still be delivered immediately.
      */
     const DELAY_SECONDS = 'delay_seconds';
+
+
+    /**
+     * Specify the sequence ID of each message, used for message de-duplication, unspecified will be generated automatically
+     * This sequence ID needs to be unique and needs to be self-increasing
+     *
+     * @see https://pulsar.apache.org/docs/next/concepts-messaging#message-deduplication
+     */
+    const SEQUENCE_ID = 'sequence_id';
 
 
     /**
@@ -69,5 +80,14 @@ class MessageOptions
             return (int)( ( time() + $seconds ) * 1000 );
         }
         return null;
+    }
+
+
+    /**
+     * @return int
+     */
+    public function getSequenceID(): int
+    {
+        return (int)( $this->data[ self::SEQUENCE_ID ] ?? Helper::getSequenceId() );
     }
 }
