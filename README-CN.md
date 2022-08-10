@@ -186,6 +186,19 @@ $options->setTopics([
 ]);
 ```
 
+> 死信队列
+
+```php
+// Assuming that the subject matter is： <topicname>-<subscriptionname>-DLQ
+$options->setDeadLetterPolicy(6);
+
+// Custom topic name
+$options->setDeadLetterPolicy(6,'persistent://public/default/demo-dead');
+
+// Custom subscription name
+$options->setDeadLetterPolicy(6,'persistent://public/default/demo-dead','sub-name');
+```
+
 ## 可选项配置
 
 * ProducerOptions

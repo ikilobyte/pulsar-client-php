@@ -190,6 +190,19 @@ $options->setTopics([
 ]);
 ```
 
+> Dead letter topic
+
+```php
+// Assuming that the subject matter is： <topicname>-<subscriptionname>-DLQ
+$options->setDeadLetterPolicy(6);
+
+// Custom topic name
+$options->setDeadLetterPolicy(6,'persistent://public/default/demo-dead');
+
+// Custom subscription name
+$options->setDeadLetterPolicy(6,'persistent://public/default/demo-dead','sub-name');
+```
+
 ## Options
 
 * ProducerOptions
@@ -208,6 +221,7 @@ $options->setTopics([
     * setSubscriptionType()
     * setNackRedeliveryDelay()
     * setReceiveQueueSize()
+    * setDeadLetterPolicy()
 * MessageOptions
     * DELAY_SECONDS
     * SEQUENCE_ID
