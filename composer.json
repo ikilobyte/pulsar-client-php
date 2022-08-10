@@ -1,6 +1,6 @@
 {
 	"name": "ikilobyte/pulsar-client-php",
-	"description": "A Pulsar Client library",
+	"description": "PHP Native Client library for Apache Pulsar",
 	"type": "library",
 	"license": "MIT",
 	"keywords": [
