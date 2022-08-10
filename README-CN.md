@@ -74,6 +74,9 @@ $options->setConnectTimeout(3);
 $options->setTopic('persistent://public/default/demo');
 $options->setCompression(Compression::ZLIB);
 $producer = new Producer('pulsar://localhost:6650', $options);
+// or use pulsar proxy address
+//$producer = new Producer('http://localhost:8080', $options);
+
 $producer->connect();
 
 for ($i = 0; $i < 10; $i++) {
@@ -100,6 +103,22 @@ for ($i = 0; $i < 10; $i++) {
 
 // close
 $producer->close();
+```
+
+> 消息去重
+
+* 消息消重是pulsar提供的一项功能，它基于生产者名称和序列号ID
+* 同一生产者的名称需要是固定而且是唯一的，一般根据业务纬度区分即可，每条消息的序列号ID是唯一而且是自增的。
+* [参考 Pulsar Docs](https://pulsar.apache.org/docs/next/concepts-messaging#message-deduplication)
+
+```php
+$options = new ProducerOptions();
+$options->setProducerName('name');
+
+$producer = new Producer('pulsar://localhost:6650', $options);
+$producer->send('body',[
+    \Pulsar\MessageOptions::SEQUENCE_ID => 123456,
+]);
 ```
 
 ## 消费者
@@ -129,6 +148,9 @@ $options->setSubscriptionType(SubscriptionType::Shared);
 $options->setNackRedeliveryDelay(20);
 
 $consumer = new Consumer('pulsar://localhost:6650', $options);
+// or use pulsar proxy address
+//$producer = new Producer('http://localhost:8080', $options);
+
 $consumer->connect();
 
 while (true) {
@@ -153,6 +175,17 @@ while (true) {
 $consumer->close();
 ```
 
+> 订阅多个主题
+
+```php
+$options->setTopics([
+    'persistent://public/default/demo-1',
+    'persistent://public/default/demo-2',
+    'persistent://public/default/demo-3',
+    //....
+]);
+```
+
 ## 可选项配置
 
 * ProducerOptions
@@ -163,6 +196,7 @@ $consumer->close();
     * setCompression()
 * ConsumerOptions
     * setTopic()
+    * setTopics()
     * setAuthentication()
     * setConnectTimeout()
     * setConsumerName()
@@ -172,6 +206,7 @@ $consumer->close();
     * setReceiveQueueSize()
 * MessageOptions
     * DELAY_SECONDS
+    * SEQUENCE_ID
 
 ## License
 
