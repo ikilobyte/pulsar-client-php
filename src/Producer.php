@@ -83,7 +83,13 @@ class Producer extends Client
     public function send(string $payload, array $options = []): string
     {
         $producer = $this->getPartitionProducer();
-        $buffer = $this->buildBuffer($producer, $payload, $options, Helper::getSequenceId());
+        $messageOptions = new MessageOptions($options);
+        $buffer = $this->buildBuffer(
+            $producer,
+            $payload,
+            $messageOptions,
+            $messageOptions->getSequenceID()
+        );
 
         /**
          * @var $response Response
@@ -109,11 +115,13 @@ class Producer extends Client
      */
     public function sendAsync(string $payload, callable $callable, array $options = [])
     {
+        $messageOptions = new MessageOptions($options);
+        $sequenceID = $messageOptions->getSequenceID();
+
         $producer = $this->getPartitionProducer();
-        $seqID = Helper::getSequenceId();
-        $buffer = $this->buildBuffer($producer, $payload, $options, $seqID);
+        $buffer = $this->buildBuffer($producer, $payload, $messageOptions, $sequenceID);
         $producer->sendAsync($buffer);
-        $this->callbacks[ $seqID ] = [$producer->getID(), $callable];
+        $this->callbacks[ $sequenceID ] = [$producer->getID(), $callable];
     }
 
 
@@ -152,18 +160,14 @@ class Producer extends Client
     /**
      * @param PartitionProducer $producer
      * @param string $payload
-     * @param array $options
-     * @param int $seqID
+     * @param MessageOptions $messageOptions
+     * @param int $sequenceID
      * @return Buffer
      * @throws RuntimeException
-     * @throws \Exception
      */
-    protected function buildBuffer(PartitionProducer $producer, string $payload, array $options, int $seqID): Buffer
+    protected function buildBuffer(PartitionProducer $producer, string $payload, MessageOptions $messageOptions, int $sequenceID): Buffer
     {
         // [totalSize] [commandSize] [command] [magicNumber] [checksum] [metadataSize] [metadata] [payload]
-
-        // New messageOptions
-        $messageOptions = new MessageOptions($options);
 
         $buffer = new Buffer();
 
@@ -174,7 +178,7 @@ class Producer extends Client
         // CommandSend
         $commandSend = new CommandSend();
         $commandSend->setProducerId($producer->getID());
-        $commandSend->setSequenceId($seqID);
+        $commandSend->setSequenceId($sequenceID);
         $commandSend->setNumMessages(1);
         $commandSend->setTxnidLeastBits(null);
         $commandSend->setTxnidMostBits(null);
