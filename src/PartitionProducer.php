@@ -104,6 +104,11 @@ class PartitionProducer
         $commandProducer->setTxnEnabled(false);
         $commandProducer->setProducerAccessMode(ProducerAccessMode::Shared);
 
+        // Name of the initial subscription of the topic.
+        if ($name = $this->options->getInitialSubscriptionName()) {
+            $commandProducer->setInitialSubscriptionName($name);
+        }
+
         $this->connection->writeCommand(BaseCommand_Type::PRODUCER, $commandProducer)->wait();
     }
 

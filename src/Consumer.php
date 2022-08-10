@@ -182,6 +182,13 @@ class Consumer extends Client
             return;
         }
 
+        // Is it necessary to enter the dead letter queue
+        $deadLetter = $this->options->getDeadLetterPolicy();
+        if ($deadLetter->trigger($message)) {
+            $this->ack($message);
+            return;
+        }
+
         // push to Local queue
         $this->nackMessageQueue->insert($message, -( time() + $this->options->getNackRedeliveryDelay() ));
     }

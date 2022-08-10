@@ -18,31 +18,44 @@ use Pulsar\Exception\OptionsException;
 class ConsumerOptions extends Options
 {
     /**
-     * @var string consumer name
+     * consumer name
+     *
+     * @var string
      */
     const NAME = 'name';
 
     /**
-     * @var string subscription
+     * subscription
+     *
+     * @var string
      */
     const SUBSCRIPTION = 'subscription';
 
     /**
-     * @var int sub_type
+     * sub_type
+     *
+     * @var int
      */
     const SUBSCRIPTION_TYPE = 'sub_type';
 
-
     /**
-     * @var int Nack Latency delivery default 60 seconds Unit second
+     * Nack Latency delivery default 60 seconds Unit second
+     *
+     * @var int
      */
     const NACK_REDELIVERY_DELAY = 'nack_redelivery_delay';
 
     /**
-     * @var int Provides message throughput using local memory, default is 1000
+     * Provides message throughput using local memory, default is 1000
+     *
+     * @var int
      */
     const RECEIVE_QUEUE_SIZE = 'receive_queue_size';
 
+    /**
+     * @var string
+     */
+    const DEAD_LETTER_POLICY = 'dead_letter_policy';
 
     /**
      * @param array $topics
@@ -105,6 +118,36 @@ class ConsumerOptions extends Options
         $this->data[ self::RECEIVE_QUEUE_SIZE ] = $size;
     }
 
+
+    /**
+     * @param int $maxRedeliveryCount
+     * @param string $deadLetterTopic
+     * @param string $initialSubscriptionName
+     * @return void
+     * @throws OptionsException
+     */
+    public function setDeadLetterPolicy(int $maxRedeliveryCount, string $deadLetterTopic = '', string $initialSubscriptionName = 'logic')
+    {
+        if ($maxRedeliveryCount <= 0) {
+            throw new OptionsException('maxRedeliveryCount Must be greater than 0');
+        }
+
+        $config = [
+            'max'          => $maxRedeliveryCount,
+            'topic'        => $deadLetterTopic,
+            'subscription' => $initialSubscriptionName,
+        ];
+        $this->data[ self::DEAD_LETTER_POLICY ] = new DeadLetterPolicy($config, $this);
+    }
+
+
+    /**
+     * @return DeadLetterPolicy
+     */
+    public function getDeadLetterPolicy(): DeadLetterPolicy
+    {
+        return $this->data[ self::DEAD_LETTER_POLICY ] ?? new DeadLetterPolicy();
+    }
 
     /**
      * @return int|mixed

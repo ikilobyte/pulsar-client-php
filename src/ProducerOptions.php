@@ -31,12 +31,29 @@ class ProducerOptions extends Options
 
 
     /**
+     * @var string
+     */
+    const INITIAL_SUBSCRIPTION_NAME = 'initial_subscription_name';
+
+    /**
      * @param string $name
      * @return void
      */
     public function setProducerName(string $name)
     {
         $this->data[ self::NAME ] = $name;
+    }
+
+
+    /**
+     * Name of the initial subscription of the topic.
+     *
+     * @param string $name
+     * @return void
+     */
+    public function setInitialSubscriptionName(string $name)
+    {
+        $this->data[ self::INITIAL_SUBSCRIPTION_NAME ] = $name;
     }
 
 
@@ -70,7 +87,16 @@ class ProducerOptions extends Options
         if (!isset($this->data[ self::NAME ])) {
             $this->data[ self::NAME ] = base64_encode(random_bytes(6));
         }
-        
+
         return $this->data[ self::NAME ];
+    }
+
+
+    /**
+     * @return int|mixed|string
+     */
+    public function getInitialSubscriptionName()
+    {
+        return $this->data[ self::INITIAL_SUBSCRIPTION_NAME ] ?? '';
     }
 }
