@@ -8,7 +8,7 @@
 
 namespace Pulsar;
 
-use ProtobufMessage;
+use Protobuf\AbstractMessage;
 use Pulsar\Exception\RuntimeException;
 use Pulsar\Proto\BaseCommand;
 use Pulsar\Proto\CommandError;
@@ -35,7 +35,7 @@ class Response
 
 
     /**
-     * @var ProtobufMessage
+     * @var AbstractMessage
      */
     public $subCommand;
 
@@ -73,10 +73,10 @@ class Response
 
 
     /**
-     * @return ProtobufMessage
+     * @return AbstractMessage
      * @throws RuntimeException
      */
-    public function getSubCommand(): ProtobufMessage
+    public function getSubCommand(): AbstractMessage
     {
         $type = $this->baseCommand->getType();
         $method = TypeParser::parseMethodName($type, 'get');

@@ -8,7 +8,7 @@
 
 namespace Pulsar;
 
-use Pulsar\Proto\CommandSubscribe_SubType;
+use Pulsar\Proto\CommandSubscribe\SubType;
 
 
 /**
@@ -18,8 +18,8 @@ use Pulsar\Proto\CommandSubscribe_SubType;
  */
 class SubscriptionType
 {
-    const Exclusive = CommandSubscribe_SubType::Exclusive;
-    const Shared = CommandSubscribe_SubType::Shared;
-    const Failover = CommandSubscribe_SubType::Failover;
-    const Key_Shared = CommandSubscribe_SubType::Key_Shared;
+    const Exclusive = SubType::Exclusive_VALUE;
+    const Shared = SubType::Shared_VALUE;
+    const Failover = SubType::Failover_VALUE;
+    const Key_Shared = SubType::Key_Shared_VALUE;
 }

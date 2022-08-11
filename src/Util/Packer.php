@@ -10,11 +10,12 @@ namespace Pulsar\Util;
 
 use Exception;
 use Google\CRC32\CRC32;
-use ProtobufMessage;
+use Protobuf\AbstractMessage;
 use Pulsar\Compression\Factory;
 use Pulsar\Exception\RuntimeException;
 use Pulsar\Message;
 use Pulsar\Proto\BaseCommand;
+use Pulsar\Proto\BaseCommand\Type;
 use Pulsar\Proto\CommandMessage;
 use Pulsar\Proto\MessageMetadata;
 use Pulsar\Proto\SingleMessageMetadata;
@@ -28,20 +29,19 @@ class Packer
 {
 
     /**
-     * @param int $type
-     * @param ProtobufMessage $message
+     * @param Type $type
+     * @param AbstractMessage $message
      * @param bool $simpleFrame
      * @return Buffer
-     * @throws Exception
      */
-    public static function encode(int $type, ProtobufMessage $message, bool $simpleFrame = true): Buffer
+    public static function encode(Type $type, AbstractMessage $message, bool $simpleFrame = true): Buffer
     {
         $baseCommand = new BaseCommand();
         $baseCommand->setType($type);
         call_user_func([$baseCommand, TypeParser::parseMethodName($type)], $message);
 
         // [totalSize] [commandSize] [command]
-        $cmdBytes = $baseCommand->serializeToString();
+        $cmdBytes = $baseCommand->toStream()->getContents();
         $cmdSize = strlen($cmdBytes);
         $buffer = new Buffer();
         $buffer->writeUint32($cmdSize + 4);

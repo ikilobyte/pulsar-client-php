@@ -9,14 +9,14 @@
 namespace Pulsar\IO;
 
 use Exception;
-use ProtobufMessage;
+use Protobuf\AbstractMessage;
 use Pulsar\Authentication\Authentication;
 use Pulsar\Client;
 use Pulsar\Exception\ConnectException;
 use Pulsar\Exception\IOException;
 use Pulsar\Exception\RuntimeException;
 use Pulsar\Proto\BaseCommand;
-use Pulsar\Proto\BaseCommand_Type;
+use Pulsar\Proto\BaseCommand\Type;
 use Pulsar\Proto\CommandConnect;
 use Pulsar\Proto\CommandConnected;
 use Pulsar\Proto\FeatureFlags;
@@ -73,7 +73,7 @@ class StreamIO extends AbstractIO implements Reader
         }
 
         $cmd = new CommandConnect();
-        $cmd->setProtocolVersion(ProtocolVersion::v17);
+        $cmd->setProtocolVersion(ProtocolVersion::v17_VALUE);
         $cmd->setClientVersion(sprintf('ikilobyte/pulsar-client-php@v%s', Client::VERSION_ID));
 
         if ($authentication) {
@@ -91,7 +91,8 @@ class StreamIO extends AbstractIO implements Reader
             $cmd->setProxyToBrokerUrl($brokerServiceUrl);
         }
 
-        $buffer = Packer::encode(BaseCommand_Type::CONNECT, $cmd);
+        $buffer = Packer::encode(Type::CONNECT(), $cmd);
+
         $response = $this->write($buffer->bytes())->wait();
 
         /**
@@ -116,12 +117,11 @@ class StreamIO extends AbstractIO implements Reader
 
 
     /**
-     * @param int $type
-     * @param ProtobufMessage $message
+     * @param Type $type
+     * @param AbstractMessage $message
      * @return $this|StreamIO
-     * @throws Exception
      */
-    public function writeCommand(int $type, ProtobufMessage $message): AbstractIO
+    public function writeCommand(Type $type, AbstractMessage $message): AbstractIO
     {
         return $this->write(Packer::encode($type, $message)->bytes());
     }
@@ -203,25 +203,24 @@ class StreamIO extends AbstractIO implements Reader
         // This part does not need to be read subsequently in the
         $buffer->skip($commandSize);
 
-        $baseCommand = new BaseCommand();
-        $baseCommand->parseFromString($commandBytes);
+        $baseCommand = new BaseCommand($commandBytes);
         $commandType = $baseCommand->getType();
 
         // receive PING reply PONG
-        if ($commandType == BaseCommand_Type::PING) {
+        if ($commandType->value() == Type::PING_VALUE) {
             $this->pong();
             return null;
         }
 
         // receive PONG command
         // No processing required
-        if ($commandType == BaseCommand_Type::PONG) {
+        if ($commandType->value() == Type::PONG_VALUE) {
             return null;
         }
 
         // receive ACTIVE_CONSUMER_CHANGE
         // only consumer received
-        if ($commandType == BaseCommand_Type::ACTIVE_CONSUMER_CHANGE) {
+        if ($commandType->value() == Type::ACTIVE_CONSUMER_CHANGE_VALUE) {
             return null;
         }
 

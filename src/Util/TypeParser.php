@@ -8,7 +8,7 @@
 
 namespace Pulsar\Util;
 
-use Pulsar\Proto\BaseCommand_Type;
+use Pulsar\Proto\BaseCommand\Type;
 
 class TypeParser
 {
@@ -20,49 +20,14 @@ class TypeParser
 
 
     /**
-     * @return void
-     */
-    public static function initial()
-    {
-        if (empty(self::$data)) {
-            self::$data = array_flip(( new BaseCommand_Type() )->getEnumValues());
-        }
-    }
-
-
-    /**
-     * @param int $type
+     * @param Type $type
      * @param string $prefix
      * @return string
      */
-    public static function parseMethodName(int $type, string $prefix = 'set'): string
+    public static function parseMethodName(Type $type, string $prefix = 'set'): string
     {
-        self::initial();
-
-        if ($type == BaseCommand_Type::LOOKUP) {
-            return 'setLookupTopic';
-        }
-
-        if ($type == BaseCommand_Type::REDELIVER_UNACKNOWLEDGED_MESSAGES) {
-            return 'setRedeliverUnacknowledgedMessages';
-        }
-
-        // lookupTopicResponse
-        if ($type == BaseCommand_Type::LOOKUP_RESPONSE) {
-            return 'getLookupTopicResponse';
-        }
-
-
-        if ($type == BaseCommand_Type::PARTITIONED_METADATA) {
-            return 'setPartitionMetadata';
-        }
-
-        if ($type == BaseCommand_Type::PARTITIONED_METADATA_RESPONSE) {
-            return 'getPartitionMetadataResponse';
-        }
-
         $method = $prefix;
-        foreach (explode('_', self::$data[ $type ]) as $part) {
+        foreach (explode('_', $type->name()) as $part) {
             $method .= ucfirst(strtolower($part));
         }
 
