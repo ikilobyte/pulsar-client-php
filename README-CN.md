@@ -20,36 +20,14 @@
 ## 依赖
 
 * PHP 7.x (Not supported PHP8)
-* Protobuf Extension
-  > 因为Apache Pulsar使用proto2语法
-
-  > 由于Google protobuf的PHP扩展并不支持proto2语法
-
-  > 所以是安装[allegro/php-protobuf](https://github.com/allegro/php-protobuf)扩展，而不是安装 protocolbuffers/protobuf
-
-  > 很遗憾的是，由于allegro/php-protobuf扩展库不支持php8，所以它也不能支持php8
-
 * ZLib Extension（如果你想使用zlib压缩）
+* Swoole Extension（如果你想在swoole中使用）
+    * 只需要配置`SWOOLE_HOOK_SOCKETS、SWOOLE_HOOK_STREAM_FUNCTION` 或者 `SWOOLE_HOOK_ALL`
 
 ## 安装
 
 ```bash
 composer require ikilobyte/pulsar-client-php
-```
-
-> allegro/php-protobuf
-
-```bash
-cd /usr/local/src
-git clone https://github.com/allegro/php-protobuf
-cd php-protobuf
-phpize 
-./configure --with-php-config=$(which php-config) 
-make && make install
-
-# add to php.ini
-[protobuf]
-extension=protobuf.so
 ```
 
 ## 生产者
