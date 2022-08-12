@@ -224,15 +224,16 @@ class Producer extends Client
         $packet .= $payload;                                                // [payload]
 
         $msgMetadata->setUncompressedSize(strlen($packet));
+        $msgMetadataBytes = $msgMetadata->toStream()->getContents();
 
-        $msgMetadataSize = strlen($msgMetadata->toStream()->getContents());
+        $msgMetadataSize = strlen($msgMetadataBytes);
 
 
         // make checksum bytes
         $compressionPacket = $compressionProvider->encode($packet);
         $checksumBuffer = new Buffer();
         $checksumBuffer->writeUint32($msgMetadataSize);                                           // [metadataSize]
-        $checksumBuffer->write($msgMetadata->toStream()->getContents());                          // [metadata]
+        $checksumBuffer->write($msgMetadataBytes);                                                // [metadata]
         $checksumBuffer->write($compressionPacket);                                               // [payload]
 
         // [checksum] === [metadataSize] [metadata] [payload]
@@ -242,7 +243,7 @@ class Producer extends Client
         $buffer->writeUint32($msgMetadataSize);
 
         // [metadata]
-        $buffer->write($msgMetadata->toStream()->getContents());
+        $buffer->write($msgMetadataBytes);
 
         // [payload]
         $buffer->write($compressionPacket);
