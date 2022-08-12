@@ -12,14 +12,13 @@ namespace Pulsar;
 
 
 use Pulsar\IO\AbstractIO;
-use Pulsar\Proto\BaseCommand_Type;
+use Pulsar\Proto\BaseCommand\Type;
 use Pulsar\Proto\CommandAck;
-use Pulsar\Proto\CommandAck_AckType;
+use Pulsar\Proto\CommandAck\AckType;
 use Pulsar\Proto\CommandCloseConsumer;
 use Pulsar\Proto\CommandFlow;
 use Pulsar\Proto\CommandRedeliverUnacknowledgedMessages;
 use Pulsar\Proto\CommandSubscribe;
-use Pulsar\Proto\CommandSubscribe_InitialPosition;
 use Pulsar\Util\Helper;
 
 
@@ -106,14 +105,14 @@ class PartitionConsumer
         $command->setConsumerId($this->id);
         $command->setTopic($this->topic);
         $command->setRequestId(Helper::getRequestID());
-        $command->setSubType($this->options->getSubscriptionType());
+        $command->setSubType(CommandSubscribe\SubType::valueOf($this->options->getSubscriptionType()));
         $command->setConsumerName($this->name);
         $command->setSubscription($this->options->getSubscriptionName());
 
         $command->setDurable(true);
-        $command->setInitialPosition(CommandSubscribe_InitialPosition::Latest);
+        $command->setInitialPosition(CommandSubscribe\InitialPosition::Latest());
         $command->setReplicateSubscriptionState(false);
-        $this->connection->writeCommand(BaseCommand_Type::SUBSCRIBE, $command)->wait();
+        $this->connection->writeCommand(Type::SUBSCRIBE(), $command)->wait();
     }
 
 
@@ -132,7 +131,7 @@ class PartitionConsumer
             $flow = new CommandFlow();
             $flow->setConsumerId($this->id);
             $flow->setMessagePermits($supplement);
-            $this->connection->writeCommand(BaseCommand_Type::FLOW, $flow);
+            $this->connection->writeCommand(Type::FLOW(), $flow);
             $this->availablePermits += $supplement;
         }
     }
@@ -141,19 +140,17 @@ class PartitionConsumer
     /**
      * @param Message $message
      * @return void
-     * @throws Exception\IOException
-     * @throws \Exception
      */
     public function ack(Message $message)
     {
         // send CommandAck
         $command = new CommandAck();
         $command->setConsumerId($this->id);
-        $command->setAckType(CommandAck_AckType::Individual);
-        $command->appendMessageId($message->getMessageIdData());
+        $command->setAckType(AckType::Individual());
+        $command->addMessageId($message->getMessageIdData());
         $command->setTxnidLeastBits(null);
         $command->setTxnidMostBits(null);
-        $this->connection->writeCommand(BaseCommand_Type::ACK, $command);
+        $this->connection->writeCommand(Type::ACK(), $command);
     }
 
 
@@ -167,8 +164,8 @@ class PartitionConsumer
         // send CommandRedeliverUnacknowledgedMessages
         $command = new CommandRedeliverUnacknowledgedMessages();
         $command->setConsumerId($this->id);
-        $command->appendMessageIds($message->getMessageIdData());
-        $this->connection->writeCommand(BaseCommand_Type::REDELIVER_UNACKNOWLEDGED_MESSAGES, $command);
+        $command->addMessageIds($message->getMessageIdData());
+        $this->connection->writeCommand(Type::REDELIVER_UNACKNOWLEDGED_MESSAGES(), $command);
     }
 
 
@@ -182,7 +179,7 @@ class PartitionConsumer
         $command = new CommandCloseConsumer();
         $command->setConsumerId($this->id);
         $command->setRequestId(Helper::getRequestID());
-        $this->connection->writeCommand(BaseCommand_Type::CLOSE_CONSUMER, $command)->wait();
+        $this->connection->writeCommand(Type::CLOSE_CONSUMER(), $command)->wait();
     }
 
 
