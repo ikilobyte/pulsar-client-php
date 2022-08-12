@@ -17,13 +17,11 @@ use Pulsar\Exception\RuntimeException;
 use Pulsar\IO\AbstractIO;
 use Pulsar\IO\Factory;
 use Pulsar\Options;
-use Pulsar\Proto\BaseCommand_Type;
+use Pulsar\Proto\BaseCommand\Type;
 use Pulsar\Proto\CommandLookupTopic;
 use Pulsar\Proto\CommandLookupTopicResponse;
-use Pulsar\Proto\CommandLookupTopicResponse_LookupType;
 use Pulsar\Proto\CommandPartitionedTopicMetadata;
 use Pulsar\Proto\CommandPartitionedTopicMetadataResponse;
-use Pulsar\Proto\CommandPartitionedTopicMetadataResponse_LookupType;
 use Pulsar\Util\Helper;
 
 
@@ -78,7 +76,7 @@ class TcpLookupService implements LookupService
         $command->setRequestId(Helper::getRequestID());
         $command->setAuthoritative(false);
         $command->setTopic($topic);
-        $response = $this->connection->writeCommand(BaseCommand_Type::LOOKUP, $command)->wait();
+        $response = $this->connection->writeCommand(Type::LOOKUP(), $command)->wait();
 
         /**
          * @var $subCommand CommandLookupTopicResponse
@@ -86,11 +84,11 @@ class TcpLookupService implements LookupService
         $subCommand = $response->subCommand;
 
 
-        switch ($subCommand->getResponse()) {
+        switch ($subCommand->getResponse()->value()) {
 
             // Need to connect to a new broker
             // TLS is not supported at this time
-            case CommandLookupTopicResponse_LookupType::Redirect:
+            case CommandLookupTopicResponse\LookupType::Redirect_VALUE:
                 $parse = parse_url($subCommand->getBrokerServiceUrl());
                 return new Result($parse['host'], $parse['port'], $subCommand->getBrokerServiceUrl());
 
@@ -98,7 +96,7 @@ class TcpLookupService implements LookupService
             // But it also creates a new connection
             // Instead of using this current connection
             // TLS is not supported at this time
-            case CommandLookupTopicResponse_LookupType::Connect:
+            case CommandLookupTopicResponse\LookupType::Connect_VALUE:
                 return new Result($this->host, $this->port, $subCommand->getBrokerServiceUrl());
 
             //
@@ -121,13 +119,13 @@ class TcpLookupService implements LookupService
         $command->setRequestId(Helper::getRequestID());
         $command->setTopic($topic);
 
-        $results = $this->connection->writeCommand(BaseCommand_Type::PARTITIONED_METADATA, $command)->wait();
+        $results = $this->connection->writeCommand(Type::PARTITIONED_METADATA(), $command)->wait();
 
         /**
          * @var $subCommand CommandPartitionedTopicMetadataResponse
          */
         $subCommand = $results->subCommand;
-        if ($subCommand->getResponse() == CommandPartitionedTopicMetadataResponse_LookupType::Failed) {
+        if ($subCommand->getResponse()->value() == CommandPartitionedTopicMetadataResponse\LookupType::Failed_VALUE) {
             throw new RuntimeException($subCommand->getMessage());
         }
 
