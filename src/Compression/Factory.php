@@ -27,13 +27,12 @@ class Factory
     public static function create(int $type): Compression
     {
         switch ($type) {
-            case CompressionType::NONE:
+            case CompressionType::NONE_VALUE:
                 return new NoneCompression();
-            case CompressionType::ZLIB:
+            case CompressionType::ZLIB_VALUE:
                 return new ZlibCompression();
             default:
-                $enums = array_flip(( new CompressionType() )->getEnumValues());
-                throw new RuntimeException(sprintf('Not supported %s compression', $enums[ $type ] ?? $type));
+                throw new RuntimeException('only supported zlib compression');
         }
     }
 }
