@@ -14,7 +14,7 @@
 		}
 	},
 	"require": {
-		"php": "^8.0",
+		"php": ">=7.0",
 		"google/crc32": "^0.1.0",
 		"guzzlehttp/guzzle": ">=6.5",
 		"protobuf-php/protobuf": "^0.1.3"
