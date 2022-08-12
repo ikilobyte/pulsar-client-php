@@ -11,7 +11,7 @@ namespace Pulsar;
 use Google\CRC32\CRC32;
 use Pulsar\Exception\RuntimeException;
 use Pulsar\Proto\BaseCommand;
-use Pulsar\Proto\BaseCommand_Type;
+use Pulsar\Proto\BaseCommand\Type;
 use Pulsar\Proto\CommandSend;
 use Pulsar\Proto\CommandSendReceipt;
 use Pulsar\Proto\MessageMetadata;
@@ -173,7 +173,7 @@ class Producer extends Client
 
         // BaseCommand
         $baseCommand = new BaseCommand();
-        $baseCommand->setType(BaseCommand_Type::SEND);
+        $baseCommand->setType(Type::SEND());
 
         // CommandSend
         $commandSend = new CommandSend();
@@ -186,7 +186,7 @@ class Producer extends Client
         $baseCommand->setSend($commandSend);
 
         // serialize BaseCommand
-        $baseCommandBytes = $baseCommand->serializeToString();
+        $baseCommandBytes = $baseCommand->toStream()->getContents();
 
         // [commandSize]
         $buffer->writeUint32(strlen($baseCommandBytes));
@@ -215,7 +215,7 @@ class Producer extends Client
         $singleMsgMetadata->setPayloadSize(strlen($payload));
         $singleMsgMetadata->setEventTime(time() * 1000);
         $singleMsgMetadata->setPartitionKey($messageOptions->getKey());
-        $singleMsgMetadataBytes = $singleMsgMetadata->serializeToString();
+        $singleMsgMetadataBytes = $singleMsgMetadata->toStream()->getContents();
 
         // [metadataSize] [metadata] [payload]
         $packet = '';
@@ -225,15 +225,15 @@ class Producer extends Client
 
         $msgMetadata->setUncompressedSize(strlen($packet));
 
-        $msgMetadataSize = strlen($msgMetadata->serializeToString());
+        $msgMetadataSize = strlen($msgMetadata->toStream()->getContents());
 
 
         // make checksum bytes
         $compressionPacket = $compressionProvider->encode($packet);
         $checksumBuffer = new Buffer();
-        $checksumBuffer->writeUint32($msgMetadataSize);                                     // [metadataSize]
-        $checksumBuffer->write($msgMetadata->serializeToString());                          // [metadata]
-        $checksumBuffer->write($compressionPacket);                                         // [payload]
+        $checksumBuffer->writeUint32($msgMetadataSize);                                           // [metadataSize]
+        $checksumBuffer->write($msgMetadata->toStream()->getContents());                          // [metadata]
+        $checksumBuffer->write($compressionPacket);                                               // [payload]
 
         // [checksum] === [metadataSize] [metadata] [payload]
         $buffer->writeUint32($this->getChecksum($checksumBuffer));
@@ -242,7 +242,7 @@ class Producer extends Client
         $buffer->writeUint32($msgMetadataSize);
 
         // [metadata]
-        $buffer->write($msgMetadata->serializeToString());
+        $buffer->write($msgMetadata->toStream()->getContents());
 
         // [payload]
         $buffer->write($compressionPacket);

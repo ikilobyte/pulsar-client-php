@@ -9,6 +9,7 @@
 namespace Pulsar\Compression;
 
 use Pulsar\Exception\RuntimeException;
+use Pulsar\Proto\CompressionType;
 
 /**
  * Class ZlibCompression
@@ -48,12 +49,12 @@ class ZlibCompression implements Compression
         return zlib_decode($data, $originSize);
     }
 
-    
+
     /**
-     * @return int
+     * @return CompressionType
      */
-    public function getType(): int
+    public function getType(): CompressionType
     {
-        return self::ZLIB;
+        return CompressionType::ZLIB();
     }
 }

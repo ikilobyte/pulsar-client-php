@@ -9,6 +9,8 @@
 namespace Pulsar\Compression;
 
 
+use Pulsar\Proto\CompressionType;
+
 /**
  *
  */
@@ -26,9 +28,9 @@ interface Compression
 
 
     /**
-     * @return int
+     * @return CompressionType
      */
-    public function getType(): int;
+    public function getType(): CompressionType;
 
     /**
      * @param string $data

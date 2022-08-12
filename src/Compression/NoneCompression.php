@@ -8,6 +8,8 @@
 
 namespace Pulsar\Compression;
 
+use Pulsar\Proto\CompressionType;
+
 /**
  * Class None
  *
@@ -32,10 +34,10 @@ class NoneCompression implements Compression
     }
 
     /**
-     * @return int
+     * @return CompressionType
      */
-    public function getType(): int
+    public function getType(): CompressionType
     {
-        return self::NONE;
+        return CompressionType::NONE();
     }
 }

@@ -13,7 +13,7 @@ namespace Pulsar;
 
 use Pulsar\Exception\RuntimeException;
 use Pulsar\IO\AbstractIO;
-use Pulsar\Proto\BaseCommand_Type;
+use Pulsar\Proto\BaseCommand\Type;
 use Pulsar\Proto\CommandCloseProducer;
 use Pulsar\Proto\CommandProducer;
 use Pulsar\Proto\ProducerAccessMode;
@@ -102,14 +102,14 @@ class PartitionProducer
         $commandProducer->setUserProvidedProducerName(true);
         $commandProducer->setEncrypted(false);
         $commandProducer->setTxnEnabled(false);
-        $commandProducer->setProducerAccessMode(ProducerAccessMode::Shared);
+        $commandProducer->setProducerAccessMode(ProducerAccessMode::Shared());
 
         // Name of the initial subscription of the topic.
         if ($name = $this->options->getInitialSubscriptionName()) {
             $commandProducer->setInitialSubscriptionName($name);
         }
 
-        $this->connection->writeCommand(BaseCommand_Type::PRODUCER, $commandProducer)->wait();
+        $this->connection->writeCommand(Type::PRODUCER(), $commandProducer)->wait();
     }
 
 
@@ -123,7 +123,7 @@ class PartitionProducer
         $command = new CommandCloseProducer();
         $command->setProducerId($this->id);
         $command->setRequestId(Helper::getRequestID());
-        $this->connection->writeCommand(BaseCommand_Type::CLOSE_PRODUCER, $command)->wait();
+        $this->connection->writeCommand(Type::CLOSE_PRODUCER(), $command)->wait();
     }
 
 
