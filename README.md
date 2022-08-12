@@ -20,38 +20,15 @@ Reference [PulsarApi.proto](src/PulsarApi.proto) And support Swoole coroutine
 
 ## Requirements
 
-* PHP 7.x (Not supported PHP8)
-* Protobuf Extension
-  > Because Apache Pulsar uses the proto2 syntax
-
-  > Since the Google protobuf for PHP extension does not support the proto2 syntax
-
-  > So install the [allegro/php-protobuf](https://github.com/allegro/php-protobuf) extension instead rather than
-  protocolbuffers/protobuf
-
-  > Unfortunately, since the allegro/php-protobuf extension library does not support php8, it cannot support php8 either
-
+* PHP >=7.0 (Supported PHP8)
 * ZLib Extension（If you want to use zlib compression）
+* Swoole Extension(If you want to use in swoole)
+    * Use in the swoole only requires that the `SWOOLE_HOOK_SOCKETS、SWOOLE_HOOK_STREAM_FUNCTION` or `SWOOLE_HOOK_ALL`
 
 ## Installation
 
 ```bash
 composer require ikilobyte/pulsar-client-php
-```
-
-> allegro/php-protobuf
-
-```bash
-cd /usr/local/src
-git clone https://github.com/allegro/php-protobuf
-cd php-protobuf
-phpize 
-./configure --with-php-config=$(which php-config) 
-make && make install
-
-# add to php.ini
-[protobuf]
-extension=protobuf.so
 ```
 
 ## Producer
