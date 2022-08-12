@@ -81,8 +81,7 @@ class Packer
         $checksumBytes .= $metadataBytes;
 
         // unSerialize
-        $metadata = new MessageMetadata();
-        $metadata->parseFromString($metadataBytes);
+        $metadata = new MessageMetadata($metadataBytes);
 
         // [payloads]
         $payloadBytes = $buffer->read($buffer->readableLength());
@@ -93,7 +92,7 @@ class Packer
             throw new RuntimeException('checksum verify failed');
         }
 
-        $compressionProvider = Factory::create($metadata->getCompression());
+        $compressionProvider = Factory::create($metadata->getCompression()->value());
         $decodePayload = $compressionProvider->decode($payloadBytes, $metadata->getUncompressedSize());
         $buffer = new Buffer($decodePayload);
 
@@ -167,11 +166,10 @@ class Packer
 
         // [metadataSize]
         $size = $buffer->readUint32();
-        $singleMetadata = new SingleMessageMetadata();
 
         // [metadata]
         $singleMetadataBuffer = $buffer->read($size);
-        $singleMetadata->parseFromString($singleMetadataBuffer);
+        $singleMetadata = new SingleMessageMetadata($singleMetadataBuffer);
 
         // [payload]
         return $buffer->read($singleMetadata->getPayloadSize());
