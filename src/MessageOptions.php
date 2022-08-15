@@ -48,6 +48,12 @@ class MessageOptions
     /**
      * @var array
      */
+    const PROPERTIES = 'properties';
+
+
+    /**
+     * @var array
+     */
     protected $data = [];
 
 
@@ -89,5 +95,14 @@ class MessageOptions
     public function getSequenceID(): int
     {
         return (int)( $this->data[ self::SEQUENCE_ID ] ?? Helper::getSequenceId() );
+    }
+
+
+    /**
+     * @return array|mixed
+     */
+    public function getProperties()
+    {
+        return $this->data[ self::PROPERTIES ] ?? [];
     }
 }

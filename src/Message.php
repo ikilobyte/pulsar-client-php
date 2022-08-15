@@ -8,6 +8,8 @@
 
 namespace Pulsar;
 
+use Protobuf\MessageCollection;
+use Pulsar\Proto\KeyValue;
 use Pulsar\Proto\MessageIdData;
 use Pulsar\Util\Helper;
 use Pulsar\Util\Tracking;
@@ -60,6 +62,12 @@ class Message
 
 
     /**
+     * @var MessageCollection|null
+     */
+    protected $properties = null;
+
+
+    /**
      * @param MessageIdData $id
      * @param int $consumerID
      * @param string $publishTime
@@ -67,14 +75,16 @@ class Message
      * @param string $payload
      * @param int $batchNums
      * @param int $batchIdx
+     * @param MessageCollection|null $properties
      */
-    public function __construct(MessageIdData $id,
-                                int           $consumerID,
-                                string        $publishTime,
-                                string        $topic,
-                                string        $payload,
-                                int           $batchNums = 1,
-                                int           $batchIdx = 0
+    public function __construct(MessageIdData     $id,
+                                int               $consumerID,
+                                string            $publishTime,
+                                string            $topic,
+                                string            $payload,
+                                int               $batchNums = 1,
+                                int               $batchIdx = 0,
+                                MessageCollection $properties = null
     )
     {
         $this->id = $id;
@@ -84,6 +94,7 @@ class Message
         $this->payload = $payload;
         $this->batchNums = $batchNums;
         $this->batchIdx = $batchIdx;
+        $this->properties = $properties;
     }
 
     /**
@@ -134,6 +145,28 @@ class Message
     public function getTopic(): string
     {
         return $this->topic;
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getProperties(): array
+    {
+        if (is_null($this->properties)) {
+            return [];
+        }
+
+        $results = [];
+        foreach ($this->properties as $kv) {
+
+            /**
+             * @var $kv KeyValue
+             */
+            $results[ $kv->getKey() ] = $kv->getValue();
+        }
+
+        return $results;
     }
 
     /**

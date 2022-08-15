@@ -9,11 +9,13 @@
 namespace Pulsar;
 
 use Google\CRC32\CRC32;
+use Protobuf\AbstractMessage;
 use Pulsar\Exception\RuntimeException;
 use Pulsar\Proto\BaseCommand;
 use Pulsar\Proto\BaseCommand\Type;
 use Pulsar\Proto\CommandSend;
 use Pulsar\Proto\CommandSendReceipt;
+use Pulsar\Proto\KeyValue;
 use Pulsar\Proto\MessageMetadata;
 use Pulsar\Proto\SingleMessageMetadata;
 use Pulsar\Util\Buffer;
@@ -215,6 +217,7 @@ class Producer extends Client
         $singleMsgMetadata->setPayloadSize(strlen($payload));
         $singleMsgMetadata->setEventTime(time() * 1000);
         $singleMsgMetadata->setPartitionKey($messageOptions->getKey());
+        $this->appendProperties($singleMsgMetadata, $messageOptions);
         $singleMsgMetadataBytes = $singleMsgMetadata->toStream()->getContents();
 
         // [metadataSize] [metadata] [payload]
@@ -289,5 +292,28 @@ class Producer extends Client
         $crc = CRC32::create(CRC32::CASTAGNOLI);
         $crc->update($buffer->bytes());
         return hexdec($crc->hash());
+    }
+
+
+    /**
+     * @param AbstractMessage $message
+     * @param MessageOptions $options
+     * @return void
+     */
+    protected function appendProperties(AbstractMessage &$message, MessageOptions $options)
+    {
+        foreach ($options->getProperties() as $key => $val) {
+            $kv = new KeyValue();
+            $kv->setKey($key);
+            if (is_array($val)) {
+                $val = json_encode($val, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            }
+            $kv->setValue($val);
+
+            /**
+             * @var $message MessageMetadata|SingleMessageMetadata
+             */
+            $message->addProperties($kv);
+        }
     }
 }
