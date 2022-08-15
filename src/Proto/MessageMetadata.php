@@ -226,7 +226,7 @@ class MessageMetadata extends \Protobuf\AbstractMessage
     {
         $this->compression = \Pulsar\Proto\CompressionType::NONE();
         $this->uncompressed_size = '0';
-        $this->num_messages_in_batch = '1';
+        $this->num_messages_in_batch = null;
         $this->event_time = '0';
         $this->partition_key_b64_encoded = false;
         $this->highest_sequence_id = '0';
