@@ -19,7 +19,7 @@
 
 ## 依赖
 
-* PHP 7.x (Not supported PHP8)
+* PHP >=7.0 (Supported PHP8)
 * ZLib Extension（如果你想使用zlib压缩）
 * Swoole Extension（如果你想在swoole中使用）
     * 只需要配置`SWOOLE_HOOK_SOCKETS、SWOOLE_HOOK_STREAM_FUNCTION` 或者 `SWOOLE_HOOK_ALL`
