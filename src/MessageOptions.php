@@ -11,6 +11,7 @@ declare( strict_types = 1 );
 namespace Pulsar;
 
 
+use Pulsar\Exception\OptionsException;
 use Pulsar\Util\Helper;
 
 /**
@@ -99,10 +100,16 @@ class MessageOptions
 
 
     /**
-     * @return array|mixed
+     * @return array
+     * @throws OptionsException
      */
-    public function getProperties()
+    public function getProperties(): array
     {
-        return $this->data[ self::PROPERTIES ] ?? [];
+        $properties = $this->data[ self::PROPERTIES ] ?? [];
+        if (!is_array($properties)) {
+            throw new OptionsException('properties need array values');
+        }
+
+        return $properties;
     }
 }
