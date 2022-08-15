@@ -22,6 +22,7 @@ Reference [PulsarApi.proto](src/PulsarApi.proto) And support Swoole coroutine
 
 * PHP >=7.0 (Supported PHP8)
 * ZLib Extension（If you want to use zlib compression）
+* Zstd Extension（If you want to use zstd compression）
 * Swoole Extension(If you want to use in swoole)
     * Use in the swoole only requires that the `SWOOLE_HOOK_SOCKETS、SWOOLE_HOOK_STREAM_FUNCTION` or `SWOOLE_HOOK_ALL`
 
@@ -60,7 +61,12 @@ $producer = new Producer('pulsar://localhost:6650', $options);
 $producer->connect();
 
 for ($i = 0; $i < 10; $i++) {
-    $messageID = $producer->send(sprintf('hello %d',$i));
+    $messageID = $producer->send(sprintf('hello %d',$i),[
+        MessageOptions::PROPERTIES => [
+          'key' => 'value',
+          'ms'  => microtime(true),
+        ]
+    ]);
     echo 'messageID ' . $messageID . "\n";
 }
 
@@ -202,6 +208,7 @@ $options->setDeadLetterPolicy(6,'persistent://public/default/demo-dead','sub-nam
 * MessageOptions
     * DELAY_SECONDS
     * SEQUENCE_ID
+    * PROPERTIES
 
 ## License
 
