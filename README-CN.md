@@ -15,12 +15,14 @@
 
 [English](README.md) | 中文
 
-这是一个用php实现的[Apache Pulsar](https://pulsar.apache.org)客户端库，基于[PulsarApi.proto](src/PulsarApi.proto)，且支持Swoole协程环境
+这是一个用php实现的[Apache Pulsar](https://pulsar.apache.org)客户端库，基于[PulsarApi.proto](src/PulsarApi.proto)
+，且支持Swoole协程环境
 
 ## 依赖
 
 * PHP >=7.0 (Supported PHP8)
-* ZLib Extension（如果你想使用zlib压缩）
+* ZLib Extension（如果你想使用`zlib`压缩）
+* Zstd Extension（如果你想使用`zstd`压缩）
 * Swoole Extension（如果你想在swoole中使用）
     * 只需要配置`SWOOLE_HOOK_SOCKETS、SWOOLE_HOOK_STREAM_FUNCTION` 或者 `SWOOLE_HOOK_ALL`
 
@@ -59,6 +61,13 @@ $producer->connect();
 
 for ($i = 0; $i < 10; $i++) {
     $messageID = $producer->send(sprintf('hello %d',$i));
+    
+    $messageID = $producer->send(sprintf('hello %d',$i),[
+        MessageOptions::PROPERTIES => [
+           'key' => 'value',
+           'ms'  => microtime(true),
+        ]
+    ]);
     echo 'messageID ' . $messageID . "\n";
 }
 
@@ -133,7 +142,11 @@ $consumer->connect();
 
 while (true) {
     $message = $consumer->receive();
-    echo sprintf('Got message 【%s】messageID[%s]  topic[%s] publishTime[%s]',
+    
+    // get properties
+    var_export($message->getProperties());
+    
+    echo sprintf('Got message 【%s】messageID[%s] topic[%s] publishTime[%s]',
         $message->getPayload(),
         $message->getMessageId(),
         $message->getTopic(),
@@ -198,6 +211,7 @@ $options->setDeadLetterPolicy(6,'persistent://public/default/demo-dead','sub-nam
 * MessageOptions
     * DELAY_SECONDS
     * SEQUENCE_ID
+    * PROPERTIES
 
 ## License
 
