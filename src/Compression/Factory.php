@@ -29,10 +29,14 @@ class Factory
         switch ($type) {
             case CompressionType::NONE_VALUE:
                 return new NoneCompression();
+
             case CompressionType::ZLIB_VALUE:
                 return new ZlibCompression();
+
+            case CompressionType::ZSTD_VALUE:
+                return new ZstdCompression();
             default:
-                throw new RuntimeException('only supported zlib compression');
+                throw new RuntimeException('only supported zlib/zstd compression');
         }
     }
 }

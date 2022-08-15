@@ -26,6 +26,12 @@ interface Compression
      */
     const ZLIB = 2;
 
+    /**
+     * ZSTD Compress
+     *
+     * @see https://github.com/kjdev/php-ext-zstd
+     */
+    const ZSTD = 3;
 
     /**
      * @return CompressionType
