@@ -10,14 +10,11 @@ declare( strict_types = 1 );
 
 namespace Pulsar\Lookup;
 
-
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\RequestOptions;
 use Pulsar\Authentication\Authentication;
 use Pulsar\Exception\OptionsException;
 use Pulsar\Exception\RuntimeException;
 use Pulsar\Options;
+
 
 /**
  * Class HttpLookupService
@@ -43,12 +40,6 @@ class HttpLookupService implements LookupService
 
 
     /**
-     * @var Client
-     */
-    protected $client;
-
-
-    /**
      * @param Options $options
      * @throws OptionsException
      */
@@ -56,14 +47,12 @@ class HttpLookupService implements LookupService
     {
         $this->address = trim($options->getUrl()['url'], '/');
         $this->options = $options;
-        $this->client = new Client();
     }
 
 
     /**
      * @param string $topic
      * @return Result
-     * @throws GuzzleException
      * @throws RuntimeException
      */
     public function lookup(string $topic): Result
@@ -88,7 +77,6 @@ class HttpLookupService implements LookupService
     /**
      * @param string $topic
      * @return int
-     * @throws GuzzleException
      * @throws RuntimeException
      */
     public function getPartitionedTopicMetadata(string $topic): int
@@ -127,15 +115,19 @@ class HttpLookupService implements LookupService
     }
 
 
-
-
     /**
      * @param string $url
      * @return array
-     * @throws GuzzleException
      */
     protected function request(string $url): array
     {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 
         $headers = [];
 
@@ -143,14 +135,12 @@ class HttpLookupService implements LookupService
          * @var $auth Authentication
          */
         if ($auth = $this->options->offsetGet(Options::Authentication)) {
-            $headers['Authorization'] = 'Bearer ' . $auth->authData();
+            $headers[] = 'Authorization: Bearer ' . $auth->authData();
         }
-
-        $response = $this->client->request('GET', $url, [
-            RequestOptions::HEADERS => $headers,
-        ]);
-
-        return (array)json_decode($response->getBody()->getContents(), true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        $result = json_decode(curl_exec($ch), true);
+        curl_close($ch);
+        return $result;
     }
 
 
