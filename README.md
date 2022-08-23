@@ -119,6 +119,7 @@ use Pulsar\Authentication\Jwt;
 use Pulsar\Consumer;
 use Pulsar\ConsumerOptions;
 use Pulsar\SubscriptionType;
+use Pulsar\Proto\CommandSubscribe\InitialPosition;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
@@ -132,6 +133,11 @@ $options->setConnectTimeout(3);
 $options->setTopic('persistent://public/default/demo');
 $options->setSubscription('logic');
 $options->setSubscriptionType(SubscriptionType::Shared);
+
+// Initial position at which to set cursor when subscribing to a topic at first time.	
+// default use InitialPosition::Latest()
+// $options->setSubscriptionInitialPosition(InitialPosition::Earliest());
+
 
 // Configure how many seconds Nack's messages are redelivered, the default is 1 minute
 $options->setNackRedeliveryDelay(20);
@@ -211,6 +217,7 @@ $options->setDeadLetterPolicy(6,'persistent://public/default/demo-dead','sub-nam
     * setNackRedeliveryDelay()
     * setReceiveQueueSize()
     * setDeadLetterPolicy()
+    * setSubscriptionInitialPosition()
 * MessageOptions
     * DELAY_SECONDS
     * SEQUENCE_ID
