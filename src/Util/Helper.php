@@ -8,6 +8,7 @@
 
 namespace Pulsar\Util;
 
+use Pulsar\Exception\RuntimeException;
 use Pulsar\Proto\MessageIdData;
 
 /**
@@ -76,6 +77,26 @@ class Helper
     public static function serializeID(MessageIdData $idData): string
     {
         return sprintf('%s:%s:%s', $idData->getLedgerId(), $idData->getEntryId(), max($idData->getPartition(), 0));
+    }
+
+
+    /**
+     * @param string $id
+     * @return MessageIdData
+     * @throws RuntimeException
+     */
+    public static function unserializeID(string $id): MessageIdData
+    {
+        if (substr_count($id, ':') != 2) {
+            throw new RuntimeException('Wrong message ID format');
+        }
+        
+        list($ledgerID, $entryID, $partition) = explode(':', $id);
+        $id = new MessageIdData();
+        $id->setLedgerId($ledgerID);
+        $id->setEntryId($entryID);
+        $id->setPartition($partition);
+        return $id;
     }
 
 
