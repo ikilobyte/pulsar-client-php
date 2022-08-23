@@ -110,7 +110,7 @@ class PartitionConsumer
         $command->setSubscription($this->options->getSubscriptionName());
 
         $command->setDurable(true);
-        $command->setInitialPosition(CommandSubscribe\InitialPosition::Latest());
+        $command->setInitialPosition($this->options->getSubscriptionInitialPosition());
         $command->setReplicateSubscriptionState(false);
         $this->connection->writeCommand(Type::SUBSCRIBE(), $command)->wait();
     }

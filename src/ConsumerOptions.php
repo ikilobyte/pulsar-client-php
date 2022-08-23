@@ -9,6 +9,7 @@
 namespace Pulsar;
 
 use Pulsar\Exception\OptionsException;
+use Pulsar\Proto\CommandSubscribe\InitialPosition;
 
 /**
  * Class ConsumerOptions
@@ -57,6 +58,13 @@ class ConsumerOptions extends Options
      */
     const DEAD_LETTER_POLICY = 'dead_letter_policy';
 
+
+    /**
+     * @var string
+     */
+    const INITIAL_POSITION = 'initial_position';
+
+
     /**
      * @param array $topics
      * @return void
@@ -92,6 +100,25 @@ class ConsumerOptions extends Options
     public function setSubscriptionType(int $subType)
     {
         $this->data[ self::SUBSCRIPTION_TYPE ] = $subType;
+    }
+
+
+    /**
+     * @param InitialPosition $position
+     * @return void
+     */
+    public function setSubscriptionInitialPosition(InitialPosition $position)
+    {
+        $this->data[ self::INITIAL_POSITION ] = $position;
+    }
+
+    
+    /**
+     * @return InitialPosition
+     */
+    public function getSubscriptionInitialPosition(): InitialPosition
+    {
+        return $this->data[ self::INITIAL_POSITION ] ?? InitialPosition::Latest();
     }
 
 
