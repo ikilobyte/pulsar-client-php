@@ -48,7 +48,7 @@ class PartitionConsumer
 
 
     /**
-     * @var ConsumerOptions
+     * @var ConsumerOptions|ReaderOptions
      */
     protected $options;
 
@@ -76,15 +76,18 @@ class PartitionConsumer
      * @param int $id
      * @param string $topic
      * @param AbstractIO $connection
-     * @param ConsumerOptions $options
+     * @param Options $options
      * @throws Exception\IOException
      * @throws Exception\OptionsException
-     * @throws \Exception
      */
-    public function __construct(int $id, string $topic, AbstractIO $connection, ConsumerOptions $options)
+    public function __construct(int $id, string $topic, AbstractIO $connection, Options $options)
     {
         $this->id = $id;
         $this->connection = $connection;
+
+        /**
+         * @var $options ConsumerOptions|ReaderOptions
+         */
         $this->options = $options;
         $this->topic = $topic;
         $this->name = sprintf('%s-%d', $this->options->getConsumerName(), $id);
@@ -112,6 +115,13 @@ class PartitionConsumer
         $command->setDurable(true);
         $command->setInitialPosition($this->options->getSubscriptionInitialPosition());
         $command->setReplicateSubscriptionState(false);
+
+        // only reader interface
+        if ($this->options instanceof ReaderOptions) {
+            $command->setDurable(false);
+            $command->setStartMessageId($this->options->getStartMessageID());
+        }
+
         $this->connection->writeCommand(Type::SUBSCRIBE(), $command)->wait();
     }
 
