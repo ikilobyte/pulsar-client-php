@@ -9,6 +9,7 @@
 namespace Pulsar;
 
 use Protobuf\MessageCollection;
+use Pulsar\Exception\RuntimeException;
 use Pulsar\Proto\KeyValue;
 use Pulsar\Proto\MessageIdData;
 use Pulsar\Util\Helper;
@@ -175,5 +176,46 @@ class Message
     public function canAck(): bool
     {
         return Tracking::tryAck($this->id, $this->batchIdx);
+    }
+
+
+    /**
+     * 生成最新的消息ID给reader使用
+     *
+     * @return MessageIdData
+     */
+    public static function latestMessageIdData(): MessageIdData
+    {
+        $id = new MessageIdData();
+        $id->setLedgerId(PHP_INT_MAX);
+        $id->setEntryId(PHP_INT_MAX);
+        return $id;
+    }
+
+
+    /**
+     * 生成最早的消息ID给reader使用
+     *
+     * @return MessageIdData
+     */
+    public static function earliestMessageIdData(): MessageIdData
+    {
+        $id = new MessageIdData();
+        $id->setLedgerId(-1);
+        $id->setEntryId(-1);
+        return $id;
+    }
+
+
+    /**
+     * 将消息ID转成MessageID对象
+     *
+     * @param string $messageID
+     * @return MessageIdData
+     * @throws RuntimeException
+     */
+    public static function deserialize(string $messageID): MessageIdData
+    {
+        return Helper::unserializeID($messageID);
     }
 }
