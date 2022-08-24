@@ -145,7 +145,7 @@ $options->setNackRedeliveryDelay(20);
 
 $consumer = new Consumer('pulsar://localhost:6650', $options);
 // or use pulsar proxy address
-//$producer = new Consumer('http://localhost:8080', $options);
+//$consumer = new Consumer('http://localhost:8080', $options);
 
 $consumer->connect();
 
