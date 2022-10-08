@@ -118,6 +118,7 @@ class HttpLookupService implements LookupService
     /**
      * @param string $url
      * @return array
+     * @throws RuntimeException
      */
     protected function request(string $url): array
     {
@@ -138,8 +139,12 @@ class HttpLookupService implements LookupService
             $headers[] = 'Authorization: Bearer ' . $auth->authData();
         }
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        $result = json_decode(curl_exec($ch), true);
+        $response = curl_exec($ch);
+        $result = json_decode($response, true);
         curl_close($ch);
+        if (!is_array($result)) {
+            throw new RuntimeException('Pulsar Connect Failed');
+        }
         return $result;
     }
 
