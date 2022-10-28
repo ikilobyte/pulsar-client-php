@@ -64,6 +64,10 @@ class ConsumerOptions extends Options
      */
     const INITIAL_POSITION = 'initial_position';
 
+    /**
+     * @var boolean is enable reconnect
+     */
+    const ENABLE_RECONNECT = 'reconnect';
 
     /**
      * @param array $topics
@@ -112,7 +116,7 @@ class ConsumerOptions extends Options
         $this->data[ self::INITIAL_POSITION ] = $position;
     }
 
-    
+
     /**
      * @return InitialPosition
      */
@@ -165,6 +169,35 @@ class ConsumerOptions extends Options
             'subscription' => $initialSubscriptionName,
         ];
         $this->data[ self::DEAD_LETTER_POLICY ] = new DeadLetterPolicy($config, $this);
+    }
+
+
+    /**
+     * @param bool $status true
+     * @param int $interval Reconnection interval (sleep)
+     * @param int $limit <= 0（No limit）
+     * @return void
+     */
+    public function setReconnectPolicy(bool $status, int $interval = 5, int $limit = -1)
+    {
+        $this->data[ self::ENABLE_RECONNECT ] = [
+            'status'   => $status,      // Whether to open
+            'interval' => $interval,    // sleep
+            'limit'    => $limit,       // limit
+        ];
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getReconnectPolicy(): array
+    {
+        return $this->data[ self::ENABLE_RECONNECT ] ?? [
+            'status'   => true,
+            'interval' => 5,
+            'limit'    => -1,
+        ];
     }
 
 

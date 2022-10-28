@@ -24,6 +24,12 @@ use Pulsar\Lookup\TcpLookupService;
  */
 abstract class Client
 {
+
+    /**
+     * @var string
+     */
+    protected $url;
+
     /**
      * @var string
      */
@@ -43,7 +49,7 @@ abstract class Client
     /**
      * Class library version
      */
-    const VERSION_ID = '1.1.2';
+    const VERSION_ID = '1.1.5';
 
     /**
      * @var Options
@@ -82,6 +88,12 @@ abstract class Client
 
 
     /**
+     * @var int reconnect count
+     */
+    protected $reconnect = 0;
+
+
+    /**
      * @param string $url
      * @param Options $options
      * @throws Exception\OptionsException
@@ -89,17 +101,28 @@ abstract class Client
     public function __construct(string $url, Options $options)
     {
         $options->setUrl($url);
+        $this->url = $url;
         $this->options = $options;
 
         $parse = $this->options->getUrl();
         $this->serviceHost = $parse['host'];
         $this->servicePort = $parse['port'];
         $this->serviceScheme = $parse['scheme'];
+        $this->getPartitionTopicMetadata();
+    }
+
+
+    /**
+     * @return void
+     * @throws Exception\OptionsException
+     */
+    protected function getPartitionTopicMetadata()
+    {
         $this->eventloop = new Select();
         $this->lookupService = $this->makeLookupService();
         $this->topicManage = new TopicManage();
 
-
+        // lookup
         foreach ($this->options->getTopics() as $topic) {
             $partition = $this->lookupService->getPartitionedTopicMetadata(
                 $this->options->validateTopic($topic)

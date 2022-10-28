@@ -44,7 +44,7 @@ class StreamIO extends AbstractIO implements Reader
      */
     public function connect(string $host, int $port, $timeout = null)
     {
-        $this->socket = stream_socket_client(
+        $this->socket = @stream_socket_client(
             sprintf('tcp://%s:%d', $host, $port),
             $code,
             $message,
