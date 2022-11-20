@@ -108,7 +108,7 @@ abstract class Client
         $this->serviceHost = $parse['host'];
         $this->servicePort = $parse['port'];
         $this->serviceScheme = $parse['scheme'];
-        $this->getPartitionTopicMetadata();
+        $this->fetchPartitionTopicMetadata();
     }
 
 
@@ -116,7 +116,7 @@ abstract class Client
      * @return void
      * @throws Exception\OptionsException
      */
-    protected function getPartitionTopicMetadata()
+    protected function fetchPartitionTopicMetadata()
     {
         $this->eventloop = new Select();
         $this->lookupService = $this->makeLookupService();

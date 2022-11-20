@@ -112,7 +112,7 @@ class Consumer extends Client
             $this->consumers = [];
 
             // connect
-            $this->getPartitionTopicMetadata();
+            $this->fetchPartitionTopicMetadata();
             $this->connect();
         } catch (Throwable $e) {
 
