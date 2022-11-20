@@ -121,6 +121,7 @@ class Packer
                 $payload,
                 $batchNums,
                 $batchIdx,
+                $commandMessage->getRedeliveryCount(),
                 $properties
             );
             $trackingValue += $batchIdx;
