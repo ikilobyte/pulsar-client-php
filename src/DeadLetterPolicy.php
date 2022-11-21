@@ -109,10 +109,15 @@ class DeadLetterPolicy
     protected function storage(Message $message)
     {
         $topic = $this->config['topic'];
-        
+
         // Recommend use default format
         if (empty($topic)) {
-            $topic = sprintf('%s-%s-DLQ', $message->getTopic(), $this->options->getSubscriptionName());
+            $topic = sprintf(
+                '%s-%s-DLQ',
+                // replace partition topic flag
+                preg_replace('/-partition-\d+/', '', $message->getTopic()),
+                $this->options->getSubscriptionName()
+            );
         }
 
         $options = new ProducerOptions();
