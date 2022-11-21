@@ -152,11 +152,12 @@ while (true) {
     // get properties
     var_export($message->getProperties());
     
-    echo sprintf('Got message 【%s】messageID[%s] topic[%s] publishTime[%s]',
+    echo sprintf('Got message 【%s】messageID[%s] topic[%s] publishTime[%s] redeliveryCount[%d]',
         $message->getPayload(),
         $message->getMessageId(),
         $message->getTopic(),
         $message->getPublishTime(),
+        $message->getRedeliveryCount()
     ) . "\n";
     
     // ... 
@@ -194,6 +195,19 @@ $options->setDeadLetterPolicy(6,'persistent://public/default/demo-dead');
 
 // Custom subscription name
 $options->setDeadLetterPolicy(6,'persistent://public/default/demo-dead','sub-name');
+```
+
+> 自动重连（仅支持消费者）
+
+```php
+// start reconnect
+$options->setReconnectPolicy(true);
+
+// Reconnect interval(seconds)
+$options->setReconnectPolicy(true,3);
+
+// Maximum number of reconnections
+$options->setReconnectPolicy(true,3,100);
 ```
 
 ## Reader
@@ -260,7 +274,9 @@ $reader->close();
     * setSubscriptionType()
     * setNackRedeliveryDelay()
     * setReceiveQueueSize()
+    * setDeadLetterPolicy()
     * setSubscriptionInitialPosition()
+    * setReconnectPolicy()
 * ReaderOptions
     * setTopic()
     * setAuthentication()
