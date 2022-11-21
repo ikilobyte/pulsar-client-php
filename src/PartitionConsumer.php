@@ -11,6 +11,7 @@ declare( strict_types = 1 );
 namespace Pulsar;
 
 
+use Pulsar\Exception\IOException;
 use Pulsar\IO\AbstractIO;
 use Pulsar\Proto\BaseCommand\Type;
 use Pulsar\Proto\CommandAck;
@@ -150,6 +151,7 @@ class PartitionConsumer
     /**
      * @param Message $message
      * @return void
+     * @throws IOException
      */
     public function ack(Message $message)
     {

@@ -9,12 +9,14 @@
 namespace Pulsar;
 
 
+use Pulsar\Exception\IOException;
 use Pulsar\Exception\OptionsException;
 use Pulsar\Exception\RuntimeException;
 use Pulsar\Proto\CommandMessage;
 use Pulsar\Util\Packer;
 use SplPriorityQueue;
 use SplQueue;
+use Throwable;
 
 /**
  * Class Consumer
@@ -57,9 +59,6 @@ class Consumer extends Client
     public function __construct(string $url, ConsumerOptions $options)
     {
         parent::__construct($url, $options);
-        $this->messageQueue = new SplQueue();
-        $this->nackMessageQueue = new SplPriorityQueue();
-        $this->nackMessageQueue->setExtractFlags(SplPriorityQueue::EXTR_BOTH);
     }
 
 
@@ -70,6 +69,11 @@ class Consumer extends Client
      */
     public function connect()
     {
+        //
+        $this->messageQueue = new SplQueue();
+        $this->nackMessageQueue = new SplPriorityQueue();
+        $this->nackMessageQueue->setExtractFlags(SplPriorityQueue::EXTR_BOTH);
+
         parent::initialization();
 
         // Send Subscribe Command
@@ -83,6 +87,50 @@ class Consumer extends Client
         }
     }
 
+
+    /**
+     * @param array $policy
+     * @return bool
+     * @throws IOException
+     */
+    protected function reconnect(array $policy): bool
+    {
+        /**
+         * @var $policy array{status: bool,interval: int,limit: int}
+         */
+
+        $this->reconnect += 1;
+        echo sprintf("consumer reconnect[%d] %s %s\n",
+            $this->reconnect,
+            $this->url,
+            date('Y-m-d H:i:s')
+        );
+
+        try {
+            // clear status
+            $this->connections = [];
+            $this->consumers = [];
+
+            // connect
+            $this->fetchPartitionTopicMetadata();
+            $this->connect();
+        } catch (Throwable $e) {
+
+            if ($policy['limit'] >= 1 && $this->reconnect >= $policy['limit']) {
+                throw new IOException('Reconnection Fail');
+            }
+
+            // Preventing memory overflows
+            $interval = $policy['interval'] > 0 ? $policy['interval'] : 5;
+            sleep($interval);
+
+            return $this->reconnect($policy);
+        }
+
+        echo sprintf("reconnect %s success %s\n", $this->url, date('Y-m-d H:i:s'));
+        $this->reconnect = 0;
+        return true;
+    }
 
     /**
      * @return void
@@ -116,7 +164,22 @@ class Consumer extends Client
             return $this->messageQueue->dequeue();
         }
 
-        $response = $this->eventloop->wait($this->getWaitSeconds());
+        try {
+            $response = $this->eventloop->wait($this->getWaitSeconds());
+        } catch (IOException $e) {
+            $response = null;
+
+            $policy = $this->options->getReconnectPolicy();
+            // not enable reconnect
+            if (!$policy['status']) {
+                throw $e;
+            }
+
+            if ($this->reconnect($policy)) {
+                return $this->receive();
+            }
+        }
+
 
         // nack
         $this->executeInternalNack();

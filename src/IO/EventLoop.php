@@ -11,12 +11,18 @@ declare( strict_types = 1 );
 namespace Pulsar\IO;
 
 
+use Pulsar\Exception\IOException;
+use Pulsar\Exception\RuntimeException;
+use Pulsar\Response;
+
 interface EventLoop
 {
 
     /**
      * @param $seconds
-     * @return mixed
+     * @return Response|null
+     * @throws IOException
+     * @throws RuntimeException
      */
     public function wait($seconds = null);
 

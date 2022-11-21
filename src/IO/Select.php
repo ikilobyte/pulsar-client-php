@@ -36,7 +36,7 @@ class Select implements EventLoop
 
     /**
      * @param $seconds
-     * @return mixed|Response|null
+     * @return Response|null
      * @throws IOException
      * @throws RuntimeException
      */

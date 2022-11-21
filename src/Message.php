@@ -69,6 +69,11 @@ class Message
 
 
     /**
+     * @var int
+     */
+    protected $redeliveryCount = 0;
+
+    /**
      * @param MessageIdData $id
      * @param int $consumerID
      * @param string $publishTime
@@ -76,6 +81,7 @@ class Message
      * @param string $payload
      * @param int $batchNums
      * @param int $batchIdx
+     * @param int $redeliveryCount
      * @param MessageCollection|null $properties
      */
     public function __construct(MessageIdData     $id,
@@ -85,6 +91,7 @@ class Message
                                 string            $payload,
                                 int               $batchNums = 1,
                                 int               $batchIdx = 0,
+                                int               $redeliveryCount = 0,
                                 MessageCollection $properties = null
     )
     {
@@ -95,6 +102,7 @@ class Message
         $this->payload = $payload;
         $this->batchNums = $batchNums;
         $this->batchIdx = $batchIdx;
+        $this->redeliveryCount = $redeliveryCount;
         $this->properties = $properties;
     }
 
@@ -106,6 +114,14 @@ class Message
         return Helper::serializeID($this->id);
     }
 
+
+    /**
+     * @return int
+     */
+    public function getRedeliveryCount(): int
+    {
+        return $this->redeliveryCount;
+    }
 
     /**
      * @return int

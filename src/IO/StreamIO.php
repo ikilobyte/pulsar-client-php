@@ -44,7 +44,7 @@ class StreamIO extends AbstractIO implements Reader
      */
     public function connect(string $host, int $port, $timeout = null)
     {
-        $this->socket = stream_socket_client(
+        $this->socket = @stream_socket_client(
             sprintf('tcp://%s:%d', $host, $port),
             $code,
             $message,
@@ -108,10 +108,20 @@ class StreamIO extends AbstractIO implements Reader
     /**
      * @param string $buffer
      * @return $this
+     * @throws IOException
      */
     public function write(string $buffer): AbstractIO
     {
-        fwrite($this->socket, $buffer);
+        if (feof($this->socket)) {
+            $this->close();
+            throw new IOException('socket EOF');
+        }
+
+        $size = @fwrite($this->socket, $buffer);
+        if ($size === false) {
+            throw new IOException('write data of close socket');
+        }
+        
         return $this;
     }
 
@@ -120,6 +130,7 @@ class StreamIO extends AbstractIO implements Reader
      * @param Type $type
      * @param AbstractMessage $message
      * @return $this|StreamIO
+     * @throws IOException
      */
     public function writeCommand(Type $type, AbstractMessage $message): AbstractIO
     {
