@@ -117,6 +117,8 @@ class Message
 
     /**
      * @return int
+     * The number is self-incrementing when nack is used and is maintained by the pulsar broker
+     * The quantity is reset when the consumer disconnects
      */
     public function getRedeliveryCount(): int
     {
