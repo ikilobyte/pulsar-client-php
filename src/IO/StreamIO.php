@@ -147,7 +147,7 @@ class StreamIO extends AbstractIO implements Reader
         $bytes = fread($this->socket, $size);
 
         // socket is closed
-        if ($bytes == '' && feof($this->socket)) {
+        if (\feof($this->socket) || !\is_resource($this->socket) || $bytes === false) {
             $this->close();
             throw new IOException('socket is closed');
         }
