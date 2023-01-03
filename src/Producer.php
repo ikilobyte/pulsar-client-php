@@ -12,13 +12,11 @@ use Google\CRC32\CRC32;
 use Protobuf\AbstractMessage;
 use Pulsar\Exception\OptionsException;
 use Pulsar\Exception\RuntimeException;
-use Pulsar\Proto\BaseCommand;
-use Pulsar\Proto\BaseCommand\Type;
-use Pulsar\Proto\CommandSend;
 use Pulsar\Proto\CommandSendReceipt;
 use Pulsar\Proto\KeyValue;
 use Pulsar\Proto\MessageMetadata;
 use Pulsar\Proto\SingleMessageMetadata;
+use Pulsar\Traits\CommandSendBuilder;
 use Pulsar\Traits\ProducerKeepAlive;
 use Pulsar\Util\Buffer;
 use Pulsar\Util\Helper;
@@ -31,6 +29,7 @@ use Pulsar\Util\Helper;
 class Producer extends Client
 {
     use ProducerKeepAlive;
+    use CommandSendBuilder;
 
     /**
      * @var ProducerOptions
@@ -83,13 +82,14 @@ class Producer extends Client
      * @param string $payload
      * @param array $options
      * @return string
-     * @throws RuntimeException|OptionsException
+     * @throws RuntimeException
+     * @throws \Exception
      */
     public function send(string $payload, array $options = []): string
     {
         $producer = $this->getPartitionProducer();
         $messageOptions = new MessageOptions($options);
-        $buffer = $this->buildBuffer(
+        $buffer = $this->buildSendBuffer(
             $producer,
             $payload,
             $messageOptions,
@@ -117,6 +117,7 @@ class Producer extends Client
      * @param array $options
      * @return void
      * @throws RuntimeException|OptionsException
+     * @throws \Exception
      */
     public function sendAsync(string $payload, callable $callable, array $options = [])
     {
@@ -124,7 +125,7 @@ class Producer extends Client
         $sequenceID = $messageOptions->getSequenceID();
 
         $producer = $this->getPartitionProducer();
-        $buffer = $this->buildBuffer($producer, $payload, $messageOptions, $sequenceID);
+        $buffer = $this->buildSendBuffer($producer, $payload, $messageOptions, $sequenceID);
         $producer->sendAsync($buffer);
         $this->callbacks[ $sequenceID ] = [$producer->getID(), $callable];
     }
@@ -160,104 +161,6 @@ class Producer extends Client
             unset($this->callbacks[ $seqID ]);
 
         } while (count($this->callbacks));
-    }
-
-    /**
-     * @param PartitionProducer $producer
-     * @param string $payload
-     * @param MessageOptions $messageOptions
-     * @param int $sequenceID
-     * @return Buffer
-     * @throws RuntimeException|OptionsException
-     */
-    protected function buildBuffer(PartitionProducer $producer, string $payload, MessageOptions $messageOptions, int $sequenceID): Buffer
-    {
-        // [totalSize] [commandSize] [command] [magicNumber] [checksum] [metadataSize] [metadata] [payload]
-
-        $buffer = new Buffer();
-
-        // BaseCommand
-        $baseCommand = new BaseCommand();
-        $baseCommand->setType(Type::SEND());
-
-        // CommandSend
-        $commandSend = new CommandSend();
-        $commandSend->setProducerId($producer->getID());
-        $commandSend->setSequenceId($sequenceID);
-        $commandSend->setNumMessages(1);
-        $commandSend->setTxnidLeastBits(null);
-        $commandSend->setTxnidMostBits(null);
-
-        $baseCommand->setSend($commandSend);
-
-        // serialize BaseCommand
-        $baseCommandBytes = $baseCommand->toStream()->getContents();
-
-        // [commandSize]
-        $buffer->writeUint32(strlen($baseCommandBytes));
-
-        // [command]
-        $buffer->write($baseCommandBytes);
-
-        // [magicNumber]
-        $buffer->writeUint16(0x0e01);
-
-        // only support zlib、none
-        $compressionProvider = $this->options->getCompression();
-
-        // metadata
-        $msgMetadata = new MessageMetadata();
-        $msgMetadata->setProducerName($producer->getName());
-        $msgMetadata->setSequenceId(0);
-        $msgMetadata->setPublishTime(time() * 1000);
-        $msgMetadata->setNumMessagesInBatch(1);
-        $msgMetadata->setCompression($compressionProvider->getType());
-        $msgMetadata->setPartitionKey($messageOptions->getKey());
-        $msgMetadata->setDeliverAtTime($messageOptions->getDeliverAtTime());
-
-        // singleMessageMetadata
-        $singleMsgMetadata = new SingleMessageMetadata();
-        $singleMsgMetadata->setPayloadSize(strlen($payload));
-        $singleMsgMetadata->setEventTime(time() * 1000);
-        $singleMsgMetadata->setPartitionKey($messageOptions->getKey());
-        $this->appendProperties($singleMsgMetadata, $messageOptions);
-        $singleMsgMetadataBytes = $singleMsgMetadata->toStream()->getContents();
-
-        // [metadataSize] [metadata] [payload]
-        $packet = '';
-        $packet .= Helper::writeUint32(strlen($singleMsgMetadataBytes));    // [metadataSize]
-        $packet .= $singleMsgMetadataBytes;                                 // [metadata]
-        $packet .= $payload;                                                // [payload]
-
-        $msgMetadata->setUncompressedSize(strlen($packet));
-        $msgMetadataBytes = $msgMetadata->toStream()->getContents();
-
-        $msgMetadataSize = strlen($msgMetadataBytes);
-
-
-        // make checksum bytes
-        $compressionPacket = $compressionProvider->encode($packet);
-        $checksumBuffer = new Buffer();
-        $checksumBuffer->writeUint32($msgMetadataSize);                                           // [metadataSize]
-        $checksumBuffer->write($msgMetadataBytes);                                                // [metadata]
-        $checksumBuffer->write($compressionPacket);                                               // [payload]
-
-        // [checksum] === [metadataSize] [metadata] [payload]
-        $buffer->writeUint32($this->getChecksum($checksumBuffer));
-
-        // [metadataSize]
-        $buffer->writeUint32($msgMetadataSize);
-
-        // [metadata]
-        $buffer->write($msgMetadataBytes);
-
-        // [payload]
-        $buffer->write($compressionPacket);
-
-        // [totalSize]
-        $buffer->put(Helper::writeUint32($buffer->length()), 0);
-
-        return $buffer;
     }
 
 
