@@ -19,6 +19,7 @@ use Pulsar\Proto\CommandSendReceipt;
 use Pulsar\Proto\KeyValue;
 use Pulsar\Proto\MessageMetadata;
 use Pulsar\Proto\SingleMessageMetadata;
+use Pulsar\Traits\ProducerKeepAlive;
 use Pulsar\Util\Buffer;
 use Pulsar\Util\Helper;
 
@@ -29,6 +30,7 @@ use Pulsar\Util\Helper;
  */
 class Producer extends Client
 {
+    use ProducerKeepAlive;
 
     /**
      * @var ProducerOptions
@@ -272,6 +274,9 @@ class Producer extends Client
         }
 
         parent::close();
+
+        // set keepalive false notify event loop exit
+        $this->keepalive = false;
     }
 
 
