@@ -10,6 +10,7 @@ namespace Pulsar;
 
 use Google\CRC32\CRC32;
 use Protobuf\AbstractMessage;
+use Pulsar\Exception\OptionsException;
 use Pulsar\Exception\RuntimeException;
 use Pulsar\Proto\BaseCommand;
 use Pulsar\Proto\BaseCommand\Type;
@@ -80,7 +81,7 @@ class Producer extends Client
      * @param string $payload
      * @param array $options
      * @return string
-     * @throws RuntimeException
+     * @throws RuntimeException|OptionsException
      */
     public function send(string $payload, array $options = []): string
     {
@@ -113,7 +114,7 @@ class Producer extends Client
      * @param callable $callable
      * @param array $options
      * @return void
-     * @throws RuntimeException
+     * @throws RuntimeException|OptionsException
      */
     public function sendAsync(string $payload, callable $callable, array $options = [])
     {
@@ -165,7 +166,7 @@ class Producer extends Client
      * @param MessageOptions $messageOptions
      * @param int $sequenceID
      * @return Buffer
-     * @throws RuntimeException
+     * @throws RuntimeException|OptionsException
      */
     protected function buildBuffer(PartitionProducer $producer, string $payload, MessageOptions $messageOptions, int $sequenceID): Buffer
     {
@@ -299,6 +300,7 @@ class Producer extends Client
      * @param AbstractMessage $message
      * @param MessageOptions $options
      * @return void
+     * @throws OptionsException
      */
     protected function appendProperties(AbstractMessage &$message, MessageOptions $options)
     {
