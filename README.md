@@ -92,6 +92,11 @@ for ($i = 0; $i < 10; $i++) {
 
 // close
 $producer->close();
+
+// or 
+// keepalive connection This method allows you to wrap the connection pool yourself
+// When the call is close() Will close the hold connection
+$producer->keepalive();
 ```
 
 > Message deduplication
