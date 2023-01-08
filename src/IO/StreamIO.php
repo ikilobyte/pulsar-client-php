@@ -220,18 +220,21 @@ class StreamIO extends AbstractIO implements Reader
         // receive PING reply PONG
         if ($commandType->value() == Type::PING_VALUE) {
             $this->pong();
+            dump('receive PING ');
             return null;
         }
 
         // receive PONG command
         // No processing required
         if ($commandType->value() == Type::PONG_VALUE) {
+            dump('receive PONG');
             return null;
         }
 
         // receive ACTIVE_CONSUMER_CHANGE
         // only consumer received
         if ($commandType->value() == Type::ACTIVE_CONSUMER_CHANGE_VALUE) {
+            dump('receive ACTIVE CONSUMER_CHANGE');
             return null;
         }
 

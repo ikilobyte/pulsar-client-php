@@ -43,11 +43,13 @@ class Select implements EventLoop
     public function wait($seconds = null)
     {
         $reads = array_values($this->reads);
-        $n = stream_select($reads, $writes, $excepts, $seconds);
+        // Shield Interrupted system call
+        $n = @stream_select($reads, $writes, $excepts, $seconds);
         if ($n <= 0) {
             return null;
         }
 
+        echo "select n ${n}\n";
         $response = null;
         foreach ($reads as $socket) {
 

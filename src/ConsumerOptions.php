@@ -252,8 +252,8 @@ class ConsumerOptions extends Options
      */
     public function getNackRedeliveryDelay()
     {
-        $delay = $this->data[ self::NACK_REDELIVERY_DELAY ] ?? 60;
-        return $delay <= 0 ? 60 : $delay;
+        $delay = $this->data[ self::NACK_REDELIVERY_DELAY ] ?? 10;
+        return $delay <= 0 ? 10 : $delay;
     }
 
 

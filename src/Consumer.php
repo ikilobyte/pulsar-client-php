@@ -10,6 +10,7 @@ namespace Pulsar;
 
 
 use Pulsar\Exception\IOException;
+use Pulsar\Exception\MessageNotFound;
 use Pulsar\Exception\OptionsException;
 use Pulsar\Exception\RuntimeException;
 use Pulsar\Proto\CommandMessage;
@@ -145,12 +146,13 @@ class Consumer extends Client
 
 
     /**
+     * @param bool $loop
      * @return Message
-     * @throws Exception\IOException
+     * @throws IOException
      * @throws RuntimeException
-     * @throws \Exception
+     * @throws MessageNotFound
      */
-    public function receive(): Message
+    public function receive(bool $loop = true): Message
     {
         if (!$this->isHandshake) {
             throw new RuntimeException('not connect to pulsar server');
@@ -165,7 +167,9 @@ class Consumer extends Client
         }
 
         try {
+            dump('get wait seconds ' . $this->getWaitSeconds());
             $response = $this->eventloop->wait($this->getWaitSeconds());
+            dump($response);
         } catch (IOException $e) {
             $response = null;
 
@@ -176,7 +180,7 @@ class Consumer extends Client
             }
 
             if ($this->reconnect($policy)) {
-                return $this->receive();
+                return $this->receive($loop);
             }
         }
 
@@ -188,7 +192,10 @@ class Consumer extends Client
         $this->ping();
 
         if (is_null($response)) {
-            return $this->receive();
+            if (!$loop) {
+                throw new MessageNotFound();
+            }
+            return $this->receive($loop);
         }
 
 
@@ -197,7 +204,7 @@ class Consumer extends Client
          */
         $commandMessage = $response->getSubCommand();
         if (!( $commandMessage instanceof CommandMessage )) {
-            return $this->receive();
+            return $this->receive($loop);
         }
 
 
