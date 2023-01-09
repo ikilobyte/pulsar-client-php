@@ -215,6 +215,33 @@ $options->setReconnectPolicy(true,3);
 $options->setReconnectPolicy(true,3,100);
 ```
 
+> 不循环接收消息，且平滑退出
+
+```php
+
+$running = true;
+
+// kill -15 $PID  
+pcntl_signal(SIGTERM,function() use (&$running){
+    $running = false;
+});
+
+while ($running) {
+    try {
+        $message = $consumer->receive(false);
+        
+        // ...
+    } catch (\Pulsar\Exception\MessageNotFound $e) {
+        echo "Message Not Found\n";
+        continue;
+    } catch (Throwable $e) {
+        echo $e->getMessage() . "\n";
+        throw $e;
+    } finally {
+        pcntl_signal_dispatch();
+    }
+}
+
 ## Reader
 
 ```php

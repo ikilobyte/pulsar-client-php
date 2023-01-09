@@ -218,6 +218,34 @@ $options->setReconnectPolicy(true,3);
 $options->setReconnectPolicy(true,3,100);
 ```
 
+> Not loop Receive And Smooth exit
+
+```php
+
+$running = true;
+
+// kill -15 $PID  
+pcntl_signal(SIGTERM,function() use (&$running){
+    $running = false;
+});
+
+while ($running) {
+    try {
+        $message = $consumer->receive(false);
+        
+        // ...
+    } catch (\Pulsar\Exception\MessageNotFound $e) {
+        echo "Message Not Found\n";
+        continue;
+    } catch (Throwable $e) {
+        echo $e->getMessage() . "\n";
+        throw $e;
+    } finally {
+        pcntl_signal_dispatch();
+    }
+}
+```
+
 ## Reader
 
 ```php
