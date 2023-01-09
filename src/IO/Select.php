@@ -49,7 +49,6 @@ class Select implements EventLoop
             return null;
         }
 
-        echo "select n ${n}\n";
         $response = null;
         foreach ($reads as $socket) {
 

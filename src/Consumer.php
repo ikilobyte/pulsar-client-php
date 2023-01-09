@@ -167,9 +167,7 @@ class Consumer extends Client
         }
 
         try {
-            dump('get wait seconds ' . $this->getWaitSeconds());
             $response = $this->eventloop->wait($this->getWaitSeconds());
-            dump($response);
         } catch (IOException $e) {
             $response = null;
 
@@ -203,7 +201,11 @@ class Consumer extends Client
          * @var $commandMessage CommandMessage
          */
         $commandMessage = $response->getSubCommand();
+        // It may appear that the current message is not CommandMessage
         if (!( $commandMessage instanceof CommandMessage )) {
+            if (!$loop) {
+                throw new MessageNotFound();
+            }
             return $this->receive($loop);
         }
 
