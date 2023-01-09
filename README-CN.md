@@ -241,6 +241,7 @@ while ($running) {
         pcntl_signal_dispatch();
     }
 }
+```
 
 ## Reader
 
