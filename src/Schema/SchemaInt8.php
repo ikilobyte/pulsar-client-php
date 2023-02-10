@@ -68,12 +68,14 @@ class SchemaInt8 implements ISchema
         $schema->setType($type);
         $schema->setName($type->name());
 
-        $properties = new KeyValue();
-        foreach ($this->properties as $key => $val) {
-            $properties->setKey($key);
-            $properties->setValue($val);
+        if ($this->properties) {
+            $properties = new KeyValue();
+            foreach ($this->properties as $key => $val) {
+                $properties->setKey($key);
+                $properties->setValue($val);
+            }
+            $schema->addProperties($properties);
         }
-        $schema->addProperties($properties);
 
         return $schema;
     }

@@ -109,6 +109,11 @@ class PartitionProducer
             $commandProducer->setInitialSubscriptionName($name);
         }
 
+        // set schema
+        if ($schema = $this->options->getSchema()) {
+            $commandProducer->setSchema($schema->getProtoSchema());
+        }
+
         $this->connection->writeCommand(Type::PRODUCER(), $commandProducer)->wait();
     }
 
