@@ -123,6 +123,11 @@ class PartitionConsumer
             $command->setStartMessageId($this->options->getStartMessageID());
         }
 
+        // set schema
+        if ($schema = $this->options->getSchema()) {
+            $command->setSchema($schema->getProtoSchema());
+        }
+
         $this->connection->writeCommand(Type::SUBSCRIBE(), $command)->wait();
     }
 
