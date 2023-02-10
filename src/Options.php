@@ -11,6 +11,7 @@ namespace Pulsar;
 use ArrayAccess;
 use Pulsar\Authentication\Authentication;
 use Pulsar\Exception\OptionsException;
+use Pulsar\Schema\ISchema;
 
 
 /**
@@ -127,7 +128,25 @@ abstract class Options implements ArrayAccess
         return $topics;
     }
 
-    
+
+    /**
+     * @param ISchema $schema
+     * @return void
+     */
+    public function setSchema(ISchema $schema)
+    {
+        $this->data['schema'] = $schema;
+    }
+
+
+    /**
+     * @return ISchema|null
+     */
+    public function getSchema()
+    {
+        return $this->data['schema'] ?? null;
+    }
+
     /**
      * @param string $topic
      * @return string
@@ -151,6 +170,7 @@ abstract class Options implements ArrayAccess
         return $topic;
     }
 
+
     /**
      * @return array
      */
@@ -158,6 +178,7 @@ abstract class Options implements ArrayAccess
     {
         return $this->data;
     }
+
 
     /**
      * @param $offset
