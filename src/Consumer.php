@@ -218,6 +218,10 @@ class Consumer extends Client
         $messages = Packer::decode($commandMessage, $response->getBuffer(), $consumer->getTopic());
 
         foreach ($messages as $message) {
+
+            // Save Options to Message Object
+            $message->setOptions($this->options);
+
             $this->messageQueue->enqueue($message);
         }
 

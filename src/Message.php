@@ -23,6 +23,9 @@ use Pulsar\Util\Tracking;
  */
 class Message
 {
+
+    use MessageSchema;
+
     /**
      * @var MessageIdData
      */
@@ -72,6 +75,13 @@ class Message
      * @var int
      */
     protected $redeliveryCount = 0;
+
+
+    /**
+     * @var Options
+     */
+    protected $options = null;
+
 
     /**
      * @param MessageIdData $id
