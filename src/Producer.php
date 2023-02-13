@@ -79,14 +79,19 @@ class Producer extends Client
 
 
     /**
-     * @param string $payload
+     * @param mixed $payload
      * @param array $options
      * @return string
      * @throws RuntimeException
      * @throws \Exception
      */
-    public function send(string $payload, array $options = []): string
+    public function send($payload, array $options = []): string
     {
+        // schema payload encode
+        if ($schema = $this->options->getSchema()) {
+            $payload = $schema->encode($payload);
+        }
+
         $producer = $this->getPartitionProducer();
         $messageOptions = new MessageOptions($options);
         $buffer = $this->buildSendBuffer(
