@@ -13,20 +13,22 @@ use Protobuf\Stream;
 use Pulsar\Proto\Schema;
 
 /**
- * Class SchemaUint8
+ * Class SchemaInt16
+ * little endian byte order
  *
  * @package Pulsar\Schema
  */
-class SchemaInt8 extends AbstractSchema implements ISchema
+class SchemaInt16 extends AbstractSchema implements ISchema
 {
 
     /**
      * @param $data
      * @return string
+     * @throws \Exception
      */
     public function encode($data): string
     {
-        return chr($data);
+        return $this->pack('v', $data);
     }
 
 
@@ -37,7 +39,7 @@ class SchemaInt8 extends AbstractSchema implements ISchema
      */
     public function decode($payload): int
     {
-        return ord($payload);
+        return $this->unpack('v', $payload);
     }
 
 
@@ -47,7 +49,7 @@ class SchemaInt8 extends AbstractSchema implements ISchema
     public function getProtoSchema(): Schema
     {
         $schema = new Schema();
-        $type = Schema\Type::Int8();
+        $type = Schema\Type::Int16();
         $schema->setSchemaData(Stream::wrap(''));
         $schema->setType($type);
         $schema->setName($type->name());
