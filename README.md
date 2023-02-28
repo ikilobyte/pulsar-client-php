@@ -8,6 +8,7 @@
     * [Installation](#Installation)
     * [Producer](#Producer)
     * [Consumer](#Consumer)
+    * [Schema](#Schema)
     * [Reader](#Reader)
     * [Options](#Options)
     * [License](#License)
@@ -246,6 +247,84 @@ while ($running) {
 }
 ```
 
+## Schema
+
+- Currently only supports `INT8`、`INT16`、`INT32`、`INT64`、`DOUBLE`、`STRING`、`JSON`，The following code uses `JSON Schema`
+  as an example
+
+- model.php
+
+```php
+<?php
+
+class Person
+{
+    public $id;
+    public $name;
+    public $age;
+    // ...
+}
+```
+
+- Consumer Statement Schema
+
+ ```php
+
+// JSON schema
+// @see https://avro.apache.org/docs/1.11.1/specification/
+// @see https://pulsar.apache.org/docs/2.11.x/schema-overview/
+
+$define = '{"type":"record","name":"Person","fields":[{"name":"id","type":"int"},{"name":"name","type":"string"},{"name":"age","type":"int"}]}';
+
+$schema = new \Pulsar\Schema\SchemaJson($define, [
+    'key' => 'value',
+]);
+
+// ... some code
+$consumerOptions->setSchema($schema);
+$consumer = new \Pulsar\Consumer('pulsar://xxx',$consumerOptions);
+$consumer->connect();
+
+while (true) {
+    $message = $consumer->receive();
+    $person = new Person();
+    $message->getSchemaValue($person);
+    echo sprintf(
+        'payload %s id %d name %s age %d',
+        $message->getPayload(),
+        $person->id,
+        $person->name,
+        $person->age
+    ) . "\n";
+    
+    // .. some code
+}
+
+```
+
+- Producer Statement Schema
+
+```php
+
+$define = '{"type":"record","name":"Person","fields":[{"name":"id","type":"int"},{"name":"name","type":"string"},{"name":"age","type":"int"}]}';
+$schema = new \Pulsar\Schema\SchemaJson($define, [
+    'key' => 'value',
+]);
+
+// ... some code
+$producerOptions->setSchema($schema);
+$producer = new \Pulsar\Producer('xx',$options);
+$producer->connect();
+
+$person = new Person();
+$person->id = 1;
+$person->name = 'Tony';
+$person->age = 18;
+
+// directly send Person Object No need to manually convert to json string
+$id = $producer->send($person);
+```
+
 ## Reader
 
 ```php
@@ -300,6 +379,7 @@ $reader->close();
     * setConnectTimeout()
     * setProducerName()
     * setCompression()
+    * setSchema()
 * ConsumerOptions
     * setTopic()
     * setTopics()
@@ -313,6 +393,7 @@ $reader->close();
     * setDeadLetterPolicy()
     * setSubscriptionInitialPosition()
     * setReconnectPolicy()
+    * setSchema()
 * ReaderOptions
     * setTopic()
     * setAuthentication()
