@@ -24,6 +24,9 @@ abstract class AbstractSchema
     protected $properties = [];
 
 
+    protected $define = '';
+
+
     /**
      * @param array $properties
      */
