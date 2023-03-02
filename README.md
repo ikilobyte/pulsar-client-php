@@ -252,7 +252,7 @@ while ($running) {
 - Currently only supports `INT8`、`INT16`、`INT32`、`INT64`、`DOUBLE`、`STRING`、`JSON`，The following code uses `JSON Schema`
   as an example
 
-- model.php
+- `model.php`
 
 ```php
 <?php
