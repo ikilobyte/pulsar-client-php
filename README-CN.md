@@ -247,8 +247,8 @@ while ($running) {
 ## Schema
 
 - 目前只支持 `INT8`、`INT16`、`INT32`、`INT64`、`DOUBLE`、`STRING`、`JSON`，以下代码以 `JSON Schema` 为示例
-- https://avro.apache.org/docs/1.11.1/specification/
 - https://pulsar.apache.org/docs/2.11.x/schema-overview/
+- https://avro.apache.org/docs/1.11.1/specification/
 
 - `model.php`
 
