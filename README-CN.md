@@ -247,6 +247,8 @@ while ($running) {
 ## Schema
 
 - 目前只支持 `INT8`、`INT16`、`INT32`、`INT64`、`DOUBLE`、`STRING`、`JSON`，以下代码以 `JSON Schema` 为示例
+- https://avro.apache.org/docs/1.11.1/specification/
+- https://pulsar.apache.org/docs/2.11.x/schema-overview/
 
 - `model.php`
 
@@ -262,21 +264,40 @@ class Person
 }
 ```
 
-- Consumer Statement Schema
+- 生产者配置`Schema`
+
+```php
+<?php
+$define = '{"type":"record","name":"Person","fields":[{"name":"id","type":"int"},{"name":"name","type":"string"},{"name":"age","type":"int"}]}';
+$schema = new \Pulsar\Schema\SchemaJson($define, [
+    'key' => 'value',
+]);
+
+// ... some code
+$producerOptions->setSchema($schema);
+$producer = new \Pulsar\Producer('xx',$options);
+$producer->connect();
+
+$person = new Person();
+$person->id = 1;
+$person->name = 'Tony';
+$person->age = 18;
+
+// 可以直接发送 $person 对象
+$id = $producer->send($person);
+```
+
+- 消费者配置`Schema`
 
  ```php
-
-// JSON schema
-// @see https://avro.apache.org/docs/1.11.1/specification/
-// @see https://pulsar.apache.org/docs/2.11.x/schema-overview/
-
+<?php
 $define = '{"type":"record","name":"Person","fields":[{"name":"id","type":"int"},{"name":"name","type":"string"},{"name":"age","type":"int"}]}';
 
 $schema = new \Pulsar\Schema\SchemaJson($define, [
     'key' => 'value',
 ]);
 
-// ... some code
+// ... 省略一些初始化的代码
 $consumerOptions->setSchema($schema);
 $consumer = new \Pulsar\Consumer('pulsar://xxx',$consumerOptions);
 $consumer->connect();
@@ -296,29 +317,6 @@ while (true) {
     // .. some code
 }
 
-```
-
-- Producer Statement Schema
-
-```php
-
-$define = '{"type":"record","name":"Person","fields":[{"name":"id","type":"int"},{"name":"name","type":"string"},{"name":"age","type":"int"}]}';
-$schema = new \Pulsar\Schema\SchemaJson($define, [
-    'key' => 'value',
-]);
-
-// ... some code
-$producerOptions->setSchema($schema);
-$producer = new \Pulsar\Producer('xx',$options);
-$producer->connect();
-
-$person = new Person();
-$person->id = 1;
-$person->name = 'Tony';
-$person->age = 18;
-
-// directly send Person Object No need to manually convert to json string
-$id = $producer->send($person);
 ```
 
 ## Reader

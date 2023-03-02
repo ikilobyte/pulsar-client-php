@@ -251,6 +251,8 @@ while ($running) {
 
 - Currently only supports `INT8`、`INT16`、`INT32`、`INT64`、`DOUBLE`、`STRING`、`JSON`，The following code uses `JSON Schema`
   as an example
+- https://avro.apache.org/docs/1.11.1/specification/
+- https://pulsar.apache.org/docs/2.11.x/schema-overview/
 
 - `model.php`
 
@@ -266,14 +268,33 @@ class Person
 }
 ```
 
+- Producer Statement Schema
+
+```php
+<?php
+$define = '{"type":"record","name":"Person","fields":[{"name":"id","type":"int"},{"name":"name","type":"string"},{"name":"age","type":"int"}]}';
+$schema = new \Pulsar\Schema\SchemaJson($define, [
+    'key' => 'value',
+]);
+
+// ... some code
+$producerOptions->setSchema($schema);
+$producer = new \Pulsar\Producer('xx',$options);
+$producer->connect();
+
+$person = new Person();
+$person->id = 1;
+$person->name = 'Tony';
+$person->age = 18;
+
+// directly send Person Object No need to manually convert to json string
+$id = $producer->send($person);
+```
+
 - Consumer Statement Schema
 
  ```php
-
-// JSON schema
-// @see https://avro.apache.org/docs/1.11.1/specification/
-// @see https://pulsar.apache.org/docs/2.11.x/schema-overview/
-
+<?php
 $define = '{"type":"record","name":"Person","fields":[{"name":"id","type":"int"},{"name":"name","type":"string"},{"name":"age","type":"int"}]}';
 
 $schema = new \Pulsar\Schema\SchemaJson($define, [
@@ -300,29 +321,6 @@ while (true) {
     // .. some code
 }
 
-```
-
-- Producer Statement Schema
-
-```php
-
-$define = '{"type":"record","name":"Person","fields":[{"name":"id","type":"int"},{"name":"name","type":"string"},{"name":"age","type":"int"}]}';
-$schema = new \Pulsar\Schema\SchemaJson($define, [
-    'key' => 'value',
-]);
-
-// ... some code
-$producerOptions->setSchema($schema);
-$producer = new \Pulsar\Producer('xx',$options);
-$producer->connect();
-
-$person = new Person();
-$person->id = 1;
-$person->name = 'Tony';
-$person->age = 18;
-
-// directly send Person Object No need to manually convert to json string
-$id = $producer->send($person);
 ```
 
 ## Reader
