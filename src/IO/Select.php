@@ -49,6 +49,9 @@ class Select implements EventLoop
             return null;
         }
 
+        // Disrupting the order is so that consumers can consume fairly
+        shuffle($reads);
+        
         $response = null;
         foreach ($reads as $socket) {
 
