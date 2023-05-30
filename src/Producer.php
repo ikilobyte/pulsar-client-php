@@ -12,6 +12,7 @@ use Google\CRC32\CRC32;
 use Protobuf\AbstractMessage;
 use Pulsar\Exception\OptionsException;
 use Pulsar\Exception\RuntimeException;
+use Pulsar\IO\ChannelManager;
 use Pulsar\Proto\CommandSendReceipt;
 use Pulsar\Proto\KeyValue;
 use Pulsar\Proto\MessageMetadata;
@@ -20,6 +21,7 @@ use Pulsar\Traits\CommandSendBuilder;
 use Pulsar\Traits\ProducerKeepAlive;
 use Pulsar\Util\Buffer;
 use Pulsar\Util\Helper;
+use Swoole\Coroutine;
 
 /**
  * Class Producer
@@ -53,9 +55,22 @@ class Producer extends Client
      * @param string $url
      * @param ProducerOptions $options
      * @throws Exception\OptionsException
+     * @throws RuntimeException
      */
     public function __construct(string $url, ProducerOptions $options)
     {
+        // validate keepalive condition
+        if ($options->getKeepalive()) {
+
+            if (!extension_loaded('swoole')) {
+                throw new RuntimeException('Keepalive require swoole extension');
+            }
+
+            if (Coroutine::getCid() === -1) {
+                throw new RuntimeException('Keepalive Must be in a coroutine environment');
+            }
+        }
+
         parent::__construct($url, $options);
     }
 
@@ -66,12 +81,41 @@ class Producer extends Client
      */
     public function connect()
     {
+        // Establish tcp connection And complete the pulsar server handshake
         parent::initialization();
+
+        // Enable Keepalive
+        if ($this->options->getKeepalive()) {
+            Coroutine::create(function () {
+                while ($this->keepalive) {
+
+                    /**
+                     * @var $response Response
+                     */
+                    $response = $this->eventloop->wait(3);
+                    if (is_null($response)) {
+                        continue;
+                    }
+
+                    $fd = $response->fd();
+                    if ($fd <= 0) {
+                        continue;
+                    }
+
+                    // Push data to Channel
+                    ChannelManager::get($fd)->push($response);
+                }
+            });
+        }
 
         // Send CreateProducer Command
         foreach ($this->topicManage->all() as $id => $topic) {
-            $io = $this->topicManage->getConnection($topic);
-            $this->producers[] = new PartitionProducer($id, $topic, $io, $this->options);
+            $connection = $this->topicManage->getConnection($topic);
+            if ($this->options->getKeepalive()) {
+                ChannelManager::init($connection->fd());
+            }
+            
+            $this->producers[] = new PartitionProducer($id, $topic, $connection, $this->options);
         }
     }
 
@@ -123,6 +167,7 @@ class Producer extends Client
      * @return void
      * @throws RuntimeException|OptionsException
      * @throws \Exception
+     * @deprecated 1.3.0
      */
     public function sendAsync(string $payload, callable $callable, array $options = [])
     {
@@ -140,6 +185,7 @@ class Producer extends Client
      * @return void
      * @throws Exception\IOException
      * @throws RuntimeException
+     * @deprecated 1.3.0
      */
     public function wait()
     {

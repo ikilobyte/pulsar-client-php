@@ -57,6 +57,7 @@ class StreamIO extends AbstractIO implements Reader
 
         $this->host = $host;
         $this->port = $port;
+        $this->fd = (int)$this->socket;
     }
 
 
@@ -173,6 +174,11 @@ class StreamIO extends AbstractIO implements Reader
      */
     public function wait($seconds = null)
     {
+        // Receive from Channel
+        if ($this->keepalive) {
+            return ChannelManager::get($this->fd)->pop($seconds);
+        }
+
         $reads = [$this->socket];
         $n = stream_select($reads, $writes, $excepts, $seconds);
         if ($n <= 0) {
@@ -255,6 +261,6 @@ class StreamIO extends AbstractIO implements Reader
             } while ($remainingSize > 0);
         }
 
-        return new Response($buffer, $baseCommand);
+        return new Response($buffer, $baseCommand, $this->fd);
     }
 }

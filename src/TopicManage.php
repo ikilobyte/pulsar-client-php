@@ -75,7 +75,7 @@ class TopicManage
     /**
      * @return int
      */
-    public function countTopics(): int
+    public function size(): int
     {
         return count($this->data);
     }

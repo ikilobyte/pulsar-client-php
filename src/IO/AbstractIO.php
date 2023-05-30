@@ -73,6 +73,16 @@ abstract class AbstractIO
 
 
     /**
+     * @var int
+     */
+    protected $fd = 0;
+
+    /**
+     * @var bool
+     */
+    protected $keepalive = false;
+
+    /**
      * @return void
      */
     protected function pong()
@@ -123,6 +133,33 @@ abstract class AbstractIO
     }
 
 
+
+    /**
+     * @param bool $status
+     * @return void
+     */
+    public function setKeepalive(bool $status)
+    {
+        $this->keepalive = $status;
+    }
+
+
+    /**
+     * @return int
+     */
+    public function fd(): int
+    {
+        return $this->fd;
+    }
+
+    /**
+     * Handling readable events
+     *
+     * @return mixed
+     */
+    abstract public function handleRead();
+
+    
     /**
      * @param string $host
      * @param int $port

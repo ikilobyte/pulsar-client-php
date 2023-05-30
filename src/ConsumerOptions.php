@@ -16,7 +16,7 @@ use Pulsar\Proto\CommandSubscribe\InitialPosition;
  *
  * @package Pulsar
  */
-class ConsumerOptions extends Options
+final class ConsumerOptions extends Options
 {
     /**
      * consumer name

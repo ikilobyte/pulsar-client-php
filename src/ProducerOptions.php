@@ -17,7 +17,7 @@ use Pulsar\Compression\Factory;
  *
  * @package Pulsar
  */
-class ProducerOptions extends Options
+final class ProducerOptions extends Options
 {
     /**
      * @var string
@@ -34,6 +34,13 @@ class ProducerOptions extends Options
      * @var string
      */
     const INITIAL_SUBSCRIPTION_NAME = 'initial_subscription_name';
+
+
+    /**
+     * @var string
+     */
+    const KEEPALIVE = 'keepalive';
+
 
     /**
      * @param string $name
@@ -54,6 +61,17 @@ class ProducerOptions extends Options
     public function setInitialSubscriptionName(string $name)
     {
         $this->data[ self::INITIAL_SUBSCRIPTION_NAME ] = $name;
+    }
+
+    /**
+     * Whether to enable keep-alive
+     *
+     * @param bool $status
+     * @return void
+     */
+    public function setKeepalive(bool $status)
+    {
+        $this->data[ self::KEEPALIVE ] = $status;
     }
 
 
@@ -98,5 +116,14 @@ class ProducerOptions extends Options
     public function getInitialSubscriptionName()
     {
         return $this->data[ self::INITIAL_SUBSCRIPTION_NAME ] ?? '';
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function getKeepalive(): bool
+    {
+        return $this->data[ self::KEEPALIVE ] ?? false;
     }
 }

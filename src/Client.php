@@ -165,9 +165,12 @@ abstract class Client
             }
 
             $this->topicManage->setConnection($topic, $this->connections[ $connectionKey ]);
+        }
 
-            // Add to EventLoop
-            $this->eventloop->addRead($this->topicManage->getConnection($topic));
+        // Add to Eventloop
+        foreach ($this->connections as $connection) {
+            $connection->setKeepalive($this->options->getKeepalive());
+            $this->eventloop->addRead($connection);
         }
 
         $this->isHandshake = true;

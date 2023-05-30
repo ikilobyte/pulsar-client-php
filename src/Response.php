@@ -41,15 +41,22 @@ class Response
 
 
     /**
+     * @var int
+     */
+    public $fd = 0;
+
+    /**
      * @param Buffer $buffer
      * @param BaseCommand $message
+     * @param int $fd
      * @throws RuntimeException
      */
-    public function __construct(Buffer $buffer, BaseCommand $message)
+    public function __construct(Buffer $buffer, BaseCommand $message, int $fd)
     {
         $this->buffer = $buffer;
         $this->baseCommand = $message;
         $this->subCommand = $this->getSubCommand();
+        $this->fd = $fd;
         $this->checkError();
     }
 
@@ -69,6 +76,14 @@ class Response
     public function getBuffer(): Buffer
     {
         return $this->buffer;
+    }
+
+    /**
+     * @return int
+     */
+    public function fd(): int
+    {
+        return $this->fd;
     }
 
 

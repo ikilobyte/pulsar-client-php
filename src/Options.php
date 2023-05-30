@@ -129,6 +129,18 @@ abstract class Options implements ArrayAccess
     }
 
 
+
+    /**
+     * This connection pool is not enabled by default
+     *
+     * @return bool
+     */
+    public function getKeepalive(): bool
+    {
+        return false;
+    }
+
+    
     /**
      * @param ISchema $schema
      * @return void
