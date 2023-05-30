@@ -24,15 +24,6 @@ for ($i = 0; $i < 10; $i++) {
     echo 'messageID ' . $messageID . "\n";
 }
 
-// Sending messages asynchronously
-for ($i = 0; $i < 10; $i++) {
-    $producer->sendAsync(sprintf('hello-async %d', $i), function (string $messageID) {
-        echo 'messageID ' . $messageID . "\n";
-    });
-}
-// Add this line when sending asynchronously
-$producer->wait();
-
 // Sending delayed messages
 for ($i = 0; $i < 10; $i++) {
     $producer->send(sprintf('hello-delay %d', $i), [
