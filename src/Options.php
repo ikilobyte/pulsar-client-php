@@ -8,7 +8,6 @@
 
 namespace Pulsar;
 
-use ArrayAccess;
 use Pulsar\Authentication\Authentication;
 use Pulsar\Exception\OptionsException;
 use Pulsar\Schema\ISchema;
@@ -19,7 +18,7 @@ use Pulsar\Schema\ISchema;
  *
  * @package Pulsar
  */
-abstract class Options implements ArrayAccess
+abstract class Options
 {
 
     /**
@@ -140,7 +139,7 @@ abstract class Options implements ArrayAccess
         return false;
     }
 
-    
+
     /**
      * @param ISchema $schema
      * @return void
