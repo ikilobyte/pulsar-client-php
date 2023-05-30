@@ -74,16 +74,6 @@ for ($i = 0; $i < 10; $i++) {
     echo 'messageID ' . $messageID . "\n";
 }
 
-// Sending messages asynchronously
-//for ($i = 0; $i < 10; $i++) {
-//    $producer->sendAsync(sprintf('hello-async %d',$i),function(string $messageID){
-//        echo 'messageID ' . $messageID . "\n";
-//    });
-//}
-//
-//// Add this line when sending asynchronously
-//$producer->wait();
-
 // Sending delayed messages
 for ($i = 0; $i < 10; $i++) {
     $producer->send(sprintf('hello-delay %d',$i),[
@@ -93,11 +83,18 @@ for ($i = 0; $i < 10; $i++) {
 
 // close
 $producer->close();
+```
 
-// or 
-// keepalive connection This method allows you to wrap the connection pool yourself
-// When the call is close() Will close the hold connection
-$producer->keepalive();
+> Keepalive Connection (Recommended)
+
+* require `Swoole` extension
+* If it is a resident memory application, it is recommended to open it.
+* Will keep connected, no need to repeatedly establish a connection
+* Calling the `close` method closes the connection
+* Please see [example](./examples/producer-keepalive.php)
+
+```php
+$options->setKeepalive(true);
 ```
 
 > Message deduplication
@@ -378,6 +375,7 @@ $reader->close();
     * setProducerName()
     * setCompression()
     * setSchema()
+    * setKeepalive()
 * ConsumerOptions
     * setTopic()
     * setTopics()

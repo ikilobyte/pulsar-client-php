@@ -73,16 +73,6 @@ for ($i = 0; $i < 10; $i++) {
     echo 'messageID ' . $messageID . "\n";
 }
 
-// Sending messages asynchronously
-//for ($i = 0; $i < 10; $i++) {
-//    $producer->sendAsync(sprintf('hello-async %d',$i),function(string $messageID){
-//        echo 'messageID ' . $messageID . "\n";
-//    });
-//}
-//
-//// Add this line when sending asynchronously
-//$producer->wait();
-
 // Sending delayed messages
 for ($i = 0; $i < 10; $i++) {
     $producer->send(sprintf('hello-delay %d',$i),[
@@ -93,10 +83,18 @@ for ($i = 0; $i < 10; $i++) {
 // close
 $producer->close();
 
-// or 
-// keepalive connection This method allows you to wrap the connection pool yourself
-// When the call is close() Will close the hold connection
-$producer->keepalive();
+```
+
+> 保持连接
+
+* 依赖 `Swoole` 扩展，必须开启协程
+* 如果是常驻内存应用，建议开启
+* 会保持连接，无需反复建立连接
+* 可以通过 `$producer->close()` 关闭连接，但不应该去调用
+* 请看[示例](./examples/producer-keepalive.php)
+
+```php
+$options->setKeepalive(true);
 ```
 
 > 消息去重
