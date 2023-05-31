@@ -171,6 +171,10 @@ class Producer extends Client
      */
     public function sendAsync(string $payload, callable $callable, array $options = [])
     {
+        if ($this->options->getKeepalive()) {
+            throw new RuntimeException('Must be Without keepalive');
+        }
+
         $messageOptions = new MessageOptions($options);
         $sequenceID = $messageOptions->getSequenceID();
 
@@ -189,6 +193,10 @@ class Producer extends Client
      */
     public function wait()
     {
+        if ($this->options->getKeepalive()) {
+            throw new RuntimeException('Must be Without keepalive');
+        }
+
         do {
 
             // It actually takes data from the memory buffer
