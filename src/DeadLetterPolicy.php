@@ -13,6 +13,7 @@ namespace Pulsar;
 
 use Pulsar\Authentication\Authentication;
 use Pulsar\Compression\Compression;
+use Pulsar\Exception\OptionsException;
 
 /**
  * Class DeadLetterPolicy
@@ -40,14 +41,9 @@ class DeadLetterPolicy
 
 
     /**
-     * @var string
-     */
-    const DEFAULT_SUBSCRIPTION = 'logic';
-
-
-    /**
      * @param array $config
      * @param ConsumerOptions|null $options
+     * @throws OptionsException
      */
     public function __construct(array $config = [], ConsumerOptions $options = null)
     {
@@ -55,7 +51,8 @@ class DeadLetterPolicy
         $this->options = $options;
 
         if (empty($this->config['subscription'])) {
-            $this->config['subscription'] = self::DEFAULT_SUBSCRIPTION;
+            // Consistent with consumers
+            $this->config['subscription'] = $options->getSubscriptionName();
         }
     }
 

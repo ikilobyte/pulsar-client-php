@@ -157,7 +157,7 @@ final class ConsumerOptions extends Options
      * @return void
      * @throws OptionsException
      */
-    public function setDeadLetterPolicy(int $maxRedeliveryCount, string $deadLetterTopic = '', string $initialSubscriptionName = 'logic')
+    public function setDeadLetterPolicy(int $maxRedeliveryCount, string $deadLetterTopic = '', string $initialSubscriptionName = '')
     {
         if ($maxRedeliveryCount <= 0) {
             throw new OptionsException('maxRedeliveryCount Must be greater than 0');
