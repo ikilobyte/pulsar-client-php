@@ -50,9 +50,14 @@ while ($running) {
         // The message will be re-delivered after the specified time
         // $consumer->nack($message);
 
-    } catch (MessageNotFound$e) {
-        echo "Message Not Found\n";
-        continue;
+    } catch (MessageNotFound $e) {
+        // enum code see Exception/MessageNotFound.php
+        $code = $e->getCode();
+        if ($code == MessageNotFound::Ignore) {
+            continue;
+        }
+        
+        throw $e;
     } catch (Throwable $e) {
         echo $e->getMessage();
         throw $e;

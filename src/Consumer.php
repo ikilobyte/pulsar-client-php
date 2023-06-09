@@ -204,7 +204,7 @@ class Consumer extends Client
         // It may appear that the current message is not CommandMessage
         if (!( $commandMessage instanceof CommandMessage )) {
             if (!$loop) {
-                throw new MessageNotFound();
+                throw new MessageNotFound('command parse fail', MessageNotFound::CommandParseFail);
             }
             return $this->receive($loop);
         }

@@ -19,10 +19,22 @@ class MessageNotFound extends Exception
 {
 
     /**
-     * @param string $message
+     * Can be ignored, not a err
      */
-    public function __construct(string $message = 'Message Not Found')
+    const Ignore = 0;
+
+    /**
+     * Command parsing failed
+     */
+    const CommandParseFail = 1;
+
+    
+    /**
+     * @param string $message
+     * @param int $code
+     */
+    public function __construct(string $message = 'Message Not Found', int $code = MessageNotFound::Ignore)
     {
-        parent::__construct($message);
+        parent::__construct($message, $code);
     }
 }
