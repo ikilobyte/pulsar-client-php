@@ -402,7 +402,7 @@ $reader->close();
     * SEQUENCE_ID
     * PROPERTIES
 
-## MessageNotFound Err Code （v1.2.1）
+## MessageNotFound ErrCode （v1.2.1）
 
 * `MessageNotFound::Ignore`
 * `MessageNotFound::CommandParseFail`
