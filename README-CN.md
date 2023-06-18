@@ -398,6 +398,11 @@ $reader->close();
     * SEQUENCE_ID
     * PROPERTIES
 
+## MessageNotFound 错误码（v1.2.1）
+
+* `MessageNotFound::Ignore`
+* `MessageNotFound::CommandParseFail`
+
 ## License
 
 [MIT](LICENSE) LICENSE
