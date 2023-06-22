@@ -233,6 +233,9 @@ while ($running) {
         
         // ...
     } catch (\Pulsar\Exception\MessageNotFound $e) {
+        if ($e ->getCode() != \Pulsar\Exception\MessageNotFound::Ignore) {
+            die($e->getMessage());
+        }
         echo "Message Not Found\n";
         continue;
     } catch (Throwable $e) {
