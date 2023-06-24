@@ -64,5 +64,7 @@ jobs:
             
             -   name: test pulsar
                 run: |
+                    rm -rf composer.lock && composer install
+                    ls -al
                     php examples/workflows/producer.php
                     php examples/workflows/consumer.php
