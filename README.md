@@ -28,6 +28,16 @@ Reference [PulsarApi.proto](src/PulsarApi.proto) And support Swoole coroutine
 * Swoole Extension(If you want to use in swoole)
     * Use in the swoole only requires that the `SWOOLE_HOOK_SOCKETS、SWOOLE_HOOK_STREAM_FUNCTION` or `SWOOLE_HOOK_ALL`
 
+## Recommend
+
+> If the following error occurs, the following extensions must be installed
+
+```bash
+Negative integers are only supported with GMP or BC (64bit) intextensions.
+```
+
+* `gmp` Extension **or** `bcmath` Extension
+
 ## Installation
 
 ```bash

@@ -28,6 +28,16 @@
 * Swoole Extension（如果你想在swoole中使用）
     * 只需要配置`SWOOLE_HOOK_SOCKETS、SWOOLE_HOOK_STREAM_FUNCTION` 或者 `SWOOLE_HOOK_ALL`
 
+## 推荐
+
+* 如果出现以下报错，则必须安装下面的扩展（二选一）
+
+```bash
+Negative integers are only supported with GMP or BC (64bit) intextensions. 
+```
+
+* `gmp`  **或** `bcmath`
+
 ## 安装
 
 ```bash
