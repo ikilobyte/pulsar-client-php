@@ -90,18 +90,6 @@ for ($i = 0; $i < 10; $i++) {
     ]);
 }
 
-// Send Batch message 
-$messages = [];
-for ($i = 0;$i < 10;$i++) {
-  $messages[] = json_encode([
-        'id'    => $i,
-        'now'   => date('Y-m-d H:i:s')
-  ]);
-}
-
-$messageID = $producer->send($messages);
-echo "batch message id ${messageID}\n";
-
 // close
 $producer->close();
 
@@ -197,20 +185,6 @@ while (true) {
 }
 
 $consumer->close();
-```
-
-> 批量接收消息
-
-- 只有当生产者批量发送消息时，才能接收到批量消息。
-
-```php
-$messages = $consumer->batchReceive();
-foreach ($messages as $message) {
-    // ...
-    
-    // Ack
-    $consumer->ack($message);
-}
 ```
 
 > 订阅多个主题
