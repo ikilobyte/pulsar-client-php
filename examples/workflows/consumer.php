@@ -30,7 +30,7 @@ while (true) {
         exit(1);
     }
 
-    if ($receive >= 20) {
+    if ($receive >= 30) {
         break;
     }
 

@@ -34,6 +34,19 @@ for ($i = 0; $i < 10; $i++) {
     echo sprintf("message id %s delay %s\n", $messageID, $i * 5);
 }
 
+
+// Send Batch messages
+$messages = [];
+for ($i = 0; $i < 10; $i++) {
+    $messages[] = [
+        'id'   => $i,
+        'date' => date('Y-m-d H:i:s'),
+    ];
+}
+
+$messageID = $producer->send($messages);
+echo sprintf("batch message id %s\n", $messageID);
+
 // close
 $producer->close();
 
