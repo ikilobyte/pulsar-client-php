@@ -10,7 +10,7 @@ use Swoole\Http\Request as SwooleRequest;
 use Swoole\Http\Response as SwooleResponse;
 use Swoole\Http\Server as SwooleServer;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
 
 
