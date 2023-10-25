@@ -237,13 +237,13 @@ class Consumer extends Client
      * @throws MessageNotFound
      * @throws RuntimeException
      */
-    public function batchReceive(): array
+    public function batchReceive(bool $loop = true): array
     {
-        $messages = [$this->receive()];
+        $messages = [$this->receive($loop)];
         while (!$this->messageQueue->isEmpty()) {
             $messages[] = $this->messageQueue->dequeue();
         }
-        
+
         return $messages;
     }
 
