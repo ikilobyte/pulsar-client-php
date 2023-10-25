@@ -38,10 +38,10 @@ for ($i = 0; $i < 10; $i++) {
 // Send Batch messages
 $messages = [];
 for ($i = 0; $i < 10; $i++) {
-    $messages[] = [
+    $messages[] = json_encode([
         'id'   => $i,
         'date' => date('Y-m-d H:i:s'),
-    ];
+    ]);
 }
 
 $messageID = $producer->send($messages);
