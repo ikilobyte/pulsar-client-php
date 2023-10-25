@@ -1,4 +1,4 @@
-name: Test Pulsar
+name: Push Tag Test Pulsar
 on:
     push:
         tags:

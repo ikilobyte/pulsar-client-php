@@ -1,4 +1,4 @@
-name: Test Pulsar
+name: Dispatch Test Pulsar
 on: workflow_dispatch
 
 jobs:
