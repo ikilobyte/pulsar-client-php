@@ -18,6 +18,13 @@ jobs:
                 uses: shivammathur/setup-php@v2
                 with:
                     php-version: ${{ matrix.php }}
+                    extensions: swoole-4.8.10
+            
+            # print php info
+            -   name: php info
+                run: |
+                    php -v
+                    php -m
             
             # initial pulsar
             -   name: initial pulsar server
