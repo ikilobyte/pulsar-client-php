@@ -19,9 +19,9 @@ interface ISchema
 {
     /**
      * @param $data
-     * @return mixed
+     * @return string
      */
-    public function encode($data);
+    public function encode($data): string;
 
 
     /**

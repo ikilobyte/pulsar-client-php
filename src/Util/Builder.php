@@ -215,12 +215,11 @@ class Builder
 
 
     /**
-     * @param $payload
+     * @param string $payload
      * @return string
-     * @throws OptionsException
-     * SingleMessageMetadata
+     * @throws OptionsException SingleMessageMetadata
      */
-    protected function singleMessage($payload): string
+    protected function singleMessage(string $payload): string
     {
         // singleMessageMetadata
         $singleMsgMetadata = new SingleMessageMetadata();
