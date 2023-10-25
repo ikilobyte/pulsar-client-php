@@ -91,6 +91,19 @@ for ($i = 0; $i < 10; $i++) {
     ]);
 }
 
+// Send Batch message 
+// The underlying protocol will automatically package these messages into a message and send it to pulsar
+$messages = [];
+for ($i = 0;$i < 10;$i++) {
+    $messages[] = json_encode([
+          'id'    => $i,
+          'now'   => date('Y-m-d H:i:s')
+    ]);
+}
+
+$messageID = $producer->send($messages);
+echo "batch message id ${messageID}\n";
+
 // close
 $producer->close();
 ```
@@ -187,6 +200,20 @@ while (true) {
 }
 
 $consumer->close();
+```
+
+> Receive Batch Message
+
+- Only when the producer sends the message in bulk can the batch message be received.
+
+```php
+$messages = $consumer->batchReceive();
+foreach ($messages as $message) {
+    // ...
+    
+    // Ack
+    $consumer->ack($message);
+}
 ```
 
 > Subscribe to multiple topics
