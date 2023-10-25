@@ -75,3 +75,4 @@ jobs:
                     ls -al
                     php examples/workflows/producer.php
                     php examples/workflows/consumer.php
+                    php examples/workflows/keepalive.php
