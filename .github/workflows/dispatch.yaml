@@ -25,6 +25,7 @@ jobs:
                 run: |
                     php -v
                     php -m
+                    php --ri swoole
             
             # initial pulsar
             -   name: initial pulsar server
