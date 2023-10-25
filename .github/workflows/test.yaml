@@ -1,0 +1,70 @@
+name: Test Pulsar
+on: workflow_dispatch
+
+jobs:
+    start:
+        strategy:
+            matrix:
+                php: [ "7.0" , "7.1", "7.2", "7.3", "7.4", "8.0", "8.1", "8.2" ]
+        runs-on: ubuntu-latest
+        steps:
+            
+            # checkout
+            -   name: checkout
+                uses: actions/checkout@v3.0.0
+            
+            # with
+            -   name: with php version-${{matrix.php}}
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: ${{ matrix.php }}
+            
+            # initial pulsar
+            -   name: initial pulsar server
+                run: |
+                    chmod -c o+w `pwd`/.github
+                    ls -al
+                    docker run -itd --privileged --name pulsar -v `pwd`/.github:/pulsar/tokens -p 6650:6650 -p 8080:8080 apachepulsar/pulsar:3.0.0 bin/pulsar standalone
+                    echo "-- Wait for Pulsar service to be ready"
+                    until curl http://localhost:8080/metrics > /dev/null 2>&1 ; do sleep 1; done
+            
+            # create token
+            -   name: create authentication token
+                run: |
+                    docker exec pulsar bin/pulsar tokens create-secret-key --output /pulsar/tokens/jwt.key --base64
+                    docker exec pulsar bin/pulsar tokens create --secret-key file:///pulsar/tokens/jwt.key --subject workflows > `pwd`/.github/jwt.token
+                    ls -al .github
+                    cat .github/jwt.key
+            
+            # grant permission
+            -   name: grant permission
+                run: |
+                    docker exec pulsar bin/pulsar-admin namespaces grant-permission public/default --actions produce,consume --role workflows
+                    docker exec pulsar bin/pulsar-admin namespaces permissions public/default
+            
+            
+            # configure standalone.conf
+            -   name: configure standalone.conf
+                run: |
+                    docker cp pulsar:/pulsar/conf/standalone.conf .
+                    sed -i 's/authenticationEnabled=false/authenticationEnabled=true/g' standalone.conf
+                    sed -i 's/authenticationProviders=/authenticationProviders=org.apache.pulsar.broker.authentication.AuthenticationProviderToken/g' standalone.conf
+                    sed -i 's/brokerClientAuthenticationPlugin=/brokerClientAuthenticationPlugin=org.apache.pulsar.client.impl.auth.AuthenticationToken/g' standalone.conf
+                    sed -i 's/brokerClientAuthenticationParameters=/brokerClientAuthenticationParameters=file:\/\/\/pulsar\/tokens\/jwt.token/g' standalone.conf
+                    sed -i 's/tokenSecretKey=/tokenSecretKey=file:\/\/\/pulsar\/tokens\/jwt.key/g' standalone.conf
+            
+            # restart pulsar
+            -   name: restart pulsar
+                run: |
+                    docker cp standalone.conf pulsar:/pulsar/conf/standalone.conf
+                    docker restart pulsar
+                    echo "-- Wait for Pulsar service to be ready"
+                    until curl http://localhost:8080/metrics > /dev/null 2>&1 ; do sleep 1; done
+            
+            
+            -   name: test pulsar
+                run: |
+                    rm -rf composer.lock && composer install
+                    ls -al
+                    php examples/workflows/producer.php
+                    php examples/workflows/consumer.php
