@@ -9,6 +9,7 @@
 namespace Pulsar;
 
 use Pulsar\Exception\OptionsException;
+use Pulsar\Policy\DeadLetterPolicy;
 use Pulsar\Proto\CommandSubscribe\InitialPosition;
 
 /**
@@ -203,10 +204,11 @@ final class ConsumerOptions extends Options
 
     /**
      * @return DeadLetterPolicy
+     * @throws OptionsException
      */
     public function getDeadLetterPolicy(): DeadLetterPolicy
     {
-        return $this->data[ self::DEAD_LETTER_POLICY ] ?? new DeadLetterPolicy();
+        return $this->data[ self::DEAD_LETTER_POLICY ] ?? new DeadLetterPolicy([], $this);
     }
 
     /**
