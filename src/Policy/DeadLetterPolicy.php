@@ -8,12 +8,18 @@
 declare( strict_types = 1 );
 
 
-namespace Pulsar;
+namespace Pulsar\Policy;
 
 
 use Pulsar\Authentication\Authentication;
 use Pulsar\Compression\Compression;
+use Pulsar\ConsumerOptions;
+use Pulsar\Exception;
 use Pulsar\Exception\OptionsException;
+use Pulsar\Message;
+use Pulsar\Options;
+use Pulsar\Producer;
+use Pulsar\ProducerOptions;
 
 /**
  * Class DeadLetterPolicy
