@@ -10,6 +10,7 @@ namespace Pulsar;
 
 use Google\CRC32\CRC32;
 use Protobuf\AbstractMessage;
+use Pulsar\Builder\BatchBuilder;
 use Pulsar\Exception\OptionsException;
 use Pulsar\Exception\RuntimeException;
 use Pulsar\IO\ChannelManager;
@@ -17,9 +18,9 @@ use Pulsar\Proto\CommandSendReceipt;
 use Pulsar\Proto\KeyValue;
 use Pulsar\Proto\MessageMetadata;
 use Pulsar\Proto\SingleMessageMetadata;
-use Pulsar\Traits\CommandSendBuilder;
 use Pulsar\Traits\ProducerKeepAlive;
 use Pulsar\Util\Buffer;
+use Pulsar\Util\Builder;
 use Pulsar\Util\Helper;
 use Swoole\Coroutine;
 
@@ -31,7 +32,6 @@ use Swoole\Coroutine;
 class Producer extends Client
 {
     use ProducerKeepAlive;
-    use CommandSendBuilder;
 
     /**
      * @var ProducerOptions
@@ -114,7 +114,7 @@ class Producer extends Client
             if ($this->options->getKeepalive()) {
                 ChannelManager::init($connection->fd());
             }
-            
+
             $this->producers[] = new PartitionProducer($id, $topic, $connection, $this->options);
         }
     }
@@ -131,19 +131,18 @@ class Producer extends Client
      */
     public function send($payload, array $options = []): string
     {
-        // schema payload encode
-        if ($schema = $this->options->getSchema()) {
-            $payload = $schema->encode($payload);
-        }
-
         $producer = $this->getPartitionProducer();
         $messageOptions = new MessageOptions($options);
-        $buffer = $this->buildSendBuffer(
+
+        $messages = is_array($payload) ? $payload : [$payload];
+        $builder = new Builder(
             $producer,
-            $payload,
+            $this->options,
             $messageOptions,
+            $messages,
             $messageOptions->getSequenceID()
         );
+        $buffer = $builder->resolve();
 
         /**
          * @var $response Response
@@ -179,7 +178,15 @@ class Producer extends Client
         $sequenceID = $messageOptions->getSequenceID();
 
         $producer = $this->getPartitionProducer();
-        $buffer = $this->buildSendBuffer($producer, $payload, $messageOptions, $sequenceID);
+
+        $builder = new Builder(
+            $producer,
+            $this->options,
+            $messageOptions,
+            [$payload],
+            $sequenceID
+        );
+        $buffer = $builder->resolve();
         $producer->sendAsync($buffer);
         $this->callbacks[ $sequenceID ] = [$producer->getID(), $callable];
     }
