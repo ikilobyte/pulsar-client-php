@@ -12,6 +12,9 @@ use Swoole\Http\Server as SwooleServer;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
+if (!extension_loaded('swoole')) {
+    exit(0);
+}
 
 
 /**
