@@ -46,4 +46,13 @@ class Jwt implements Authentication
     {
         return $this->token;
     }
+
+
+    /**
+     * @return string
+     */
+    public function authorization(): string
+    {
+        return sprintf('Bearer %s', $this->token);
+    }
 }

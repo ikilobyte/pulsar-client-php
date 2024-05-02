@@ -22,4 +22,10 @@ interface Authentication
      * @return mixed
      */
     public function authData();
+
+
+    /**
+     * @return string
+     */
+    public function authorization(): string;
 }

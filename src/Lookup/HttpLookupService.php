@@ -136,7 +136,7 @@ class HttpLookupService implements LookupService
          * @var $auth Authentication
          */
         if ($auth = $this->options->offsetGet(Options::Authentication)) {
-            $headers[] = 'Authorization: Bearer ' . $auth->authData();
+            $headers[] = sprintf('Authorization: %s', $auth->authorization());
         }
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         $response = curl_exec($ch);
