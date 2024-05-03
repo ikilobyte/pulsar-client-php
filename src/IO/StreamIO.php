@@ -14,7 +14,9 @@ use Pulsar\Authentication\Authentication;
 use Pulsar\Client;
 use Pulsar\Exception\ConnectException;
 use Pulsar\Exception\IOException;
+use Pulsar\Exception\OptionsException;
 use Pulsar\Exception\RuntimeException;
+use Pulsar\Options;
 use Pulsar\Proto\BaseCommand;
 use Pulsar\Proto\BaseCommand\Type;
 use Pulsar\Proto\CommandConnect;
@@ -36,19 +38,63 @@ class StreamIO extends AbstractIO implements Reader
 
 
     /**
+     * @var bool
+     */
+    protected $schema = 'tcp';
+
+
+    /**
+     * @param Options $options
+     */
+    public function __construct(Options $options)
+    {
+        $this->options = $options;
+    }
+
+
+    /**
+     * @return array
+     * @throws OptionsException
+     */
+    protected function getContextOptions(): array
+    {
+        $url = $this->options->getUrl();
+        if ($url['scheme'] != 'pulsar+ssl') {
+            return [];
+        }
+
+        $tls = $this->options->getTLS();
+        if (empty($tls)) {
+            throw new OptionsException('pulsar+ssl must required TLSOptions');
+        }
+
+        $this->schema = 'tls';
+        return [
+            'ssl' => array_merge($tls->getData(), [
+                'peer_name' => $url['host'],
+            ]),
+        ];
+    }
+
+    /**
      * @param string $host
      * @param int $port
      * @param $timeout
      * @return void
      * @throws ConnectException
+     * @throws OptionsException
      */
     public function connect(string $host, int $port, $timeout = null)
     {
+        $context = stream_context_create($this->getContextOptions());
+        $address = sprintf('%s://%s:%d', $this->schema, $host, $port);
         $this->socket = @stream_socket_client(
-            sprintf('tcp://%s:%d', $host, $port),
+            $address,
             $code,
             $message,
-            ( $timeout <= 0 ) ? 5 : $timeout
+            ( $timeout <= 0 ) ? 5 : $timeout,
+            STREAM_CLIENT_CONNECT,
+            $context
         );
 
         if ($code) {

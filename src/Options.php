@@ -151,6 +151,24 @@ abstract class Options
 
 
     /**
+     * @param TLSOptions $options
+     * @return void
+     */
+    public function setTLS(TLSOptions $options)
+    {
+        $this->data['tls'] = $options;
+    }
+
+
+    /**
+     * @return TLSOptions|null
+     */
+    public function getTLS()
+    {
+        return $this->data['tls'] ?? null;
+    }
+
+    /**
      * @return ISchema|null
      */
     public function getSchema()
