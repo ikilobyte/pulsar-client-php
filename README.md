@@ -8,6 +8,7 @@
     * [Installation](#Installation)
     * [Producer](#Producer)
     * [Consumer](#Consumer)
+    * [TLS](#TLS)
     * [Schema](#Schema)
     * [Reader](#Reader)
     * [Options](#Options)
@@ -47,6 +48,7 @@ composer require ikilobyte/pulsar-client-php
 ```php
 <?php
 
+use Pulsar\Authentication\Basic;
 use Pulsar\Authentication\Jwt;
 use Pulsar\Compression\Compression;
 use Pulsar\Producer;
@@ -58,8 +60,11 @@ require_once __DIR__ . '/vendor/autoload.php';
 $options = new ProducerOptions();
 
 // If permission authentication is available
-// Only JWT authentication is currently supported
+// use JWT authentication
 $options->setAuthentication(new Jwt('token')); 
+
+// use Basic authentication
+//$options->setAuthentication(new Basic('user','password'));
 
 $options->setConnectTimeout(3);
 $options->setTopic('persistent://public/default/demo');
@@ -141,6 +146,7 @@ $producer->send('body',[
 <?php
 
 use Pulsar\Authentication\Jwt;
+use Pulsar\Authentication\Basic;
 use Pulsar\Consumer;
 use Pulsar\ConsumerOptions;
 use Pulsar\SubscriptionType;
@@ -151,8 +157,11 @@ require_once __DIR__ . '/vendor/autoload.php';
 $options = new ConsumerOptions();
 
 // If permission authentication is available
-// Only JWT authentication is currently supported
+// use JWT authentication
 $options->setAuthentication(new Jwt('token'));
+
+// use Basic authentication
+//$options->setAuthentication(new Basic('user','password'));
 
 $options->setConnectTimeout(3);
 $options->setTopic('persistent://public/default/demo');
@@ -280,6 +289,33 @@ while ($running) {
         pcntl_signal_dispatch();
     }
 }
+```
+
+## TLS
+
+- Refer to the official [documentation](https://pulsar.apache.org/docs/next/security-tls-transport/) for certificate
+  configuration
+
+- Example
+
+```php
+$tls = new \Pulsar\TLSOptions('./cert.pem','./cert.key.pem');
+
+// CA Cert
+$tls->setTrustCertsFilePath('./ca.cart.pem');
+
+// optional
+$tls->setAllowInsecureConnection(false);
+$tls->setValidateHostname(true);
+$options->setTLS($tls);
+
+$consumer = new \Pulsar\Consumer('pulsar+ssl://localhost:6651',$options);
+//$producer = new \Pulsar\Producer('pulsar+ssl://localhost:6651',$options);
+
+
+// or https
+$consumer = new \Pulsar\Consumer('https://localhost:8081',$options);
+//$producer = new \Pulsar\Producer('https://localhost:8081',$options);
 ```
 
 ## Schema
@@ -439,6 +475,11 @@ $reader->close();
     * DELAY_SECONDS
     * SEQUENCE_ID
     * PROPERTIES
+* TLSOption (v1.3.0)
+    * __construct(string $certFilePath, string $keyFilePath)
+    * setTrustCertsFilePath()
+    * setValidateHostname()
+    * setAllowInsecureConnection()
 
 ## MessageNotFound ErrCode （v1.2.1）
 

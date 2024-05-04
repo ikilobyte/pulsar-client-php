@@ -281,6 +281,31 @@ while ($running) {
 }
 ```
 
+## TLS
+
+- 证书配置请参考[官方文档](https://pulsar.apache.org/docs/next/security-tls-transport/)
+
+- 示例
+
+```php
+$tls = new \Pulsar\TLSOptions('./cert.pem','./cert.key.pem');
+
+// CA Cert
+$tls->setTrustCertsFilePath('./ca.cart.pem');
+
+// optional
+$tls->setAllowInsecureConnection(false);
+$tls->setValidateHostname(true);
+$options->setTLS($tls);
+
+$consumer = new \Pulsar\Consumer('pulsar+ssl://localhost:6651',$options);
+//$producer = new \Pulsar\Producer('pulsar+ssl://localhost:6651',$options);
+
+// or https
+$consumer = new \Pulsar\Consumer('https://localhost:8081',$options);
+//$producer = new \Pulsar\Producer('https://localhost:8081',$options);
+```
+
 ## Schema
 
 - 目前只支持 `INT8`、`INT16`、`INT32`、`INT64`、`DOUBLE`、`STRING`、`JSON`，以下代码以 `JSON Schema` 为示例
@@ -436,6 +461,11 @@ $reader->close();
     * DELAY_SECONDS
     * SEQUENCE_ID
     * PROPERTIES
+* TLSOption (v1.3.0)
+    * __construct(string $certFilePath, string $keyFilePath)
+    * setTrustCertsFilePath()
+    * setValidateHostname()
+    * setAllowInsecureConnection()
 
 ## MessageNotFound 错误码（v1.2.1）
 
