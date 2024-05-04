@@ -162,10 +162,16 @@ abstract class Options
 
     /**
      * @return TLSOptions|null
+     * @throws OptionsException
      */
     public function getTLS()
     {
-        return $this->data['tls'] ?? null;
+        $tls = $this->data['tls'] ?? null;
+        if (empty($tls)) {
+            throw new OptionsException('TLSOptions Must Required');
+        }
+
+        return $tls;
     }
 
     /**
