@@ -38,15 +38,22 @@ class HttpLookupService implements LookupService
      */
     protected $options;
 
+    /**
+     * @var
+     */
+    protected $schema;
+
 
     /**
      * @param Options $options
+     * @param string $scheme
      * @throws OptionsException
      */
-    public function __construct(Options $options)
+    public function __construct(Options $options, string $scheme)
     {
-        $this->address = trim($options->getUrl()['url'], '/');
         $this->options = $options;
+        $this->address = trim($options->getUrl()['url'], '/');
+        $this->schema = $scheme;
     }
 
 
@@ -54,6 +61,7 @@ class HttpLookupService implements LookupService
      * @param string $topic
      * @return Result
      * @throws RuntimeException
+     * @throws OptionsException
      */
     public function lookup(string $topic): Result
     {
@@ -78,6 +86,7 @@ class HttpLookupService implements LookupService
      * @param string $topic
      * @return int
      * @throws RuntimeException
+     * @throws OptionsException
      */
     public function getPartitionedTopicMetadata(string $topic): int
     {
@@ -119,6 +128,7 @@ class HttpLookupService implements LookupService
      * @param string $url
      * @return array
      * @throws RuntimeException
+     * @throws OptionsException
      */
     protected function request(string $url): array
     {
@@ -127,8 +137,26 @@ class HttpLookupService implements LookupService
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_HEADER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+
+        if ($this->schema == 'http') {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        } else {
+            $tls = $this->options->getTLS()->getData();
+
+            // ca
+            if ($tls['cafile']) {
+                curl_setopt($ch, CURLOPT_CAINFO, $tls['cafile']);
+            }
+
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $tls['verify_peer']);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $tls['verify_peer_name'] ? 2 : false);
+            curl_setopt($ch, CURLOPT_SSLCERT, $tls['local_cert']);
+            curl_setopt($ch, CURLOPT_SSLKEY, $tls['local_pk']);
+
+            curl_setopt($ch, CURLOPT_SSLCERTTYPE, 'pem');
+            curl_setopt($ch, CURLOPT_SSLKEYTYPE, 'pem');
+        }
 
         $headers = [];
 
@@ -140,8 +168,11 @@ class HttpLookupService implements LookupService
         }
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         $response = curl_exec($ch);
+        if (empty($response)) {
+            throw new RuntimeException(sprintf('curl_errno[%s] %s', curl_errno($ch), curl_error($ch)));
+        }
+
         $result = json_decode($response, true);
-        curl_close($ch);
         if (!is_array($result)) {
             throw new RuntimeException('Pulsar Connect Failed');
         }

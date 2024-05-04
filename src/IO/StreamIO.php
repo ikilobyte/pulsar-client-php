@@ -64,10 +64,6 @@ class StreamIO extends AbstractIO implements Reader
         }
 
         $tls = $this->options->getTLS();
-        if (empty($tls)) {
-            throw new OptionsException('pulsar+ssl must required TLSOptions');
-        }
-
         $this->schema = 'tls';
         return [
             'ssl' => array_merge($tls->getData(), [

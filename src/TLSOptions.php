@@ -17,6 +17,7 @@ class TLSOptions extends Options
         'verify_peer_name'  => true,
         'verify_peer'       => true,
         'allow_self_signed' => true,
+        'cafile'            => '',
     ];
 
     /**
@@ -52,12 +53,12 @@ class TLSOptions extends Options
 
 
     /**
-     * @param bool $verifyPeer
+     * @param bool $insecure
      * @return self
      */
-    public function setAllowInsecureConnection(bool $verifyPeer): self
+    public function setAllowInsecureConnection(bool $insecure): self
     {
-        $this->data['verify_peer'] = $verifyPeer;
+        $this->data['verify_peer'] = !$insecure;
         return $this;
     }
 

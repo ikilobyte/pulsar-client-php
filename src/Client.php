@@ -49,7 +49,7 @@ abstract class Client
     /**
      * Class library version
      */
-    const VERSION_ID = '1.2.3';
+    const VERSION_ID = '1.3.0';
 
     /**
      * @var Options
@@ -184,8 +184,8 @@ abstract class Client
      */
     protected function makeLookupService(): LookupService
     {
-        if ($this->serviceScheme == 'http') {
-            return new HttpLookupService($this->options);
+        if (in_array($this->serviceScheme, ['http', 'https'])) {
+            return new HttpLookupService($this->options, $this->serviceScheme);
         }
 
         return new TcpLookupService($this->options);
