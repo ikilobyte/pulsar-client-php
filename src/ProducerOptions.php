@@ -87,6 +87,15 @@ final class ProducerOptions extends Options
 
 
     /**
+     * @param Compression $provider
+     * @return void
+     */
+    public function setCompressionProvider(Compression $provider)
+    {
+        $this->data[ self::CompressionType ] = $provider;
+    }
+
+    /**
      * @return Compression
      * @throws Exception\RuntimeException
      */
