@@ -44,12 +44,6 @@ class StreamIO extends AbstractIO implements Reader
 
 
     /**
-     * @var string[]
-     */
-    protected $tlsSchema = ['pulsar+ssl', 'https'];
-
-
-    /**
      * @param Options $options
      */
     public function __construct(Options $options)
@@ -64,11 +58,11 @@ class StreamIO extends AbstractIO implements Reader
      */
     protected function getContextOptions(): array
     {
-        $url = $this->options->getUrl();
-        if (!in_array($url['scheme'], $this->tlsSchema)) {
+        if (!$this->options->isTLS()) {
             return [];
         }
 
+        $url = $this->options->getUrl();
         $tls = $this->options->getTLS();
         $this->schema = 'tls';
         return [
