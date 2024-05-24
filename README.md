@@ -21,6 +21,17 @@ English | [中文](README-CN.md)
 This is a [Apache Pulsar](https://pulsar.apache.org) client library implemented in php
 Reference [PulsarApi.proto](src/PulsarApi.proto) And support Swoole coroutine
 
+Features
+
+- Support URL (`pulsar://` 、 `pulsar+ssl://` 、 `http://` 、 `https://`)
+- Multi topic consumers
+- TLS connection
+- Automatic reconnection (Only Consumer)
+- Message batching
+- Message Properties
+- Compression with `zstd`, `zlib`
+- Authentication with `jwt`, `basic`
+
 ## Requirements
 
 * PHP >=7.0 (Supported PHP8)

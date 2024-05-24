@@ -20,6 +20,17 @@
 这是一个用php实现的[Apache Pulsar](https://pulsar.apache.org)客户端库，基于[PulsarApi.proto](src/PulsarApi.proto)
 ，且支持Swoole协程环境
 
+功能
+
+- Support URL (`pulsar://` 、 `pulsar+ssl://` 、 `http://` 、 `https://`)
+- Multi topic consumers
+- TLS connection
+- Automatic reconnection (Only Consumer)
+- Message batching
+- Message Properties
+- Compression with `zstd`, `zlib`
+- Authentication with `jwt`, `basic`
+
 ## 依赖
 
 * PHP >=7.0 (Supported PHP8)
