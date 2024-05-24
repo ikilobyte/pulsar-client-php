@@ -45,7 +45,7 @@ abstract class Options
     /**
      * @var array
      */
-    protected $data = [
+    public $data = [
         self::CONNECT_TIMEOUT => 10,
     ];
 
@@ -172,6 +172,15 @@ abstract class Options
         }
 
         return $tls;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function isTLS(): bool
+    {
+        return ( $this->data['tls'] ?? null ) != null;
     }
 
     /**

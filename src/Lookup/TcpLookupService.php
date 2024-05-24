@@ -48,6 +48,11 @@ class TcpLookupService implements LookupService
      */
     protected $port;
 
+    /**
+     * @var Options
+     */
+    protected $options;
+
 
     /**
      * @param Options $options
@@ -58,6 +63,7 @@ class TcpLookupService implements LookupService
         $parse = $options->getUrl();
         $this->host = $parse['host'];
         $this->port = $parse['port'];
+        $this->options = $options;
         $this->connection = Factory::create($options);
         $this->connection->connect($this->host, $this->port);
         $this->connection->handshake($options->offsetGet(Options::Authentication));
@@ -82,22 +88,24 @@ class TcpLookupService implements LookupService
          * @var $subCommand CommandLookupTopicResponse
          */
         $subCommand = $response->subCommand;
-
+        $brokerServiceUrl = $this->getBrokerAddress($subCommand);
+        $parse = parse_url($brokerServiceUrl);
 
         switch ($subCommand->getResponse()->value()) {
 
             // Need to connect to a new broker
-            // TLS is not supported at this time
+            // TLS is supported at this time
             case CommandLookupTopicResponse\LookupType::Redirect_VALUE:
-                $parse = parse_url($subCommand->getBrokerServiceUrl());
-                return new Result($parse['host'], $parse['port'], $subCommand->getBrokerServiceUrl());
+
+                // TODO
+                return new Result($parse['host'], $parse['port'], $brokerServiceUrl);
 
             // is the broker where the current connection is located
             // But it also creates a new connection
             // Instead of using this current connection
-            // TLS is not supported at this time
+            // TLS is supported at this time
             case CommandLookupTopicResponse\LookupType::Connect_VALUE:
-                return new Result($this->host, $this->port, $subCommand->getBrokerServiceUrl());
+                return new Result($parse['host'], $parse['port'], $brokerServiceUrl);
 
             //
             default:
@@ -130,6 +138,26 @@ class TcpLookupService implements LookupService
         }
 
         return $subCommand->getPartitions();
+    }
+
+
+
+    /**
+     * @param CommandLookupTopicResponse $response
+     * @return string
+     */
+    protected function getBrokerAddress(CommandLookupTopicResponse $response): string
+    {
+        $brokerServiceUrl = $response->getBrokerServiceUrl();
+        if ($this->options->isTLS()) {
+            $brokerServiceUrl = $response->getBrokerServiceUrlTls();
+        }
+
+        if ($response->getProxyThroughServiceUrl()) {
+            $brokerServiceUrl = $this->options->data['url'];
+        }
+
+        return $brokerServiceUrl;
     }
 
 

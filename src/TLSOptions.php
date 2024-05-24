@@ -13,7 +13,7 @@ class TLSOptions extends Options
     /**
      * @var false[]
      */
-    protected $data = [
+    public $data = [
         'verify_peer_name'  => true,
         'verify_peer'       => true,
         'allow_self_signed' => true,

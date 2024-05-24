@@ -77,8 +77,9 @@ class HttpLookupService implements LookupService
             throw new RuntimeException('Get Broker Address Url Failed');
         }
 
-        $parse = parse_url($result['brokerUrl']);
-        return new Result($parse['host'], $parse['port'], $result['brokerUrl']);
+        $brokerUrl = $this->options->isTLS() ? $result['brokerUrlTls'] : $result['brokerUrl'];
+        $parse = parse_url($brokerUrl);
+        return new Result($parse['host'], $parse['port'], $brokerUrl);
     }
 
 
