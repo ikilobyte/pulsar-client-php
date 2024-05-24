@@ -177,10 +177,11 @@ abstract class Options
 
     /**
      * @return bool
+     * @throws OptionsException
      */
     public function isTLS(): bool
     {
-        return ( $this->data['tls'] ?? null ) != null;
+        return in_array($this->getUrl()['scheme'], ['pulsar+ssl', 'https']);
     }
 
     /**
