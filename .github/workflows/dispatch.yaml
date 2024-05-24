@@ -19,13 +19,6 @@ jobs:
                 with:
                     php-version: ${{ matrix.php }}
             
-            # print php info
-            -   name: php info
-                run: |
-                    php -v
-                    php -m
-                    php --ri swoole
-            
             # initial pulsar
             -   name: initial pulsar server
                 run: |
