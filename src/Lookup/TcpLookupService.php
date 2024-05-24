@@ -75,42 +75,60 @@ class TcpLookupService implements LookupService
      * @return Result
      * @throws IOException
      * @throws RuntimeException
+     * @throws OptionsException
      */
     public function lookup(string $topic): Result
     {
-        $command = new CommandLookupTopic();
-        $command->setRequestId(Helper::getRequestID());
-        $command->setAuthoritative(false);
-        $command->setTopic($topic);
-        $response = $this->connection->writeCommand(Type::LOOKUP(), $command)->wait();
+        $subCommand = $this->request($this->connection, $topic);
 
-        /**
-         * @var $subCommand CommandLookupTopicResponse
-         */
-        $subCommand = $response->subCommand;
-        $brokerServiceUrl = $this->getBrokerAddress($subCommand);
-        $parse = parse_url($brokerServiceUrl);
+        for ($i = 0; $i < 20; $i++) {
 
-        switch ($subCommand->getResponse()->value()) {
+            list($brokerServiceUrl, $proxyServiceUrl) = $this->getBrokerAddress($subCommand);
 
-            // Need to connect to a new broker
-            // TLS is supported at this time
-            case CommandLookupTopicResponse\LookupType::Redirect_VALUE:
+            $parse = parse_url($brokerServiceUrl);
 
-                // TODO
-                return new Result($parse['host'], $parse['port'], $brokerServiceUrl);
+            switch ($subCommand->getResponse()->value()) {
 
-            // is the broker where the current connection is located
-            // But it also creates a new connection
-            // Instead of using this current connection
-            // TLS is supported at this time
-            case CommandLookupTopicResponse\LookupType::Connect_VALUE:
-                return new Result($parse['host'], $parse['port'], $brokerServiceUrl);
+                // 1、Connect to a broker using a broker
+                // 2、Send lookups to new brokers
+                // 3、until you return to Connect
+                // 4、Maximum 20 attempts
+                case CommandLookupTopicResponse\LookupType::Redirect_VALUE:
 
-            //
-            default:
-                throw new RuntimeException($subCommand->getMessage());
+                    // clone the Options
+                    $options = clone $this->options;
+
+                    $options->setUrl($brokerServiceUrl);
+
+                    // create Connection
+                    $connection = Factory::create($options);
+
+                    // establish a connection
+                    $connection->connect($parse['host'], $parse['port']);
+
+                    // handshake
+                    $connection->handshake($options->offsetGet(Options::Authentication));
+
+                    // lookup
+                    $subCommand = $this->request($connection, $topic, $subCommand->getAuthoritative());
+
+                    break;
+
+                // is the broker where the current connection is located
+                // But it also creates a new connection
+                // Instead of using this current connection
+                // TLS is supported at this time
+                case CommandLookupTopicResponse\LookupType::Connect_VALUE:
+
+                    return new Result($parse['host'], $parse['port'], $proxyServiceUrl);
+
+                //
+                default:
+                    throw new RuntimeException($subCommand->getMessage());
+            }
         }
+
+        throw new RuntimeException('Maximum number of topic searches exceeded');
     }
 
 
@@ -144,22 +162,50 @@ class TcpLookupService implements LookupService
 
     /**
      * @param CommandLookupTopicResponse $response
-     * @return string
+     * @return array<string>
+     * @throws OptionsException
      */
-    protected function getBrokerAddress(CommandLookupTopicResponse $response): string
+    protected function getBrokerAddress(CommandLookupTopicResponse $response): array
     {
-        $brokerServiceUrl = $response->getBrokerServiceUrl();
         if ($this->options->isTLS()) {
             $brokerServiceUrl = $response->getBrokerServiceUrlTls();
+        } else {
+            $brokerServiceUrl = $response->getBrokerServiceUrl();
         }
+
+        // Through the current service agent
+        $proxyBrokerServiceUrl = $brokerServiceUrl;
 
         if ($response->getProxyThroughServiceUrl()) {
             $brokerServiceUrl = $this->options->data['url'];
         }
 
-        return $brokerServiceUrl;
+        return [$brokerServiceUrl, $proxyBrokerServiceUrl];
     }
 
+
+
+    /**
+     * @param AbstractIO $connect
+     * @param string $topic
+     * @param bool $authoritative
+     * @return CommandLookupTopicResponse
+     * @throws IOException
+     */
+    protected function request(AbstractIO $connect, string $topic, bool $authoritative = false): CommandLookupTopicResponse
+    {
+        $command = new CommandLookupTopic();
+        $command->setRequestId(Helper::getRequestID());
+        $command->setAuthoritative($authoritative);
+        $command->setTopic($topic);
+        $response = $connect->writeCommand(Type::LOOKUP(), $command)->wait();
+
+        /**
+         * @var $subCommand CommandLookupTopicResponse
+         */
+        $subCommand = $response->subCommand;
+        return $subCommand;
+    }
 
     /**
      * @return void
