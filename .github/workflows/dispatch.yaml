@@ -32,7 +32,7 @@ jobs:
                 run: |
                     chmod -c o+w `pwd`/.github
                     ls -al
-                    docker run -itd --privileged --name pulsar -v `pwd`/.github:/pulsar/tokens -p 6650:6650 -p 8080:8080 apachepulsar/pulsar:3.0.0 bin/pulsar standalone
+                    docker run -itd --privileged --name pulsar -v `pwd`/.github:/pulsar/tokens -p 6650:6650 -p 8080:8080 apachepulsar/pulsar bin/pulsar standalone
                     echo "-- Wait for Pulsar service to be ready"
                     until curl http://localhost:8080/metrics > /dev/null 2>&1 ; do sleep 1; done
             
