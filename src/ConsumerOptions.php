@@ -144,7 +144,7 @@ final class ConsumerOptions extends Options
      */
     public function setReceiveQueueSize(int $size)
     {
-        if ($size <= 0) {
+        if ($size < 0) {
             $size = 1000;
         }
         $this->data[ self::RECEIVE_QUEUE_SIZE ] = $size;
