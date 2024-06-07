@@ -84,7 +84,7 @@ class StreamIO extends AbstractIO implements Reader
     {
         $context = stream_context_create($this->getContextOptions());
         $address = sprintf('%s://%s:%d', $this->schema, $host, $port);
-        $this->socket = @stream_socket_client(
+        $socket = @stream_socket_client(
             $address,
             $code,
             $message,
@@ -93,10 +93,15 @@ class StreamIO extends AbstractIO implements Reader
             $context
         );
 
+        if ($socket === false) {
+            throw new ConnectException("Failed to connect to server at $address");
+        }
+
         if ($code) {
             throw new ConnectException($message, $code);
         }
 
+        $this->socket = $socket;
         $this->host = $host;
         $this->port = $port;
         $this->fd = (int)$this->socket;
