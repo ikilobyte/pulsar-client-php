@@ -26,8 +26,19 @@ class TLSOptions extends Options
      */
     public function __construct(string $certFilePath, string $keyFilePath)
     {
-        $this->data['local_cert'] = $certFilePath;
-        $this->data['local_pk'] = $keyFilePath;
+        if ($certFilePath) {
+            $this->data['local_cert'] = $certFilePath;
+        }
+
+        if ($certFilePath) {
+            $this->data['local_pk'] = $keyFilePath;
+        }
+
+        // without TLS cert
+        if (empty($certFilePath) && empty($keyFilePath)) {
+            $this->setValidateHostname(false);
+            $this->setAllowInsecureConnection(true);
+        }
     }
 
     /**
