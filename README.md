@@ -312,6 +312,9 @@ while ($running) {
 ```php
 $tls = new \Pulsar\TLSOptions('./cert.pem','./cert.key.pem');
 
+// Establishing a TLS connection without a certificate
+//$tls = new \Pulsar\TLSOptions('','');
+
 // CA Cert
 $tls->setTrustCertsFilePath('./ca.cart.pem');
 

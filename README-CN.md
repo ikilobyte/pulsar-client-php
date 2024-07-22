@@ -304,6 +304,9 @@ $tls = new \Pulsar\TLSOptions('./cert.pem','./cert.key.pem');
 // CA Cert
 $tls->setTrustCertsFilePath('./ca.cart.pem');
 
+// 无证书建立TLS连接
+//$tls = new \Pulsar\TLSOptions('','');
+
 // optional
 $tls->setAllowInsecureConnection(false);
 $tls->setValidateHostname(true);
