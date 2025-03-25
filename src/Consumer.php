@@ -225,7 +225,7 @@ class Consumer extends Client
             $this->messageQueue->enqueue($message);
         }
 
-        $consumer->decrement(1);
+        $consumer->decrement(sizeof($messages));
 
         return $this->messageQueue->dequeue();
     }
