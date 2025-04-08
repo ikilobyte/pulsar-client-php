@@ -47,7 +47,7 @@ class CommandNewTxn extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function __construct($stream = null, \Protobuf\Configuration $configuration = null)
+    public function __construct($stream = null, ?\Protobuf\Configuration $configuration = null)
     {
         $this->txn_ttl_seconds = '0';
         $this->tc_id = '0';
@@ -168,7 +168,7 @@ class CommandNewTxn extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public static function fromStream($stream, \Protobuf\Configuration $configuration = null)
+    public static function fromStream($stream, ?\Protobuf\Configuration $configuration = null)
     {
         return new self($stream, $configuration);
     }
@@ -230,7 +230,7 @@ class CommandNewTxn extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function toStream(\Protobuf\Configuration $configuration = null)
+    public function toStream(?\Protobuf\Configuration $configuration = null)
     {
         $config = $configuration ?: \Protobuf\Configuration::getInstance();
         $context = $config->createWriteContext();

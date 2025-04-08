@@ -170,7 +170,7 @@ class Schema extends \Protobuf\AbstractMessage
      *
      * @param \Protobuf\Collection<\Pulsar\Proto\KeyValue> $value
      */
-    public function setPropertiesList(\Protobuf\Collection $value = null)
+    public function setPropertiesList(?\Protobuf\Collection $value = null)
     {
         $this->properties = $value;
     }
@@ -212,7 +212,7 @@ class Schema extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public static function fromStream($stream, \Protobuf\Configuration $configuration = null)
+    public static function fromStream($stream, ?\Protobuf\Configuration $configuration = null)
     {
         return new self($stream, $configuration);
     }
@@ -291,7 +291,7 @@ class Schema extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function toStream(\Protobuf\Configuration $configuration = null)
+    public function toStream(?\Protobuf\Configuration $configuration = null)
     {
         $config = $configuration ?: \Protobuf\Configuration::getInstance();
         $context = $config->createWriteContext();

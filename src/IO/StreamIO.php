@@ -114,7 +114,7 @@ class StreamIO extends AbstractIO implements Reader
      * @return void
      * @throws Exception
      */
-    public function handshake(Authentication $authentication = null, string $brokerServiceUrl = '')
+    public function handshake(?Authentication $authentication = null, string $brokerServiceUrl = '')
     {
         if (is_null($this->socket)) {
             throw new RuntimeException('Connection to the server failed to complete the handshake');

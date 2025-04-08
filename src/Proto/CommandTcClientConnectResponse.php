@@ -99,7 +99,7 @@ class CommandTcClientConnectResponse extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\ServerError $value
      */
-    public function setError(\Pulsar\Proto\ServerError $value = null)
+    public function setError(?\Pulsar\Proto\ServerError $value = null)
     {
         $this->error = $value;
     }
@@ -157,7 +157,7 @@ class CommandTcClientConnectResponse extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public static function fromStream($stream, \Protobuf\Configuration $configuration = null)
+    public static function fromStream($stream, ?\Protobuf\Configuration $configuration = null)
     {
         return new self($stream, $configuration);
     }
@@ -218,7 +218,7 @@ class CommandTcClientConnectResponse extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function toStream(\Protobuf\Configuration $configuration = null)
+    public function toStream(?\Protobuf\Configuration $configuration = null)
     {
         $config = $configuration ?: \Protobuf\Configuration::getInstance();
         $context = $config->createWriteContext();

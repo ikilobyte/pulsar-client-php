@@ -456,7 +456,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandConnect $value
      */
-    public function setConnect(\Pulsar\Proto\CommandConnect $value = null)
+    public function setConnect(?\Pulsar\Proto\CommandConnect $value = null)
     {
         $this->connect = $value;
     }
@@ -486,7 +486,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandConnected $value
      */
-    public function setConnected(\Pulsar\Proto\CommandConnected $value = null)
+    public function setConnected(?\Pulsar\Proto\CommandConnected $value = null)
     {
         $this->connected = $value;
     }
@@ -516,7 +516,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandSubscribe $value
      */
-    public function setSubscribe(\Pulsar\Proto\CommandSubscribe $value = null)
+    public function setSubscribe(?\Pulsar\Proto\CommandSubscribe $value = null)
     {
         $this->subscribe = $value;
     }
@@ -546,7 +546,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandProducer $value
      */
-    public function setProducer(\Pulsar\Proto\CommandProducer $value = null)
+    public function setProducer(?\Pulsar\Proto\CommandProducer $value = null)
     {
         $this->producer = $value;
     }
@@ -576,7 +576,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandSend $value
      */
-    public function setSend(\Pulsar\Proto\CommandSend $value = null)
+    public function setSend(?\Pulsar\Proto\CommandSend $value = null)
     {
         $this->send = $value;
     }
@@ -606,7 +606,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandSendReceipt $value
      */
-    public function setSendReceipt(\Pulsar\Proto\CommandSendReceipt $value = null)
+    public function setSendReceipt(?\Pulsar\Proto\CommandSendReceipt $value = null)
     {
         $this->send_receipt = $value;
     }
@@ -636,7 +636,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandSendError $value
      */
-    public function setSendError(\Pulsar\Proto\CommandSendError $value = null)
+    public function setSendError(?\Pulsar\Proto\CommandSendError $value = null)
     {
         $this->send_error = $value;
     }
@@ -666,7 +666,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandMessage $value
      */
-    public function setMessage(\Pulsar\Proto\CommandMessage $value = null)
+    public function setMessage(?\Pulsar\Proto\CommandMessage $value = null)
     {
         $this->message = $value;
     }
@@ -696,7 +696,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandAck $value
      */
-    public function setAck(\Pulsar\Proto\CommandAck $value = null)
+    public function setAck(?\Pulsar\Proto\CommandAck $value = null)
     {
         $this->ack = $value;
     }
@@ -726,7 +726,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandFlow $value
      */
-    public function setFlow(\Pulsar\Proto\CommandFlow $value = null)
+    public function setFlow(?\Pulsar\Proto\CommandFlow $value = null)
     {
         $this->flow = $value;
     }
@@ -756,7 +756,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandUnsubscribe $value
      */
-    public function setUnsubscribe(\Pulsar\Proto\CommandUnsubscribe $value = null)
+    public function setUnsubscribe(?\Pulsar\Proto\CommandUnsubscribe $value = null)
     {
         $this->unsubscribe = $value;
     }
@@ -786,7 +786,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandSuccess $value
      */
-    public function setSuccess(\Pulsar\Proto\CommandSuccess $value = null)
+    public function setSuccess(?\Pulsar\Proto\CommandSuccess $value = null)
     {
         $this->success = $value;
     }
@@ -816,7 +816,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandError $value
      */
-    public function setError(\Pulsar\Proto\CommandError $value = null)
+    public function setError(?\Pulsar\Proto\CommandError $value = null)
     {
         $this->error = $value;
     }
@@ -846,7 +846,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandCloseProducer $value
      */
-    public function setCloseProducer(\Pulsar\Proto\CommandCloseProducer $value = null)
+    public function setCloseProducer(?\Pulsar\Proto\CommandCloseProducer $value = null)
     {
         $this->close_producer = $value;
     }
@@ -876,7 +876,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandCloseConsumer $value
      */
-    public function setCloseConsumer(\Pulsar\Proto\CommandCloseConsumer $value = null)
+    public function setCloseConsumer(?\Pulsar\Proto\CommandCloseConsumer $value = null)
     {
         $this->close_consumer = $value;
     }
@@ -906,7 +906,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandProducerSuccess $value
      */
-    public function setProducerSuccess(\Pulsar\Proto\CommandProducerSuccess $value = null)
+    public function setProducerSuccess(?\Pulsar\Proto\CommandProducerSuccess $value = null)
     {
         $this->producer_success = $value;
     }
@@ -936,7 +936,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandPing $value
      */
-    public function setPing(\Pulsar\Proto\CommandPing $value = null)
+    public function setPing(?\Pulsar\Proto\CommandPing $value = null)
     {
         $this->ping = $value;
     }
@@ -966,7 +966,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandPong $value
      */
-    public function setPong(\Pulsar\Proto\CommandPong $value = null)
+    public function setPong(?\Pulsar\Proto\CommandPong $value = null)
     {
         $this->pong = $value;
     }
@@ -996,7 +996,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandRedeliverUnacknowledgedMessages $value
      */
-    public function setRedeliverUnacknowledgedMessages(\Pulsar\Proto\CommandRedeliverUnacknowledgedMessages $value = null)
+    public function setRedeliverUnacknowledgedMessages(?\Pulsar\Proto\CommandRedeliverUnacknowledgedMessages $value = null)
     {
         $this->redeliverUnacknowledgedMessages = $value;
     }
@@ -1026,7 +1026,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandPartitionedTopicMetadata $value
      */
-    public function setPartitionMetadata(\Pulsar\Proto\CommandPartitionedTopicMetadata $value = null)
+    public function setPartitionMetadata(?\Pulsar\Proto\CommandPartitionedTopicMetadata $value = null)
     {
         $this->partitionMetadata = $value;
     }
@@ -1056,7 +1056,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandPartitionedTopicMetadataResponse $value
      */
-    public function setPartitionMetadataResponse(\Pulsar\Proto\CommandPartitionedTopicMetadataResponse $value = null)
+    public function setPartitionMetadataResponse(?\Pulsar\Proto\CommandPartitionedTopicMetadataResponse $value = null)
     {
         $this->partitionMetadataResponse = $value;
     }
@@ -1086,7 +1086,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandLookupTopic $value
      */
-    public function setLookupTopic(\Pulsar\Proto\CommandLookupTopic $value = null)
+    public function setLookupTopic(?\Pulsar\Proto\CommandLookupTopic $value = null)
     {
         $this->lookupTopic = $value;
     }
@@ -1116,7 +1116,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandLookupTopicResponse $value
      */
-    public function setLookupTopicResponse(\Pulsar\Proto\CommandLookupTopicResponse $value = null)
+    public function setLookupTopicResponse(?\Pulsar\Proto\CommandLookupTopicResponse $value = null)
     {
         $this->lookupTopicResponse = $value;
     }
@@ -1146,7 +1146,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandConsumerStats $value
      */
-    public function setConsumerStats(\Pulsar\Proto\CommandConsumerStats $value = null)
+    public function setConsumerStats(?\Pulsar\Proto\CommandConsumerStats $value = null)
     {
         $this->consumerStats = $value;
     }
@@ -1176,7 +1176,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandConsumerStatsResponse $value
      */
-    public function setConsumerStatsResponse(\Pulsar\Proto\CommandConsumerStatsResponse $value = null)
+    public function setConsumerStatsResponse(?\Pulsar\Proto\CommandConsumerStatsResponse $value = null)
     {
         $this->consumerStatsResponse = $value;
     }
@@ -1206,7 +1206,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandReachedEndOfTopic $value
      */
-    public function setReachedEndOfTopic(\Pulsar\Proto\CommandReachedEndOfTopic $value = null)
+    public function setReachedEndOfTopic(?\Pulsar\Proto\CommandReachedEndOfTopic $value = null)
     {
         $this->reachedEndOfTopic = $value;
     }
@@ -1236,7 +1236,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandSeek $value
      */
-    public function setSeek(\Pulsar\Proto\CommandSeek $value = null)
+    public function setSeek(?\Pulsar\Proto\CommandSeek $value = null)
     {
         $this->seek = $value;
     }
@@ -1266,7 +1266,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandGetLastMessageId $value
      */
-    public function setGetLastMessageId(\Pulsar\Proto\CommandGetLastMessageId $value = null)
+    public function setGetLastMessageId(?\Pulsar\Proto\CommandGetLastMessageId $value = null)
     {
         $this->getLastMessageId = $value;
     }
@@ -1296,7 +1296,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandGetLastMessageIdResponse $value
      */
-    public function setGetLastMessageIdResponse(\Pulsar\Proto\CommandGetLastMessageIdResponse $value = null)
+    public function setGetLastMessageIdResponse(?\Pulsar\Proto\CommandGetLastMessageIdResponse $value = null)
     {
         $this->getLastMessageIdResponse = $value;
     }
@@ -1326,7 +1326,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandActiveConsumerChange $value
      */
-    public function setActiveConsumerChange(\Pulsar\Proto\CommandActiveConsumerChange $value = null)
+    public function setActiveConsumerChange(?\Pulsar\Proto\CommandActiveConsumerChange $value = null)
     {
         $this->active_consumer_change = $value;
     }
@@ -1356,7 +1356,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandGetTopicsOfNamespace $value
      */
-    public function setGetTopicsOfNamespace(\Pulsar\Proto\CommandGetTopicsOfNamespace $value = null)
+    public function setGetTopicsOfNamespace(?\Pulsar\Proto\CommandGetTopicsOfNamespace $value = null)
     {
         $this->getTopicsOfNamespace = $value;
     }
@@ -1386,7 +1386,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandGetTopicsOfNamespaceResponse $value
      */
-    public function setGetTopicsOfNamespaceResponse(\Pulsar\Proto\CommandGetTopicsOfNamespaceResponse $value = null)
+    public function setGetTopicsOfNamespaceResponse(?\Pulsar\Proto\CommandGetTopicsOfNamespaceResponse $value = null)
     {
         $this->getTopicsOfNamespaceResponse = $value;
     }
@@ -1416,7 +1416,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandGetSchema $value
      */
-    public function setGetSchema(\Pulsar\Proto\CommandGetSchema $value = null)
+    public function setGetSchema(?\Pulsar\Proto\CommandGetSchema $value = null)
     {
         $this->getSchema = $value;
     }
@@ -1446,7 +1446,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandGetSchemaResponse $value
      */
-    public function setGetSchemaResponse(\Pulsar\Proto\CommandGetSchemaResponse $value = null)
+    public function setGetSchemaResponse(?\Pulsar\Proto\CommandGetSchemaResponse $value = null)
     {
         $this->getSchemaResponse = $value;
     }
@@ -1476,7 +1476,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandAuthChallenge $value
      */
-    public function setAuthChallenge(\Pulsar\Proto\CommandAuthChallenge $value = null)
+    public function setAuthChallenge(?\Pulsar\Proto\CommandAuthChallenge $value = null)
     {
         $this->authChallenge = $value;
     }
@@ -1506,7 +1506,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandAuthResponse $value
      */
-    public function setAuthResponse(\Pulsar\Proto\CommandAuthResponse $value = null)
+    public function setAuthResponse(?\Pulsar\Proto\CommandAuthResponse $value = null)
     {
         $this->authResponse = $value;
     }
@@ -1536,7 +1536,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandAckResponse $value
      */
-    public function setAckResponse(\Pulsar\Proto\CommandAckResponse $value = null)
+    public function setAckResponse(?\Pulsar\Proto\CommandAckResponse $value = null)
     {
         $this->ackResponse = $value;
     }
@@ -1566,7 +1566,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandGetOrCreateSchema $value
      */
-    public function setGetOrCreateSchema(\Pulsar\Proto\CommandGetOrCreateSchema $value = null)
+    public function setGetOrCreateSchema(?\Pulsar\Proto\CommandGetOrCreateSchema $value = null)
     {
         $this->getOrCreateSchema = $value;
     }
@@ -1596,7 +1596,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandGetOrCreateSchemaResponse $value
      */
-    public function setGetOrCreateSchemaResponse(\Pulsar\Proto\CommandGetOrCreateSchemaResponse $value = null)
+    public function setGetOrCreateSchemaResponse(?\Pulsar\Proto\CommandGetOrCreateSchemaResponse $value = null)
     {
         $this->getOrCreateSchemaResponse = $value;
     }
@@ -1626,7 +1626,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandNewTxn $value
      */
-    public function setNewTxn(\Pulsar\Proto\CommandNewTxn $value = null)
+    public function setNewTxn(?\Pulsar\Proto\CommandNewTxn $value = null)
     {
         $this->newTxn = $value;
     }
@@ -1656,7 +1656,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandNewTxnResponse $value
      */
-    public function setNewTxnResponse(\Pulsar\Proto\CommandNewTxnResponse $value = null)
+    public function setNewTxnResponse(?\Pulsar\Proto\CommandNewTxnResponse $value = null)
     {
         $this->newTxnResponse = $value;
     }
@@ -1686,7 +1686,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandAddPartitionToTxn $value
      */
-    public function setAddPartitionToTxn(\Pulsar\Proto\CommandAddPartitionToTxn $value = null)
+    public function setAddPartitionToTxn(?\Pulsar\Proto\CommandAddPartitionToTxn $value = null)
     {
         $this->addPartitionToTxn = $value;
     }
@@ -1716,7 +1716,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandAddPartitionToTxnResponse $value
      */
-    public function setAddPartitionToTxnResponse(\Pulsar\Proto\CommandAddPartitionToTxnResponse $value = null)
+    public function setAddPartitionToTxnResponse(?\Pulsar\Proto\CommandAddPartitionToTxnResponse $value = null)
     {
         $this->addPartitionToTxnResponse = $value;
     }
@@ -1746,7 +1746,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandAddSubscriptionToTxn $value
      */
-    public function setAddSubscriptionToTxn(\Pulsar\Proto\CommandAddSubscriptionToTxn $value = null)
+    public function setAddSubscriptionToTxn(?\Pulsar\Proto\CommandAddSubscriptionToTxn $value = null)
     {
         $this->addSubscriptionToTxn = $value;
     }
@@ -1776,7 +1776,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandAddSubscriptionToTxnResponse $value
      */
-    public function setAddSubscriptionToTxnResponse(\Pulsar\Proto\CommandAddSubscriptionToTxnResponse $value = null)
+    public function setAddSubscriptionToTxnResponse(?\Pulsar\Proto\CommandAddSubscriptionToTxnResponse $value = null)
     {
         $this->addSubscriptionToTxnResponse = $value;
     }
@@ -1806,7 +1806,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandEndTxn $value
      */
-    public function setEndTxn(\Pulsar\Proto\CommandEndTxn $value = null)
+    public function setEndTxn(?\Pulsar\Proto\CommandEndTxn $value = null)
     {
         $this->endTxn = $value;
     }
@@ -1836,7 +1836,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandEndTxnResponse $value
      */
-    public function setEndTxnResponse(\Pulsar\Proto\CommandEndTxnResponse $value = null)
+    public function setEndTxnResponse(?\Pulsar\Proto\CommandEndTxnResponse $value = null)
     {
         $this->endTxnResponse = $value;
     }
@@ -1866,7 +1866,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandEndTxnOnPartition $value
      */
-    public function setEndTxnOnPartition(\Pulsar\Proto\CommandEndTxnOnPartition $value = null)
+    public function setEndTxnOnPartition(?\Pulsar\Proto\CommandEndTxnOnPartition $value = null)
     {
         $this->endTxnOnPartition = $value;
     }
@@ -1896,7 +1896,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandEndTxnOnPartitionResponse $value
      */
-    public function setEndTxnOnPartitionResponse(\Pulsar\Proto\CommandEndTxnOnPartitionResponse $value = null)
+    public function setEndTxnOnPartitionResponse(?\Pulsar\Proto\CommandEndTxnOnPartitionResponse $value = null)
     {
         $this->endTxnOnPartitionResponse = $value;
     }
@@ -1926,7 +1926,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandEndTxnOnSubscription $value
      */
-    public function setEndTxnOnSubscription(\Pulsar\Proto\CommandEndTxnOnSubscription $value = null)
+    public function setEndTxnOnSubscription(?\Pulsar\Proto\CommandEndTxnOnSubscription $value = null)
     {
         $this->endTxnOnSubscription = $value;
     }
@@ -1956,7 +1956,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandEndTxnOnSubscriptionResponse $value
      */
-    public function setEndTxnOnSubscriptionResponse(\Pulsar\Proto\CommandEndTxnOnSubscriptionResponse $value = null)
+    public function setEndTxnOnSubscriptionResponse(?\Pulsar\Proto\CommandEndTxnOnSubscriptionResponse $value = null)
     {
         $this->endTxnOnSubscriptionResponse = $value;
     }
@@ -1986,7 +1986,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandTcClientConnectRequest $value
      */
-    public function setTcClientConnectRequest(\Pulsar\Proto\CommandTcClientConnectRequest $value = null)
+    public function setTcClientConnectRequest(?\Pulsar\Proto\CommandTcClientConnectRequest $value = null)
     {
         $this->tcClientConnectRequest = $value;
     }
@@ -2016,7 +2016,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandTcClientConnectResponse $value
      */
-    public function setTcClientConnectResponse(\Pulsar\Proto\CommandTcClientConnectResponse $value = null)
+    public function setTcClientConnectResponse(?\Pulsar\Proto\CommandTcClientConnectResponse $value = null)
     {
         $this->tcClientConnectResponse = $value;
     }
@@ -2044,7 +2044,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public static function fromStream($stream, \Protobuf\Configuration $configuration = null)
+    public static function fromStream($stream, ?\Protobuf\Configuration $configuration = null)
     {
         return new self($stream, $configuration);
     }
@@ -2566,7 +2566,7 @@ class BaseCommand extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function toStream(\Protobuf\Configuration $configuration = null)
+    public function toStream(?\Protobuf\Configuration $configuration = null)
     {
         $config = $configuration ?: \Protobuf\Configuration::getInstance();
         $context = $config->createWriteContext();

@@ -194,7 +194,7 @@ class CommandSendError extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public static function fromStream($stream, \Protobuf\Configuration $configuration = null)
+    public static function fromStream($stream, ?\Protobuf\Configuration $configuration = null)
     {
         return new self($stream, $configuration);
     }
@@ -272,7 +272,7 @@ class CommandSendError extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function toStream(\Protobuf\Configuration $configuration = null)
+    public function toStream(?\Protobuf\Configuration $configuration = null)
     {
         $config = $configuration ?: \Protobuf\Configuration::getInstance();
         $context = $config->createWriteContext();

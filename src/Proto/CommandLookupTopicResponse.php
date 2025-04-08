@@ -82,7 +82,7 @@ class CommandLookupTopicResponse extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function __construct($stream = null, \Protobuf\Configuration $configuration = null)
+    public function __construct($stream = null, ?\Protobuf\Configuration $configuration = null)
     {
         $this->authoritative = false;
         $this->proxy_through_service_url = false;
@@ -175,7 +175,7 @@ class CommandLookupTopicResponse extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandLookupTopicResponse\LookupType $value
      */
-    public function setResponse(\Pulsar\Proto\CommandLookupTopicResponse\LookupType $value = null)
+    public function setResponse(?\Pulsar\Proto\CommandLookupTopicResponse\LookupType $value = null)
     {
         $this->response = $value;
     }
@@ -265,7 +265,7 @@ class CommandLookupTopicResponse extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\ServerError $value
      */
-    public function setError(\Pulsar\Proto\ServerError $value = null)
+    public function setError(?\Pulsar\Proto\ServerError $value = null)
     {
         $this->error = $value;
     }
@@ -353,7 +353,7 @@ class CommandLookupTopicResponse extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public static function fromStream($stream, \Protobuf\Configuration $configuration = null)
+    public static function fromStream($stream, ?\Protobuf\Configuration $configuration = null)
     {
         return new self($stream, $configuration);
     }
@@ -457,7 +457,7 @@ class CommandLookupTopicResponse extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function toStream(\Protobuf\Configuration $configuration = null)
+    public function toStream(?\Protobuf\Configuration $configuration = null)
     {
         $config = $configuration ?: \Protobuf\Configuration::getInstance();
         $context = $config->createWriteContext();

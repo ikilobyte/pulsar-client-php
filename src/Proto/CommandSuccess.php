@@ -92,7 +92,7 @@ class CommandSuccess extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\Schema $value
      */
-    public function setSchema(\Pulsar\Proto\Schema $value = null)
+    public function setSchema(?\Pulsar\Proto\Schema $value = null)
     {
         $this->schema = $value;
     }
@@ -120,7 +120,7 @@ class CommandSuccess extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public static function fromStream($stream, \Protobuf\Configuration $configuration = null)
+    public static function fromStream($stream, ?\Protobuf\Configuration $configuration = null)
     {
         return new self($stream, $configuration);
     }
@@ -173,7 +173,7 @@ class CommandSuccess extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function toStream(\Protobuf\Configuration $configuration = null)
+    public function toStream(?\Protobuf\Configuration $configuration = null)
     {
         $config = $configuration ?: \Protobuf\Configuration::getInstance();
         $context = $config->createWriteContext();

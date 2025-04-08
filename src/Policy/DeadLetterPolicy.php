@@ -51,7 +51,7 @@ class DeadLetterPolicy
      * @param ConsumerOptions|null $options
      * @throws OptionsException
      */
-    public function __construct(array $config = [], ConsumerOptions $options = null)
+    public function __construct(array $config = [], ?ConsumerOptions $options = null)
     {
         $this->config = $config;
         $this->options = $options;

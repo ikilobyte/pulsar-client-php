@@ -113,7 +113,7 @@ class CommandGetSchemaResponse extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\ServerError $value
      */
-    public function setErrorCode(\Pulsar\Proto\ServerError $value = null)
+    public function setErrorCode(?\Pulsar\Proto\ServerError $value = null)
     {
         $this->error_code = $value;
     }
@@ -173,7 +173,7 @@ class CommandGetSchemaResponse extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\Schema $value
      */
-    public function setSchema(\Pulsar\Proto\Schema $value = null)
+    public function setSchema(?\Pulsar\Proto\Schema $value = null)
     {
         $this->schema = $value;
     }
@@ -235,7 +235,7 @@ class CommandGetSchemaResponse extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public static function fromStream($stream, \Protobuf\Configuration $configuration = null)
+    public static function fromStream($stream, ?\Protobuf\Configuration $configuration = null)
     {
         return new self($stream, $configuration);
     }
@@ -313,7 +313,7 @@ class CommandGetSchemaResponse extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function toStream(\Protobuf\Configuration $configuration = null)
+    public function toStream(?\Protobuf\Configuration $configuration = null)
     {
         $config = $configuration ?: \Protobuf\Configuration::getInstance();
         $context = $config->createWriteContext();

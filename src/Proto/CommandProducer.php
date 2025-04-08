@@ -117,7 +117,7 @@ class CommandProducer extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function __construct($stream = null, \Protobuf\Configuration $configuration = null)
+    public function __construct($stream = null, ?\Protobuf\Configuration $configuration = null)
     {
         $this->encrypted = false;
         $this->epoch = '0';
@@ -303,7 +303,7 @@ class CommandProducer extends \Protobuf\AbstractMessage
      *
      * @param \Protobuf\Collection<\Pulsar\Proto\KeyValue> $value
      */
-    public function setMetadataList(\Protobuf\Collection $value = null)
+    public function setMetadataList(?\Protobuf\Collection $value = null)
     {
         $this->metadata = $value;
     }
@@ -347,7 +347,7 @@ class CommandProducer extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\Schema $value
      */
-    public function setSchema(\Pulsar\Proto\Schema $value = null)
+    public function setSchema(?\Pulsar\Proto\Schema $value = null)
     {
         $this->schema = $value;
     }
@@ -437,7 +437,7 @@ class CommandProducer extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\ProducerAccessMode $value
      */
-    public function setProducerAccessMode(\Pulsar\Proto\ProducerAccessMode $value = null)
+    public function setProducerAccessMode(?\Pulsar\Proto\ProducerAccessMode $value = null)
     {
         $this->producer_access_mode = $value;
     }
@@ -555,7 +555,7 @@ class CommandProducer extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public static function fromStream($stream, \Protobuf\Configuration $configuration = null)
+    public static function fromStream($stream, ?\Protobuf\Configuration $configuration = null)
     {
         return new self($stream, $configuration);
     }
@@ -712,7 +712,7 @@ class CommandProducer extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function toStream(\Protobuf\Configuration $configuration = null)
+    public function toStream(?\Protobuf\Configuration $configuration = null)
     {
         $config = $configuration ?: \Protobuf\Configuration::getInstance();
         $context = $config->createWriteContext();

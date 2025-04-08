@@ -96,7 +96,7 @@ class CommandConnect extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function __construct($stream = null, \Protobuf\Configuration $configuration = null)
+    public function __construct($stream = null, ?\Protobuf\Configuration $configuration = null)
     {
         $this->protocol_version = '0';
 
@@ -158,7 +158,7 @@ class CommandConnect extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\AuthMethod $value
      */
-    public function setAuthMethod(\Pulsar\Proto\AuthMethod $value = null)
+    public function setAuthMethod(?\Pulsar\Proto\AuthMethod $value = null)
     {
         $this->auth_method = $value;
     }
@@ -402,7 +402,7 @@ class CommandConnect extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\FeatureFlags $value
      */
-    public function setFeatureFlags(\Pulsar\Proto\FeatureFlags $value = null)
+    public function setFeatureFlags(?\Pulsar\Proto\FeatureFlags $value = null)
     {
         $this->feature_flags = $value;
     }
@@ -430,7 +430,7 @@ class CommandConnect extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public static function fromStream($stream, \Protobuf\Configuration $configuration = null)
+    public static function fromStream($stream, ?\Protobuf\Configuration $configuration = null)
     {
         return new self($stream, $configuration);
     }
@@ -549,7 +549,7 @@ class CommandConnect extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function toStream(\Protobuf\Configuration $configuration = null)
+    public function toStream(?\Protobuf\Configuration $configuration = null)
     {
         $config = $configuration ?: \Protobuf\Configuration::getInstance();
         $context = $config->createWriteContext();

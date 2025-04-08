@@ -102,7 +102,7 @@ class Message
                                 int               $batchNums = 1,
                                 int               $batchIdx = 0,
                                 int               $redeliveryCount = 0,
-                                MessageCollection $properties = null
+                                ?MessageCollection $properties = null
     )
     {
         $this->id = $id;

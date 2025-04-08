@@ -68,7 +68,7 @@ class CommandEndTxnOnPartition extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function __construct($stream = null, \Protobuf\Configuration $configuration = null)
+    public function __construct($stream = null, ?\Protobuf\Configuration $configuration = null)
     {
         $this->txnid_least_bits = '0';
         $this->txnid_most_bits = '0';
@@ -221,7 +221,7 @@ class CommandEndTxnOnPartition extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\TxnAction $value
      */
-    public function setTxnAction(\Pulsar\Proto\TxnAction $value = null)
+    public function setTxnAction(?\Pulsar\Proto\TxnAction $value = null)
     {
         $this->txn_action = $value;
     }
@@ -279,7 +279,7 @@ class CommandEndTxnOnPartition extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public static function fromStream($stream, \Protobuf\Configuration $configuration = null)
+    public static function fromStream($stream, ?\Protobuf\Configuration $configuration = null)
     {
         return new self($stream, $configuration);
     }
@@ -366,7 +366,7 @@ class CommandEndTxnOnPartition extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function toStream(\Protobuf\Configuration $configuration = null)
+    public function toStream(?\Protobuf\Configuration $configuration = null)
     {
         $config = $configuration ?: \Protobuf\Configuration::getInstance();
         $context = $config->createWriteContext();

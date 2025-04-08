@@ -82,7 +82,7 @@ class CommandAck extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function __construct($stream = null, \Protobuf\Configuration $configuration = null)
+    public function __construct($stream = null, ?\Protobuf\Configuration $configuration = null)
     {
         $this->txnid_least_bits = '0';
         $this->txnid_most_bits = '0';
@@ -175,7 +175,7 @@ class CommandAck extends \Protobuf\AbstractMessage
      *
      * @param \Protobuf\Collection<\Pulsar\Proto\MessageIdData> $value
      */
-    public function setMessageIdList(\Protobuf\Collection $value = null)
+    public function setMessageIdList(?\Protobuf\Collection $value = null)
     {
         $this->message_id = $value;
     }
@@ -219,7 +219,7 @@ class CommandAck extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandAck\ValidationError $value
      */
-    public function setValidationError(\Pulsar\Proto\CommandAck\ValidationError $value = null)
+    public function setValidationError(?\Pulsar\Proto\CommandAck\ValidationError $value = null)
     {
         $this->validation_error = $value;
     }
@@ -249,7 +249,7 @@ class CommandAck extends \Protobuf\AbstractMessage
      *
      * @param \Protobuf\Collection<\Pulsar\Proto\KeyLongValue> $value
      */
-    public function setPropertiesList(\Protobuf\Collection $value = null)
+    public function setPropertiesList(?\Protobuf\Collection $value = null)
     {
         $this->properties = $value;
     }
@@ -381,7 +381,7 @@ class CommandAck extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public static function fromStream($stream, \Protobuf\Configuration $configuration = null)
+    public static function fromStream($stream, ?\Protobuf\Configuration $configuration = null)
     {
         return new self($stream, $configuration);
     }
@@ -496,7 +496,7 @@ class CommandAck extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function toStream(\Protobuf\Configuration $configuration = null)
+    public function toStream(?\Protobuf\Configuration $configuration = null)
     {
         $config = $configuration ?: \Protobuf\Configuration::getInstance();
         $context = $config->createWriteContext();

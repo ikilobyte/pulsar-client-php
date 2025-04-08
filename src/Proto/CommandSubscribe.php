@@ -159,7 +159,7 @@ class CommandSubscribe extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function __construct($stream = null, \Protobuf\Configuration $configuration = null)
+    public function __construct($stream = null, ?\Protobuf\Configuration $configuration = null)
     {
         $this->durable = true;
         $this->initialPosition = \Pulsar\Proto\CommandSubscribe\InitialPosition::Latest();
@@ -434,7 +434,7 @@ class CommandSubscribe extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\MessageIdData $value
      */
-    public function setStartMessageId(\Pulsar\Proto\MessageIdData $value = null)
+    public function setStartMessageId(?\Pulsar\Proto\MessageIdData $value = null)
     {
         $this->start_message_id = $value;
     }
@@ -464,7 +464,7 @@ class CommandSubscribe extends \Protobuf\AbstractMessage
      *
      * @param \Protobuf\Collection<\Pulsar\Proto\KeyValue> $value
      */
-    public function setMetadataList(\Protobuf\Collection $value = null)
+    public function setMetadataList(?\Protobuf\Collection $value = null)
     {
         $this->metadata = $value;
     }
@@ -538,7 +538,7 @@ class CommandSubscribe extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\Schema $value
      */
-    public function setSchema(\Pulsar\Proto\Schema $value = null)
+    public function setSchema(?\Pulsar\Proto\Schema $value = null)
     {
         $this->schema = $value;
     }
@@ -568,7 +568,7 @@ class CommandSubscribe extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandSubscribe\InitialPosition $value
      */
-    public function setInitialPosition(\Pulsar\Proto\CommandSubscribe\InitialPosition $value = null)
+    public function setInitialPosition(?\Pulsar\Proto\CommandSubscribe\InitialPosition $value = null)
     {
         $this->initialPosition = $value;
     }
@@ -688,7 +688,7 @@ class CommandSubscribe extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\KeySharedMeta $value
      */
-    public function setKeySharedMeta(\Pulsar\Proto\KeySharedMeta $value = null)
+    public function setKeySharedMeta(?\Pulsar\Proto\KeySharedMeta $value = null)
     {
         $this->keySharedMeta = $value;
     }
@@ -718,7 +718,7 @@ class CommandSubscribe extends \Protobuf\AbstractMessage
      *
      * @param \Protobuf\Collection<\Pulsar\Proto\KeyValue> $value
      */
-    public function setSubscriptionPropertiesList(\Protobuf\Collection $value = null)
+    public function setSubscriptionPropertiesList(?\Protobuf\Collection $value = null)
     {
         $this->subscription_properties = $value;
     }
@@ -790,7 +790,7 @@ class CommandSubscribe extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public static function fromStream($stream, \Protobuf\Configuration $configuration = null)
+    public static function fromStream($stream, ?\Protobuf\Configuration $configuration = null)
     {
         return new self($stream, $configuration);
     }
@@ -1007,7 +1007,7 @@ class CommandSubscribe extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function toStream(\Protobuf\Configuration $configuration = null)
+    public function toStream(?\Protobuf\Configuration $configuration = null)
     {
         $config = $configuration ?: \Protobuf\Configuration::getInstance();
         $context = $config->createWriteContext();

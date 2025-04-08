@@ -61,7 +61,7 @@ class CommandGetTopicsOfNamespace extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function __construct($stream = null, \Protobuf\Configuration $configuration = null)
+    public function __construct($stream = null, ?\Protobuf\Configuration $configuration = null)
     {
         $this->mode = \Pulsar\Proto\CommandGetTopicsOfNamespace\Mode::PERSISTENT();
 
@@ -153,7 +153,7 @@ class CommandGetTopicsOfNamespace extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CommandGetTopicsOfNamespace\Mode $value
      */
-    public function setMode(\Pulsar\Proto\CommandGetTopicsOfNamespace\Mode $value = null)
+    public function setMode(?\Pulsar\Proto\CommandGetTopicsOfNamespace\Mode $value = null)
     {
         $this->mode = $value;
     }
@@ -241,7 +241,7 @@ class CommandGetTopicsOfNamespace extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public static function fromStream($stream, \Protobuf\Configuration $configuration = null)
+    public static function fromStream($stream, ?\Protobuf\Configuration $configuration = null)
     {
         return new self($stream, $configuration);
     }
@@ -322,7 +322,7 @@ class CommandGetTopicsOfNamespace extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function toStream(\Protobuf\Configuration $configuration = null)
+    public function toStream(?\Protobuf\Configuration $configuration = null)
     {
         $config = $configuration ?: \Protobuf\Configuration::getInstance();
         $context = $config->createWriteContext();

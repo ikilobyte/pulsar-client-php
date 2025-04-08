@@ -222,7 +222,7 @@ class MessageMetadata extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function __construct($stream = null, \Protobuf\Configuration $configuration = null)
+    public function __construct($stream = null, ?\Protobuf\Configuration $configuration = null)
     {
         $this->compression = \Pulsar\Proto\CompressionType::NONE();
         $this->uncompressed_size = '0';
@@ -351,7 +351,7 @@ class MessageMetadata extends \Protobuf\AbstractMessage
      *
      * @param \Protobuf\Collection<\Pulsar\Proto\KeyValue> $value
      */
-    public function setPropertiesList(\Protobuf\Collection $value = null)
+    public function setPropertiesList(?\Protobuf\Collection $value = null)
     {
         $this->properties = $value;
     }
@@ -455,7 +455,7 @@ class MessageMetadata extends \Protobuf\AbstractMessage
      *
      * @param \Protobuf\Collection $value
      */
-    public function setReplicateToList(\Protobuf\Collection $value = null)
+    public function setReplicateToList(?\Protobuf\Collection $value = null)
     {
         $this->replicate_to = $value;
     }
@@ -499,7 +499,7 @@ class MessageMetadata extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\CompressionType $value
      */
-    public function setCompression(\Pulsar\Proto\CompressionType $value = null)
+    public function setCompression(?\Pulsar\Proto\CompressionType $value = null)
     {
         $this->compression = $value;
     }
@@ -619,7 +619,7 @@ class MessageMetadata extends \Protobuf\AbstractMessage
      *
      * @param \Protobuf\Collection<\Pulsar\Proto\EncryptionKeys> $value
      */
-    public function setEncryptionKeysList(\Protobuf\Collection $value = null)
+    public function setEncryptionKeysList(?\Protobuf\Collection $value = null)
     {
         $this->encryption_keys = $value;
     }
@@ -1153,7 +1153,7 @@ class MessageMetadata extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public static function fromStream($stream, \Protobuf\Configuration $configuration = null)
+    public static function fromStream($stream, ?\Protobuf\Configuration $configuration = null)
     {
         return new self($stream, $configuration);
     }
@@ -1439,7 +1439,7 @@ class MessageMetadata extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function toStream(\Protobuf\Configuration $configuration = null)
+    public function toStream(?\Protobuf\Configuration $configuration = null)
     {
         $config = $configuration ?: \Protobuf\Configuration::getInstance();
         $context = $config->createWriteContext();

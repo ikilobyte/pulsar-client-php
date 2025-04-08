@@ -21,7 +21,7 @@ class Factory
      * @param Options|null $options
      * @return AbstractIO
      */
-    public static function create(Options $options = null): AbstractIO
+    public static function create(?Options $options = null): AbstractIO
     {
         return new StreamIO($options);
     }

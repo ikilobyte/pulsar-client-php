@@ -75,7 +75,7 @@ class MessageIdData extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function __construct($stream = null, \Protobuf\Configuration $configuration = null)
+    public function __construct($stream = null, ?\Protobuf\Configuration $configuration = null)
     {
         $this->partition = '-1';
         $this->batch_index = '-1';
@@ -228,7 +228,7 @@ class MessageIdData extends \Protobuf\AbstractMessage
      *
      * @param \Protobuf\Collection $value
      */
-    public function setAckSetList(\Protobuf\Collection $value = null)
+    public function setAckSetList(?\Protobuf\Collection $value = null)
     {
         $this->ack_set = $value;
     }
@@ -302,7 +302,7 @@ class MessageIdData extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\MessageIdData $value
      */
-    public function setFirstChunkMessageId(\Pulsar\Proto\MessageIdData $value = null)
+    public function setFirstChunkMessageId(?\Pulsar\Proto\MessageIdData $value = null)
     {
         $this->first_chunk_message_id = $value;
     }
@@ -330,7 +330,7 @@ class MessageIdData extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public static function fromStream($stream, \Protobuf\Configuration $configuration = null)
+    public static function fromStream($stream, ?\Protobuf\Configuration $configuration = null)
     {
         return new self($stream, $configuration);
     }
@@ -431,7 +431,7 @@ class MessageIdData extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function toStream(\Protobuf\Configuration $configuration = null)
+    public function toStream(?\Protobuf\Configuration $configuration = null)
     {
         $config = $configuration ?: \Protobuf\Configuration::getInstance();
         $context = $config->createWriteContext();

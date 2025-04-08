@@ -186,5 +186,5 @@ abstract class AbstractIO
     /**
      * @return mixed
      */
-    abstract public function handshake(Authentication $authentication = null, string $brokerServiceUrl = '');
+    abstract public function handshake(?Authentication $authentication = null, string $brokerServiceUrl = '');
 }

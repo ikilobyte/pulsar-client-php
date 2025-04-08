@@ -133,7 +133,7 @@ class EncryptionKeys extends \Protobuf\AbstractMessage
      *
      * @param \Protobuf\Collection<\Pulsar\Proto\KeyValue> $value
      */
-    public function setMetadataList(\Protobuf\Collection $value = null)
+    public function setMetadataList(?\Protobuf\Collection $value = null)
     {
         $this->metadata = $value;
     }
@@ -175,7 +175,7 @@ class EncryptionKeys extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public static function fromStream($stream, \Protobuf\Configuration $configuration = null)
+    public static function fromStream($stream, ?\Protobuf\Configuration $configuration = null)
     {
         return new self($stream, $configuration);
     }
@@ -242,7 +242,7 @@ class EncryptionKeys extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function toStream(\Protobuf\Configuration $configuration = null)
+    public function toStream(?\Protobuf\Configuration $configuration = null)
     {
         $config = $configuration ?: \Protobuf\Configuration::getInstance();
         $context = $config->createWriteContext();

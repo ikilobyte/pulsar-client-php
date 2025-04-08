@@ -54,7 +54,7 @@ class CommandAddSubscriptionToTxn extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function __construct($stream = null, \Protobuf\Configuration $configuration = null)
+    public function __construct($stream = null, ?\Protobuf\Configuration $configuration = null)
     {
         $this->txnid_least_bits = '0';
         $this->txnid_most_bits = '0';
@@ -177,7 +177,7 @@ class CommandAddSubscriptionToTxn extends \Protobuf\AbstractMessage
      *
      * @param \Protobuf\Collection<\Pulsar\Proto\Subscription> $value
      */
-    public function setSubscriptionList(\Protobuf\Collection $value = null)
+    public function setSubscriptionList(?\Protobuf\Collection $value = null)
     {
         $this->subscription = $value;
     }
@@ -219,7 +219,7 @@ class CommandAddSubscriptionToTxn extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public static function fromStream($stream, \Protobuf\Configuration $configuration = null)
+    public static function fromStream($stream, ?\Protobuf\Configuration $configuration = null)
     {
         return new self($stream, $configuration);
     }
@@ -293,7 +293,7 @@ class CommandAddSubscriptionToTxn extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function toStream(\Protobuf\Configuration $configuration = null)
+    public function toStream(?\Protobuf\Configuration $configuration = null)
     {
         $config = $configuration ?: \Protobuf\Configuration::getInstance();
         $context = $config->createWriteContext();

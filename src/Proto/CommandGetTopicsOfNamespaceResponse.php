@@ -61,7 +61,7 @@ class CommandGetTopicsOfNamespaceResponse extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function __construct($stream = null, \Protobuf\Configuration $configuration = null)
+    public function __construct($stream = null, ?\Protobuf\Configuration $configuration = null)
     {
         $this->filtered = false;
         $this->changed = true;
@@ -124,7 +124,7 @@ class CommandGetTopicsOfNamespaceResponse extends \Protobuf\AbstractMessage
      *
      * @param \Protobuf\Collection $value
      */
-    public function setTopicsList(\Protobuf\Collection $value = null)
+    public function setTopicsList(?\Protobuf\Collection $value = null)
     {
         $this->topics = $value;
     }
@@ -256,7 +256,7 @@ class CommandGetTopicsOfNamespaceResponse extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public static function fromStream($stream, \Protobuf\Configuration $configuration = null)
+    public static function fromStream($stream, ?\Protobuf\Configuration $configuration = null)
     {
         return new self($stream, $configuration);
     }
@@ -337,7 +337,7 @@ class CommandGetTopicsOfNamespaceResponse extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function toStream(\Protobuf\Configuration $configuration = null)
+    public function toStream(?\Protobuf\Configuration $configuration = null)
     {
         $config = $configuration ?: \Protobuf\Configuration::getInstance();
         $context = $config->createWriteContext();

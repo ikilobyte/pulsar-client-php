@@ -54,7 +54,7 @@ class CommandSendReceipt extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function __construct($stream = null, \Protobuf\Configuration $configuration = null)
+    public function __construct($stream = null, ?\Protobuf\Configuration $configuration = null)
     {
         $this->highest_sequence_id = '0';
 
@@ -146,7 +146,7 @@ class CommandSendReceipt extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\MessageIdData $value
      */
-    public function setMessageId(\Pulsar\Proto\MessageIdData $value = null)
+    public function setMessageId(?\Pulsar\Proto\MessageIdData $value = null)
     {
         $this->message_id = $value;
     }
@@ -204,7 +204,7 @@ class CommandSendReceipt extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public static function fromStream($stream, \Protobuf\Configuration $configuration = null)
+    public static function fromStream($stream, ?\Protobuf\Configuration $configuration = null)
     {
         return new self($stream, $configuration);
     }
@@ -277,7 +277,7 @@ class CommandSendReceipt extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function toStream(\Protobuf\Configuration $configuration = null)
+    public function toStream(?\Protobuf\Configuration $configuration = null)
     {
         $config = $configuration ?: \Protobuf\Configuration::getInstance();
         $context = $config->createWriteContext();

@@ -47,7 +47,7 @@ class CommandAuthResponse extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function __construct($stream = null, \Protobuf\Configuration $configuration = null)
+    public function __construct($stream = null, ?\Protobuf\Configuration $configuration = null)
     {
         $this->protocol_version = '0';
 
@@ -109,7 +109,7 @@ class CommandAuthResponse extends \Protobuf\AbstractMessage
      *
      * @param \Pulsar\Proto\AuthData $value
      */
-    public function setResponse(\Pulsar\Proto\AuthData $value = null)
+    public function setResponse(?\Pulsar\Proto\AuthData $value = null)
     {
         $this->response = $value;
     }
@@ -167,7 +167,7 @@ class CommandAuthResponse extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public static function fromStream($stream, \Protobuf\Configuration $configuration = null)
+    public static function fromStream($stream, ?\Protobuf\Configuration $configuration = null)
     {
         return new self($stream, $configuration);
     }
@@ -226,7 +226,7 @@ class CommandAuthResponse extends \Protobuf\AbstractMessage
     /**
      * {@inheritdoc}
      */
-    public function toStream(\Protobuf\Configuration $configuration = null)
+    public function toStream(?\Protobuf\Configuration $configuration = null)
     {
         $config = $configuration ?: \Protobuf\Configuration::getInstance();
         $context = $config->createWriteContext();
