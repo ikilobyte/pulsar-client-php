@@ -10,7 +10,7 @@ declare( strict_types = 1 );
 
 namespace Pulsar\Lookup;
 
-
+use Protobuf\AbstractMessage;
 use Pulsar\Exception\IOException;
 use Pulsar\Exception\OptionsException;
 use Pulsar\Exception\RuntimeException;
@@ -124,7 +124,7 @@ class TcpLookupService implements LookupService
 
                 //
                 default:
-                    throw new RuntimeException($subCommand->getMessage());
+                    $this->handleCommandFailed($subCommand);
             }
         }
 
@@ -152,7 +152,7 @@ class TcpLookupService implements LookupService
          */
         $subCommand = $results->subCommand;
         if ($subCommand->getResponse()->value() == CommandPartitionedTopicMetadataResponse\LookupType::Failed_VALUE) {
-            throw new RuntimeException($subCommand->getMessage());
+            $this->handleCommandFailed($subCommand);
         }
 
         return $subCommand->getPartitions();
@@ -213,5 +213,21 @@ class TcpLookupService implements LookupService
     public function close()
     {
         $this->connection->close();
+    }
+
+    /**
+     * @return void
+     * @throws RuntimeException
+     */
+    protected function handleCommandFailed(AbstractMessage $command)
+    {
+        $code = 0;
+        $msg = $command->getMessage();
+        if ($command->hasError()) {
+            $code = $command->getError()->value();
+            $msg = $command->getError()->name();
+        }
+
+        throw RuntimeException($msg, $code);
     }
 }

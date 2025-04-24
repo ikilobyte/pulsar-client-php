@@ -110,10 +110,7 @@ class Response
     protected function checkError()
     {
         if ($this->subCommand instanceof CommandError) {
-            throw new RuntimeException(
-                $this->subCommand->getMessage(),
-                $this->subCommand->getError()->value()
-            );
+            $this->handleSubCommandError();
         }
 
         $this->checkServerError();
@@ -127,10 +124,22 @@ class Response
     protected function checkServerError()
     {
         if ($this->subCommand instanceof CommandSendError) {
-            throw new RuntimeException(
-                $this->subCommand->getMessage(),
-                $this->subCommand->getError()->value()
-            );
+            $this->handleSubCommandError();
         }
+    }
+
+    /**
+     * @return void
+     * @throws RuntimeException
+     */
+    protected function handleSubCommandError()
+    {
+        $code = 0;
+        $msg = $this->subCommand->getMessage();
+        if ($this->subCommand->hasError()) {
+            $code = $this->subCommand->getError()->value();
+            $msg = $msg ?: $this->subCommand->getError()->name();
+        }
+        throw new RuntimeException($msg, $code);
     }
 }
