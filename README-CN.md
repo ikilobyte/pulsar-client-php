@@ -33,7 +33,7 @@
 
 ## 依赖
 
-* PHP >=7.0 (Supported PHP8)
+* PHP >=7.1
 * ZLib Extension（如果你想使用`zlib`压缩）
 * Zstd Extension（如果你想使用`zstd`压缩）
 * Swoole Extension（如果你想在swoole中使用）

@@ -34,7 +34,7 @@ Features
 
 ## Requirements
 
-* PHP >=7.0 (Supported PHP8)
+* PHP >=7.1
 * ZLib Extension（If you want to use `zlib` compression）
 * Zstd Extension（If you want to use `zstd` compression）
 * Swoole Extension(If you want to use in swoole)
