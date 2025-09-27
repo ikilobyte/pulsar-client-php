@@ -302,7 +302,7 @@ while ($running) {
 $tls = new \Pulsar\TLSOptions('./cert.pem','./cert.key.pem');
 
 // CA Cert
-$tls->setTrustCertsFilePath('./ca.cart.pem');
+$tls->setTrustCertsFilePath('./ca.cert.pem');
 
 // 无证书建立TLS连接
 //$tls = new \Pulsar\TLSOptions('','');

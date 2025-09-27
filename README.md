@@ -316,7 +316,7 @@ $tls = new \Pulsar\TLSOptions('./cert.pem','./cert.key.pem');
 //$tls = new \Pulsar\TLSOptions('','');
 
 // CA Cert
-$tls->setTrustCertsFilePath('./ca.cart.pem');
+$tls->setTrustCertsFilePath('./ca.cert.pem');
 
 // optional
 $tls->setAllowInsecureConnection(false);
