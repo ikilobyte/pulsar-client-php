@@ -56,7 +56,7 @@ class StreamIO extends AbstractIO implements Reader
      * @return array
      * @throws OptionsException
      */
-    protected function getContextOptions(): array
+    protected function getContextOptions(?string $host = null): array
     {
         if (!$this->options->isTLS()) {
             return [];
@@ -65,9 +65,10 @@ class StreamIO extends AbstractIO implements Reader
         $url = $this->options->getUrl();
         $tls = $this->options->getTLS();
         $this->schema = 'tls';
+
         return [
             'ssl' => array_merge($tls->getData(), [
-                'peer_name' => $url['host'],
+                'peer_name' => $host ?? $url['host'],
             ]),
         ];
     }
@@ -82,7 +83,7 @@ class StreamIO extends AbstractIO implements Reader
      */
     public function connect(string $host, int $port, $timeout = null)
     {
-        $context = stream_context_create($this->getContextOptions());
+        $context = stream_context_create($this->getContextOptions($host));
         $address = sprintf('%s://%s:%d', $this->schema, $host, $port);
         $socket = @stream_socket_client(
             $address,
