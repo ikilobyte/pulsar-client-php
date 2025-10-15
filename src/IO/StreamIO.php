@@ -53,6 +53,7 @@ class StreamIO extends AbstractIO implements Reader
 
 
     /**
+     * @param string|null $host
      * @return array
      * @throws OptionsException
      */
