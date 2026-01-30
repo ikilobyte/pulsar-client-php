@@ -83,7 +83,7 @@ class TcpLookupService implements LookupService
 
         for ($i = 0; $i < 20; $i++) {
 
-            list($brokerServiceUrl, $proxyServiceUrl) = $this->getBrokerAddress($subCommand);
+            [$brokerServiceUrl, $proxyServiceUrl] = $this->getBrokerAddress($subCommand);
 
             $parse = parse_url($brokerServiceUrl);
 
@@ -228,6 +228,6 @@ class TcpLookupService implements LookupService
             $msg = $command->getError()->name();
         }
 
-        throw RuntimeException($msg, $code);
+        throw new RuntimeException($msg, $code);
     }
 }
