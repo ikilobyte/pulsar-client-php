@@ -131,8 +131,8 @@ class Producer extends Client
      */
     public function send($payload, array $options = []): string
     {
-        $producer = $this->getPartitionProducer();
         $messageOptions = new MessageOptions($options);
+        $producer = $this->getPartitionProducer($messageOptions->getKey());
 
         $messages = is_array($payload) ? $payload : [$payload];
         $builder = new Builder(
@@ -177,7 +177,7 @@ class Producer extends Client
         $messageOptions = new MessageOptions($options);
         $sequenceID = $messageOptions->getSequenceID();
 
-        $producer = $this->getPartitionProducer();
+        $producer = $this->getPartitionProducer($messageOptions->getKey());
 
         $builder = new Builder(
             $producer,
@@ -250,11 +250,33 @@ class Producer extends Client
 
 
     /**
+     * Selects a partition producer by key (consistent hash) or randomly when no key is given.
+     *
+     * Uses Java String.hashCode()-compatible algorithm to match Pulsar broker routing expectations.
+     *
+     * @param string $key
      * @return PartitionProducer
      */
-    protected function getPartitionProducer(): PartitionProducer
+    protected function getPartitionProducer(string $key = ''): PartitionProducer
     {
-        return $this->producers[ mt_rand(0, count($this->producers) - 1) ];
+        $count = count($this->producers);
+
+        if ($key === '' || $count <= 1) {
+            return $this->producers[ mt_rand(0, $count - 1) ];
+        }
+
+        $hash = 0;
+        $len = strlen($key);
+        for ($i = 0; $i < $len; $i++) {
+            // Simulate Java signed 32-bit integer overflow
+            $hash = (($hash * 31) & 0xFFFFFFFF) + ord($key[$i]);
+            $hash &= 0xFFFFFFFF;
+            if ($hash >= 0x80000000) {
+                $hash -= 0x100000000;
+            }
+        }
+
+        return $this->producers[ abs($hash) % $count ];
     }
 
 
