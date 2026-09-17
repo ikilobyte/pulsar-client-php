@@ -260,6 +260,17 @@ $options->setReconnectPolicy(true,3);
 $options->setReconnectPolicy(true,3,100);
 ```
 
+> Ack 超时时间
+
+* `ack()` 会阻塞等待 broker 返回的 `ACK_RESPONSE`，通过 request ID 进行匹配
+* 如果在超时时间内没有收到匹配的响应，`ack()` 会抛出 `RuntimeException`
+* 如果在等待响应期间发生重连，重连后重新发送的 ack 同样受此超时时间限制
+* 默认值为 30 秒
+
+```php
+$options->setAckTimeout(30);
+```
+
 > 不循环接收消息，且平滑退出
 
 ```php
@@ -464,6 +475,7 @@ $reader->close();
     * setDeadLetterPolicy()
     * setSubscriptionInitialPosition()
     * setReconnectPolicy()
+    * setAckTimeout()
     * setSchema()
 * ReaderOptions
     * setTopic()
