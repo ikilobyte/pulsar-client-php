@@ -89,6 +89,14 @@ class Message
     protected $partitionKey = null;
 
     /**
+     * True when partition_key is the base64 form of the original key bytes.
+     * Kafka-on-Pulsar sets this because Kafka keys are bytes.
+     *
+     * @var bool
+     */
+    protected $base64EncodedKey = false;
+
+    /**
      * @param MessageIdData $id
      * @param int $consumerID
      * @param string $publishTime
@@ -99,6 +107,7 @@ class Message
      * @param int $redeliveryCount
      * @param MessageCollection|null $properties
      * @param string|null $partitionKey
+     * @param bool $base64EncodedKey
      */
     public function __construct(MessageIdData      $id,
                                 int                $consumerID,
@@ -109,7 +118,8 @@ class Message
                                 int                $batchIdx = 0,
                                 int                $redeliveryCount = 0,
                                 ?MessageCollection $properties = null,
-                                ?string            $partitionKey = null
+                                ?string            $partitionKey = null,
+                                bool               $base64EncodedKey = false
     )
     {
         $this->id = $id;
@@ -122,6 +132,7 @@ class Message
         $this->redeliveryCount = $redeliveryCount;
         $this->properties = $properties;
         $this->partitionKey = $partitionKey;
+        $this->base64EncodedKey = $base64EncodedKey;
     }
 
     /**
@@ -212,6 +223,15 @@ class Message
     public function getPartitionKey(): ?string
     {
         return $this->partitionKey;
+    }
+
+    /**
+     * Whether getPartitionKey() is base64 of the original key bytes.
+     * Mirrors the official client's hasBase64EncodedKey().
+     */
+    public function hasBase64EncodedKey(): bool
+    {
+        return $this->base64EncodedKey;
     }
 
     /**

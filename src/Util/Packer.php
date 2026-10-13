@@ -111,10 +111,12 @@ class Packer
                 list($singleMetadata, $payload) = self::readSingleMessage($buffer);
                 $properties = $singleMetadata->getPropertiesList();
                 $partitionKey = $singleMetadata->getPartitionKey();
+                $base64EncodedKey = (bool)$singleMetadata->getPartitionKeyB64Encoded();
             } else {
                 $payload = self::readMessage($buffer);
                 $properties = $metadata->getPropertiesList();
                 $partitionKey = $metadata->getPartitionKey();
+                $base64EncodedKey = (bool)$metadata->getPartitionKeyB64Encoded();
             }
 
             $messages[] = new Message(
@@ -127,7 +129,8 @@ class Packer
                 $batchIdx,
                 $commandMessage->getRedeliveryCount(),
                 $properties,
-                $partitionKey
+                $partitionKey,
+                $base64EncodedKey
             );
             $trackingValue += $batchIdx;
             $batchIdx += 1;
