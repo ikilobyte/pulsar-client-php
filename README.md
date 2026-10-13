@@ -30,7 +30,7 @@ Features
 - Automatic reconnection (Only Consumer)
 - Message batching
 - Message Properties
-- Compression with `zstd`, `zlib`
+- Compression with `zstd`, `zlib`, `lz4`, `snappy`
 - Authentication with `jwt`, `basic`
 
 ## Requirements
@@ -38,6 +38,8 @@ Features
 * PHP >=7.1
 * ZLib Extension（If you want to use `zlib` compression）
 * Zstd Extension（If you want to use `zstd` compression）
+* [LZ4 Extension](https://github.com/kjdev/php-ext-lz4)（If you want to use `lz4` compression）
+* [Snappy Extension](https://github.com/kjdev/php-ext-snappy)（If you want to use `snappy` compression）
 * Swoole Extension(If you want to use in swoole)
     * Use in the swoole only requires that the `SWOOLE_HOOK_SOCKETS、SWOOLE_HOOK_STREAM_FUNCTION` or `SWOOLE_HOOK_ALL`
 

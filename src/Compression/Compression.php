@@ -22,6 +22,13 @@ interface Compression
     const NONE = 0;
 
     /**
+     * LZ4 Compress
+     *
+     * @see https://github.com/kjdev/php-ext-lz4
+     */
+    const LZ4 = 1;
+
+    /**
      * Zlib
      */
     const ZLIB = 2;
@@ -32,6 +39,13 @@ interface Compression
      * @see https://github.com/kjdev/php-ext-zstd
      */
     const ZSTD = 3;
+
+    /**
+     * Snappy Compress
+     *
+     * @see https://github.com/kjdev/php-ext-snappy
+     */
+    const SNAPPY = 4;
 
     /**
      * @return CompressionType

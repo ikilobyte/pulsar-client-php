@@ -139,7 +139,7 @@ class Builder
         // [magicNumber]
         $this->buffer->writeUint16(0x0e01);
 
-        // support zlib、zstd、none
+        // support zlib、zstd、lz4、snappy、none
         $compressionProvider = $this->producerOptions->getCompression();
 
         // metadata

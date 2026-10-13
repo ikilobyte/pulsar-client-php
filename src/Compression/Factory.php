@@ -35,8 +35,14 @@ class Factory
 
             case CompressionType::ZSTD_VALUE:
                 return new ZstdCompression();
+
+            case CompressionType::LZ4_VALUE:
+                return new Lz4Compression();
+
+            case CompressionType::SNAPPY_VALUE:
+                return new SnappyCompression();
             default:
-                throw new RuntimeException('only supported zlib/zstd compression');
+                throw new RuntimeException('only supported zlib/zstd/lz4/snappy compression');
         }
     }
 }
