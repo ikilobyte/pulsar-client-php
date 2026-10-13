@@ -29,7 +29,7 @@
 - Automatic reconnection (Only Consumer)
 - Message batching
 - Message Properties
-- Compression with `zstd`, `zlib`
+- Compression with `zstd`, `zlib`, `lz4`, `snappy`
 - Authentication with `jwt`, `basic`
 
 ## 依赖
@@ -37,6 +37,8 @@
 * PHP >=7.1
 * ZLib Extension（如果你想使用`zlib`压缩）
 * Zstd Extension（如果你想使用`zstd`压缩）
+* [LZ4 Extension](https://github.com/kjdev/php-ext-lz4)（如果你想使用`lz4`压缩）
+* [Snappy Extension](https://github.com/kjdev/php-ext-snappy)（如果你想使用`snappy`压缩）
 * Swoole Extension（如果你想在swoole中使用）
     * 只需要配置`SWOOLE_HOOK_SOCKETS、SWOOLE_HOOK_STREAM_FUNCTION` 或者 `SWOOLE_HOOK_ALL`
 

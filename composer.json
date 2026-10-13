@@ -19,6 +19,11 @@
 		"protobuf-php/protobuf": "^0.1.3",
 		"ext-curl": "*"
 	},
+	"suggest": {
+		"ext-zstd": "Required to use zstd compression",
+		"ext-lz4": "Required to use lz4 compression (https://github.com/kjdev/php-ext-lz4)",
+		"ext-snappy": "Required to use snappy compression (https://github.com/kjdev/php-ext-snappy)"
+	},
 	"require-dev": {
 		"symfony/var-dumper": "^3.4"
 	}
