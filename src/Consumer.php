@@ -13,7 +13,11 @@ use Pulsar\Exception\IOException;
 use Pulsar\Exception\MessageNotFound;
 use Pulsar\Exception\OptionsException;
 use Pulsar\Exception\RuntimeException;
+use Pulsar\Proto\BaseCommand\Type;
+use Pulsar\Proto\CommandAckResponse;
 use Pulsar\Proto\CommandMessage;
+use Pulsar\Util\Buffer;
+use Pulsar\Util\Helper;
 use Pulsar\Util\Packer;
 use SplPriorityQueue;
 use SplQueue;
@@ -182,13 +186,12 @@ class Consumer extends Client
             }
         }
 
-
         // nack
         $this->executeInternalNack();
 
         // ping
         $this->ping();
-
+    
         if (is_null($response)) {
             if (!$loop) {
                 throw new MessageNotFound();
@@ -209,27 +212,10 @@ class Consumer extends Client
             return $this->receive($loop);
         }
 
-
-        $consumer = $this->getPartitionConsumer($commandMessage->getConsumerId());
-
-        /**
-         * @var $messages array<Message>
-         */
-        $messages = Packer::decode($commandMessage, $response->getBuffer(), $consumer->getTopic());
-
-        foreach ($messages as $message) {
-
-            // Save Options to Message Object
-            $message->setOptions($this->options);
-
-            $this->messageQueue->enqueue($message);
-        }
-
-        $consumer->decrement(sizeof($messages));
+        $this->enqueueCommandMessage($commandMessage, $response->getBuffer());
 
         return $this->messageQueue->dequeue();
     }
-
 
     /**
      * @return array<Message>
@@ -248,18 +234,87 @@ class Consumer extends Client
     }
 
     /**
+     * Sends the CommandAck and blocks for its CommandAckResponse, correlated by request ID.
+     *
+     * While waiting, any MESSAGE frame that arrives first (the broker may deliver one before
+     * the ACK_RESPONSE, since the connection is asynchronous) is queued rather than discarded.
+     *
+     * Unlike receive(), this does not reconnect on a dropped connection: a lost connection
+     * mid-ack throws IOException immediately, regardless of ConsumerOptions::getReconnectPolicy().
+     *
+     * This is deliberate, not an oversight. A dropped connection during ack() means the
+     * broker may already have decided this consumer is gone and redelivered the message to
+     * another consumer on the same subscription (Shared/Key_Shared). Throwing immediately
+     * gives the caller an honest, timely signal instead of a client library quietly retrying
+     * underneath it.
+     *
      * @param Message $message
-     * @return void
-     * @throws \Exception
+     * @return CommandAckResponse|null
+     * @throws IOException
+     * @throws RuntimeException
      */
-    public function ack(Message $message)
+    public function ack(Message $message): ?CommandAckResponse
     {
         if (!$message->canAck()) {
-            return;
+            return null;
         }
 
-        // send CommandAck
-        $this->getPartitionConsumer($message->getConsumerID())->ack($message);
+        $requestId = Helper::getRequestID();
+        $this->getPartitionConsumer($message->getConsumerID())->ack($message, $requestId);
+
+        $deadline = microtime(true) + $this->options->getAckTimeout();
+
+        do {
+            $remaining = $deadline - microtime(true);
+            if ($remaining <= 0) {
+                throw new RuntimeException('Timed out waiting for ACK response.');
+            }
+
+            $response = $this->eventloop->wait((int) ceil($remaining));
+
+            if (null === $response) {
+                continue;
+            }
+
+            $baseCommand = $response->getBaseCommand();
+
+            $commandType = $baseCommand->getType();
+
+            if (Type::CLOSE_CONSUMER_VALUE === $commandType->value()) {
+                // only abort if it's the consumer this message belongs to; the connection
+                // may be shared with other partition consumers that closed independently
+                if ($baseCommand->getCloseConsumer()->getConsumerId() === $message->getConsumerID()) {
+                    throw new RuntimeException(
+                        'The consumer was closed before the message acknowledgment was confirmed.'
+                    );
+                }
+                continue;
+            }
+
+            if (Type::MESSAGE_VALUE === $commandType->value()) {
+                $this->enqueueCommandMessage($baseCommand->getMessage(), $response->getBuffer());
+                continue;
+            }
+
+            if (Type::ACK_RESPONSE_VALUE === $commandType->value()) {
+                $ackResponse = $baseCommand->getAckResponse();
+
+                if ($ackResponse->getRequestId() !== $requestId) {
+                    throw new RuntimeException('ACK response request ID does not match.');
+                }
+
+                if ($ackResponse->hasError()) {
+                    $msg = $ackResponse->hasMessage() ? $ackResponse->getMessage() : $ackResponse->getError()->name();
+                    throw new RuntimeException(
+                        sprintf('The broker rejected the acknowledgment: %s', $msg),
+                        $ackResponse->getError()->value()
+                    );
+                }
+
+                return $ackResponse;
+            }
+
+        } while (true);
     }
 
 
@@ -356,6 +411,37 @@ class Consumer extends Client
     protected function getPartitionConsumer(int $consumerID): PartitionConsumer
     {
         return $this->consumers[ $consumerID ];
+    }
+
+    /**
+     * Decodes a MESSAGE frame's payload into Message objects, queues them locally, and
+     * decrements the partition's available flow-control permits accordingly.
+     *
+     * Shared by receive() and ack()'s wait loop, since a MESSAGE frame can arrive while
+     * ack() is waiting on the same connection for an unrelated ACK_RESPONSE -- it must be
+     * queued here rather than discarded, or the message would be silently lost.
+     *
+     * @param CommandMessage $commandMessage
+     * @param Buffer $buffer
+     * @return void
+     */
+    private function enqueueCommandMessage(CommandMessage $commandMessage, Buffer $buffer)
+    {
+        $consumer = $this->getPartitionConsumer($commandMessage->getConsumerId());
+
+        /**
+         * @var array<Message> $messages
+         */
+        $messages = Packer::decode($commandMessage, $buffer, $consumer->getTopic());
+
+        foreach ($messages as $message) {
+            // Save Options to Message Object
+            $message->setOptions($this->options);
+
+            $this->messageQueue->enqueue($message);
+        }
+
+        $consumer->decrement(sizeof($messages));
     }
 
 }
