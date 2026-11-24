@@ -300,7 +300,8 @@ class Consumer extends Client
                 $ackResponse = $baseCommand->getAckResponse();
 
                 if ($ackResponse->getRequestId() !== $requestId) {
-                    throw new RuntimeException('ACK response request ID does not match.');
+                    // stale response from an earlier ack() that already timed out
+                    continue;
                 }
 
                 if ($ackResponse->hasError()) {
