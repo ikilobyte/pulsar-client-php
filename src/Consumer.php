@@ -284,7 +284,7 @@ class Consumer extends Client
                 // only abort if it's the consumer this message belongs to; the connection
                 // may be shared with other partition consumers that closed independently
                 if ($baseCommand->getCloseConsumer()->getConsumerId() === $message->getConsumerID()) {
-                    throw new RuntimeException(
+                    throw new IOException(
                         'The consumer was closed before the message acknowledgment was confirmed.'
                     );
                 }
