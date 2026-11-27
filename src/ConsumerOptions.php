@@ -71,6 +71,13 @@ final class ConsumerOptions extends Options
     const ENABLE_RECONNECT = 'reconnect';
 
     /**
+     * Max seconds to wait for an ACK_RESPONSE before giving up, default 30 seconds
+     *
+     * @var int
+     */
+    const ACK_TIMEOUT = 'ack_timeout';
+
+    /**
      * @param array $topics
      * @return void
      */
@@ -256,6 +263,26 @@ final class ConsumerOptions extends Options
     {
         $delay = $this->data[ self::NACK_REDELIVERY_DELAY ] ?? 10;
         return $delay <= 0 ? 10 : $delay;
+    }
+
+
+    /**
+     * @param int $seconds
+     * @return void
+     */
+    public function setAckTimeout(int $seconds)
+    {
+        $this->data[ self::ACK_TIMEOUT ] = $seconds;
+    }
+
+
+    /**
+     * @return int|mixed
+     */
+    public function getAckTimeout()
+    {
+        $timeout = $this->data[ self::ACK_TIMEOUT ] ?? 30;
+        return $timeout <= 0 ? 30 : $timeout;
     }
 
 

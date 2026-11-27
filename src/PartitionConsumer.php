@@ -12,10 +12,12 @@ namespace Pulsar;
 
 
 use Pulsar\Exception\IOException;
+use Pulsar\Exception\RuntimeException;
 use Pulsar\IO\AbstractIO;
 use Pulsar\Proto\BaseCommand\Type;
 use Pulsar\Proto\CommandAck;
 use Pulsar\Proto\CommandAck\AckType;
+use Pulsar\Proto\CommandAckResponse;
 use Pulsar\Proto\CommandCloseConsumer;
 use Pulsar\Proto\CommandFlow;
 use Pulsar\Proto\CommandRedeliverUnacknowledgedMessages;
@@ -155,10 +157,11 @@ class PartitionConsumer
 
     /**
      * @param Message $message
-     * @return void
+     * @param int $requestId
+     * @return CommandAckResponse
      * @throws IOException
      */
-    public function ack(Message $message)
+    public function ack(Message $message, int $requestId)
     {
         // send CommandAck
         $command = new CommandAck();
@@ -167,6 +170,7 @@ class PartitionConsumer
         $command->addMessageId($message->getMessageIdData());
         $command->setTxnidLeastBits(null);
         $command->setTxnidMostBits(null);
+        $command->setRequestId($requestId);
         $this->connection->writeCommand(Type::ACK(), $command);
     }
 

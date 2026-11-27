@@ -274,6 +274,17 @@ $options->setReconnectPolicy(true,3);
 $options->setReconnectPolicy(true,3,100);
 ```
 
+> Ack timeout
+
+* `ack()` blocks waiting for the broker's `ACK_RESPONSE`, matched to the request by request ID
+* If no matching response arrives within this timeout, `ack()` throws a `RuntimeException`
+* Also applied to each resend after a reconnect occurs while waiting for the response
+* Default is 30 seconds
+
+```php
+$options->setAckTimeout(30);
+```
+
 > Not loop Receive And Smooth exit
 
 ```php
@@ -480,6 +491,7 @@ $reader->close();
     * setDeadLetterPolicy()
     * setSubscriptionInitialPosition()
     * setReconnectPolicy()
+    * setAckTimeout()
     * setSchema()
 * ReaderOptions
     * setTopic()
