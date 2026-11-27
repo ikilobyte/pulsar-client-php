@@ -11,9 +11,11 @@ namespace Pulsar;
 use Google\CRC32\CRC32;
 use Protobuf\AbstractMessage;
 use Pulsar\Builder\BatchBuilder;
+use Pulsar\Exception\IOException;
 use Pulsar\Exception\OptionsException;
 use Pulsar\Exception\RuntimeException;
 use Pulsar\IO\ChannelManager;
+use Pulsar\Proto\CommandCloseProducer;
 use Pulsar\Proto\CommandSendReceipt;
 use Pulsar\Proto\KeyValue;
 use Pulsar\Proto\MessageMetadata;
@@ -149,12 +151,22 @@ class Producer extends Client
          */
         $response = $producer->send($buffer);
 
-        /**
-         * @var $receipt CommandSendReceipt
-         */
-        $receipt = $response->getSubCommand();
-        $receipt->getMessageId()->setPartition($producer->getID());
-        return Helper::serializeID($receipt->getMessageId());
+        $subCommand = $response->getSubCommand();
+
+        if ($subCommand instanceof CommandCloseProducer) {
+            throw new IOException('The producer was closed by the broker before the message receipt was confirmed.');
+        }
+
+        if (!$subCommand instanceof CommandSendReceipt) {
+            throw new RuntimeException(sprintf(
+                'Unexpected response "%s" while waiting for the send receipt.',
+                $response->getBaseCommand()->getType()->name()
+            ));
+        }
+
+        $subCommand->getMessageId()->setPartition($producer->getID());
+
+        return Helper::serializeID($subCommand->getMessageId());
     }
 
 
